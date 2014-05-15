@@ -1,7 +1,11 @@
 {
   "name": "familysearch-check",
   "description": "A FamilySearch Tree checker that generates research opportunities",
-  "keywords": ["FamilySearch", "Genealogy", "Family History"],
+  "keywords": [
+    "FamilySearch",
+    "Genealogy",
+    "Family History"
+  ],
   "homepage": "https://github.com/genealogysystems/fs-check",
   "version": "0.1.0",
   "repository": {
@@ -14,6 +18,7 @@
     "build": "./node_modules/browserify/bin/cmd.js lib/index.js -s fs-check -o fs-check.js"
   },
   "dependencies": {
+    "gedcomx-date": "^0.2.0"
   },
   "devDependencies": {
     "chai": "~1.9.1",
