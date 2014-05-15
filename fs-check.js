@@ -49,7 +49,7 @@ module.exports = function(person, sourceRefs) {
   var sourceArr = sourceRefs.getSourceRefs(),
       tagged = false;
   for(var x in sourceArr) {
-    if(sourceArr[x].indexOf('http://gedcomx.org/Birth') !== -1) {
+    if(sourceArr[x].$getTags().indexOf('http://gedcomx.org/Birth') !== -1) {
       tagged = true;
     }
   }
