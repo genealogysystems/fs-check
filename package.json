@@ -1,0 +1,22 @@
+{
+  "name": "familysearch-check",
+  "description": "A FamilySearch Tree checker that generates research opportunities",
+  "keywords": ["FamilySearch", "Genealogy", "Family History"],
+  "homepage": "https://github.com/genealogysystems/fs-check",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:genealogysystems/fs-check.git"
+  },
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "./node_modules/browserify/bin/cmd.js lib/index.js -s fs-check -o fs-check.js"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "browserify": "~3.46.0"
+  }
+}
