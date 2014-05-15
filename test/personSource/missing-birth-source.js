@@ -25,7 +25,7 @@ describe('missingBirth', function(){
     };
 
     var opportunity = fsCheck(person, sourceRefs);
-    console.log(opportunity);
+    //console.log(opportunity);
     //expect(opportunity).to.equal(undefined);
     //expect(opportunity).to.be.instanceof(Object);
     //expect(opportunity.title).to.equal('Find a birth');
