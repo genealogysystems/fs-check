@@ -17,9 +17,23 @@
 * Consider adding `type` to be able to group opportunities.
 * Consider adding `difficulty`.
 
+### Types
+
+* `problem`
+* `cleanup`
+* `source`
+* `personal`
+* `family`
+
 # Opportunities
 
 ## Person
+
+### missingBirthFormalDate
+`cleanup` - This opportunity will appear when there is a Birth fact for a person with an original date but no formal date.
+
+### missingBirthNormalizedPlace
+`cleanup` - This opportunity will appear when there is a Birth fact for a person with an original place but no normalized place.
 
 ## PersonSource
 
