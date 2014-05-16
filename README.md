@@ -16,3 +16,15 @@
 * Consider adding `source` to identify chich check it came from. Probably should match the key in index.js
 * Consider adding `type` to be able to group opportunities.
 * Consider adding `difficulty`.
+
+# Opportunities
+
+## Person
+
+## PersonSource
+
+### missingBirthSource
+`source` - This opportunity will appear when there is a Birth fact for a person with a place and date, and there is no sources attached to the person that are tagged "Birth".
+
+### missingDeathSource
+`source` - This opportunity will appear when there is a Death fact for a person with a place and date, and there is no sources attached to the person that are tagged "Death".
