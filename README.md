@@ -31,13 +31,16 @@
 The method signature for these opportunity checks is **check(Person)**
 
 ### missingBirth
-`person` - This opportunity will appear when there is no Birth fact of the Birth fact has no place and date.
+`person` - This opportunity will appear when there is no Birth fact or if the Birth fact has no place and date.
 
 ### missingBirthFormalDate
 `cleanup` - This opportunity will appear when there is a Birth fact for a person with an original date but no formal date.
 
 ### missingBirthNormalizedPlace
 `cleanup` - This opportunity will appear when there is a Birth fact for a person with an original place but no normalized place.
+
+### missingDeath
+`person` - This opportunity will appear when there is no Death fact or if the Death fact has no place and date.
 
 ### missingDeathFormalDate
 `cleanup` - This opportunity will appear when there is a Death fact for a person with an original date but no formal date.
