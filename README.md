@@ -35,6 +35,12 @@
 ### missingBirthNormalizedPlace
 `cleanup` - This opportunity will appear when there is a Birth fact for a person with an original place but no normalized place.
 
+### missingDeathFormalDate
+`cleanup` - This opportunity will appear when there is a Death fact for a person with an original date but no formal date.
+
+### missingDeathNormalizedPlace
+`cleanup` - This opportunity will appear when there is a Death fact for a person with an original place but no normalized place.
+
 ## PersonSource
 
 ### missingBirthSource

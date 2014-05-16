@@ -3,7 +3,9 @@ module.exports = {
   person: {
     missingBirth: _dereq_('./person/missing-birth.js'),
     missingBirthFormalDate: _dereq_('./person/missing-birth-formal-date.js'),
-    missingBirthNormalizedPlace: _dereq_('./person/missing-birth-normalized-place.js')
+    missingBirthNormalizedPlace: _dereq_('./person/missing-birth-normalized-place.js'),
+    missingDeathFormalDate: _dereq_('./person/missing-death-formal-date.js'),
+    missingDeathNormalizedPlace: _dereq_('./person/missing-death-normalized-place.js')
   },
   personSource: {
     missingBirthSource: _dereq_('./personSource/missing-birth-source.js'),
@@ -16,7 +18,7 @@ module.exports = {
     
   }
 }
-},{"./person/missing-birth-formal-date.js":2,"./person/missing-birth-normalized-place.js":3,"./person/missing-birth.js":4,"./personSource/missing-birth-source.js":5,"./personSource/missing-death-source.js":6}],2:[function(_dereq_,module,exports){
+},{"./person/missing-birth-formal-date.js":2,"./person/missing-birth-normalized-place.js":3,"./person/missing-birth.js":4,"./person/missing-death-formal-date.js":5,"./person/missing-death-normalized-place.js":6,"./personSource/missing-birth-source.js":7,"./personSource/missing-death-source.js":8}],2:[function(_dereq_,module,exports){
 module.exports = function(person) {
 
   var birth = person.$getBirth();
@@ -83,6 +85,52 @@ module.exports = function(person) {
   }
 }
 },{}],5:[function(_dereq_,module,exports){
+module.exports = function(person) {
+
+  var death = person.$getDeath();
+
+  // If we have no death return
+  if(!death) {
+    return;
+  }
+
+  // If we have an original date without a formal date
+  if(death.$getDate() !== undefined && death.$getFormalDate() === undefined) {
+
+    return {
+      type: 'cleanup',
+      title: 'Add a formal death date',
+      description: 'Go to FamilySearch and enter a formal date for this death.',
+      person: person,
+      findarecord: undefined,
+      gensearch: undefined
+    };
+  }
+}
+},{}],6:[function(_dereq_,module,exports){
+module.exports = function(person) {
+
+  var death = person.$getDeath();
+
+  // If we have no death return
+  if(!death) {
+    return;
+  }
+
+  // If we have an original place without a normalized place
+  if(death.$getPlace() !== undefined && death.$getNormalizedPlace() === undefined) {
+
+    return {
+      type: 'cleanup',
+      title: 'Add a normalized death place',
+      description: 'Go to FamilySearch and enter a normalized place for this death.',
+      person: person,
+      findarecord: undefined,
+      gensearch: undefined
+    };
+  }
+}
+},{}],7:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person, sourceRefs) {
@@ -133,7 +181,7 @@ module.exports = function(person, sourceRefs) {
   }
   
 }
-},{"../util.js":7}],6:[function(_dereq_,module,exports){
+},{"../util.js":9}],8:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person, sourceRefs) {
@@ -184,7 +232,7 @@ module.exports = function(person, sourceRefs) {
   }
   
 }
-},{"../util.js":7}],7:[function(_dereq_,module,exports){
+},{"../util.js":9}],9:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date');
 
 module.exports = {
@@ -226,7 +274,7 @@ function getFactPlace(fact) {
   }
 
 }
-},{"gedcomx-date":14}],8:[function(_dereq_,module,exports){
+},{"gedcomx-date":16}],10:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -251,7 +299,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],9:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -316,14 +364,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],10:[function(_dereq_,module,exports){
+},{}],12:[function(_dereq_,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],11:[function(_dereq_,module,exports){
+},{}],13:[function(_dereq_,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -913,7 +961,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,_dereq_("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":10,"FWaASH":9,"inherits":8}],12:[function(_dereq_,module,exports){
+},{"./support/isBuffer":12,"FWaASH":11,"inherits":10}],14:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     Simple = _dereq_('./simple.js');
 
@@ -955,7 +1003,7 @@ Approximate.prototype.toFormalString = function() {
 }
 
 module.exports = Approximate;
-},{"./simple.js":17,"util":11}],13:[function(_dereq_,module,exports){
+},{"./simple.js":19,"util":13}],15:[function(_dereq_,module,exports){
 /**
  * A gedcomX Duration
  */
@@ -1212,7 +1260,7 @@ Duration.prototype.toFormalString = function() {
 }
 
 module.exports = Duration;
-},{}],14:[function(_dereq_,module,exports){
+},{}],16:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -1268,7 +1316,7 @@ GedcomXDate.getDuration = GedUtil.getDuration;
 GedcomXDate.daysInMonth = GedUtil.daysInMonth;
 
 module.exports = GedcomXDate;
-},{"./approximate.js":12,"./duration.js":13,"./range.js":15,"./recurring.js":16,"./simple.js":17,"./util.js":19}],15:[function(_dereq_,module,exports){
+},{"./approximate.js":14,"./duration.js":15,"./range.js":17,"./recurring.js":18,"./simple.js":19,"./util.js":21}],17:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -1393,7 +1441,7 @@ Range.prototype.toFormalString = function() {
 }
 
 module.exports = Range;
-},{"./approximate.js":12,"./duration.js":13,"./simple.js":17,"./util.js":19}],16:[function(_dereq_,module,exports){
+},{"./approximate.js":14,"./duration.js":15,"./simple.js":19,"./util.js":21}],18:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     GedUtil = _dereq_('./util.js'),
     Range = _dereq_('./range.js');
@@ -1479,7 +1527,7 @@ Recurring.prototype.toFormalString = function() {
 }
 
 module.exports = Recurring;
-},{"./range.js":15,"./util.js":19,"util":11}],17:[function(_dereq_,module,exports){
+},{"./range.js":17,"./util.js":21,"util":13}],19:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js');
 /**
  * The simplest representation of a date.
@@ -1891,7 +1939,7 @@ Simple.prototype.toFormalString = function() {
 }
 
 module.exports = Simple;
-},{"./util-global.js":18}],18:[function(_dereq_,module,exports){
+},{"./util-global.js":20}],20:[function(_dereq_,module,exports){
 module.exports = {
   daysInMonth: daysInMonth
 }
@@ -1935,7 +1983,7 @@ function daysInMonth(month, year) {
       throw new Error('Unknown Month');
   }
 }
-},{}],19:[function(_dereq_,module,exports){
+},{}],21:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js'),
     Duration = _dereq_('./duration.js'),
     Simple = _dereq_('./simple.js'),
@@ -2349,6 +2397,6 @@ function getObjFromDate(date, adjustTimezone) {
   }
   return obj;
 }
-},{"./approximate.js":12,"./duration.js":13,"./simple.js":17,"./util-global.js":18}]},{},[1])
+},{"./approximate.js":14,"./duration.js":15,"./simple.js":19,"./util-global.js":20}]},{},[1])
 (1)
 });
