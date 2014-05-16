@@ -65,26 +65,44 @@ module.exports = function(person) {
   }
 }
 },{}],4:[function(_dereq_,module,exports){
-module.exports = function(person) {
+var utils = _dereq_('../util.js');
 
-  // Return for now.
-  return;
+module.exports = function(person) {
 
   var birth = person.$getBirth();
 
-  if(!birth) {
-    return {
-      title: 'Find a birth',
-      description: 'search far and wide, and you will find a birth',
-      person: person,
-      findarecord: {},
-      gensearch: {}
-    };
-  } else {
-    return;
+  if(birth) {
+    if(utils.getFactPlace(birth) !== undefined || utils.getFactYear(birth) !== undefined) {
+      return;
+    }
   }
+
+  // TODO if they have a christening record, change the description
+
+  var opportunity = {
+    type: 'person',
+    title: 'Find a Birth',
+    description: 'Execute some general searches and try to find a birth record.',
+    person: person,
+    findarecord: undefined,
+    gensearch: {
+      givenName: person.$getGivenName(),
+      familyName: person.$getSurname(),
+    }
+  };
+
+  var death = person.$getDeath();
+  if(death !== undefined) {
+    opportunity.gensearch.deathPlace = utils.getFactPlace(death);
+    opportunity.gensearch.deathDate = utils.getFactYear(death)+'';
+  }
+
+  // TODO enhance the genSearch Object
+
+  return opportunity;
+
 }
-},{}],5:[function(_dereq_,module,exports){
+},{"../util.js":9}],5:[function(_dereq_,module,exports){
 module.exports = function(person) {
 
   var death = person.$getDeath();

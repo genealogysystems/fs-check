@@ -22,12 +22,16 @@
 * `problem`
 * `cleanup`
 * `source`
-* `personal`
+* `person`
 * `family`
 
 # Opportunities
 
 ## Person
+The method signature for these opportunity checks is **check(Person)**
+
+### missingBirth
+`person` - This opportunity will appear when there is no Birth fact of the Birth fact has no place and date.
 
 ### missingBirthFormalDate
 `cleanup` - This opportunity will appear when there is a Birth fact for a person with an original date but no formal date.
@@ -42,6 +46,7 @@
 `cleanup` - This opportunity will appear when there is a Death fact for a person with an original place but no normalized place.
 
 ## PersonSource
+The method signature for these opportunity checks is **check(Person, SourceRefs)**
 
 ### missingBirthSource
 `source` - This opportunity will appear when there is a Birth fact for a person with a place and date, and there is no sources attached to the person that are tagged "Birth".
