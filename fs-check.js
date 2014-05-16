@@ -7,7 +7,9 @@ module.exports = {
     missingBirthPlace: _dereq_('./person/missing-birth-place.js'),
     missingBirthNormalizedPlace: _dereq_('./person/missing-birth-normalized-place.js'),
     missingDeath: _dereq_('./person/missing-death.js'),
+    missingDeathDate: _dereq_('./person/missing-death-date.js'),
     missingDeathFormalDate: _dereq_('./person/missing-death-formal-date.js'),
+    missingDeathPlace: _dereq_('./person/missing-death-place.js'),
     missingDeathNormalizedPlace: _dereq_('./person/missing-death-normalized-place.js')
   },
   personSource: {
@@ -21,7 +23,7 @@ module.exports = {
     
   }
 }
-},{"./person/missing-birth-date.js":2,"./person/missing-birth-formal-date.js":3,"./person/missing-birth-normalized-place.js":4,"./person/missing-birth-place.js":5,"./person/missing-birth.js":6,"./person/missing-death-formal-date.js":7,"./person/missing-death-normalized-place.js":8,"./person/missing-death.js":9,"./personSource/missing-birth-source.js":10,"./personSource/missing-death-source.js":11}],2:[function(_dereq_,module,exports){
+},{"./person/missing-birth-date.js":2,"./person/missing-birth-formal-date.js":3,"./person/missing-birth-normalized-place.js":4,"./person/missing-birth-place.js":5,"./person/missing-birth.js":6,"./person/missing-death-date.js":7,"./person/missing-death-formal-date.js":8,"./person/missing-death-normalized-place.js":9,"./person/missing-death-place.js":10,"./person/missing-death.js":11,"./personSource/missing-birth-source.js":12,"./personSource/missing-death-source.js":13}],2:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person) {
@@ -49,7 +51,7 @@ module.exports = function(person) {
   var opportunity = {
     type: 'person',
     title: 'Find a Birth Date',
-    description: 'Execute some general searches and try to find a birth place.',
+    description: 'Execute some general searches and try to find a birth date.',
     person: person,
     findarecord: undefined,
     gensearch: {
@@ -70,7 +72,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":12}],3:[function(_dereq_,module,exports){
+},{"../util.js":14}],3:[function(_dereq_,module,exports){
 module.exports = function(person) {
 
   var birth = person.$getBirth();
@@ -165,7 +167,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":12}],6:[function(_dereq_,module,exports){
+},{"../util.js":14}],6:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person) {
@@ -203,7 +205,56 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":12}],7:[function(_dereq_,module,exports){
+},{"../util.js":14}],7:[function(_dereq_,module,exports){
+var utils = _dereq_('../util.js');
+
+module.exports = function(person) {
+
+  var death = person.$getDeath();
+
+  if(!death) {
+    return;
+  }
+
+  // If we already have a death date
+  if(utils.getFactYear(death) !== undefined) {
+    return;
+  }
+
+  var place = utils.getFactPlace(death)
+
+  // If we don't have a date AND place, then we count it as not having a death
+  if(place === undefined) {
+    return;
+  }
+
+  // TODO if they have a christening record, change the description
+
+  var opportunity = {
+    type: 'person',
+    title: 'Find a Death Date',
+    description: 'Execute some general searches and try to find a death date.',
+    person: person,
+    findarecord: undefined,
+    gensearch: {
+      givenName: person.$getGivenName(),
+      familyName: person.$getSurname(),
+      deathPlace: place
+    }
+  };
+
+  var birth = person.$getBirth();
+  if(birth !== undefined) {
+    opportunity.gensearch.birthPlace = utils.getFactPlace(birth);
+    opportunity.gensearch.birthDate = utils.getFactYear(birth)+'';
+  }
+
+  // TODO enhance the genSearch Object
+
+  return opportunity;
+
+}
+},{"../util.js":14}],8:[function(_dereq_,module,exports){
 module.exports = function(person) {
 
   var death = person.$getDeath();
@@ -226,7 +277,7 @@ module.exports = function(person) {
     };
   }
 }
-},{}],8:[function(_dereq_,module,exports){
+},{}],9:[function(_dereq_,module,exports){
 module.exports = function(person) {
 
   var death = person.$getDeath();
@@ -249,7 +300,56 @@ module.exports = function(person) {
     };
   }
 }
-},{}],9:[function(_dereq_,module,exports){
+},{}],10:[function(_dereq_,module,exports){
+var utils = _dereq_('../util.js');
+
+module.exports = function(person) {
+
+  var death = person.$getDeath();
+
+  if(!death) {
+    return;
+  }
+
+  // If we already have a death place
+  if(utils.getFactPlace(death) !== undefined) {
+    return;
+  }
+
+  var year = utils.getFactYear(death)
+
+  // If we don't have a date AND place, then we count it as not having a death
+  if(year === undefined) {
+    return;
+  }
+
+  // TODO if they have a christening record, change the description
+
+  var opportunity = {
+    type: 'person',
+    title: 'Find a Death Place',
+    description: 'Execute some general searches and try to find a death place.',
+    person: person,
+    findarecord: undefined,
+    gensearch: {
+      givenName: person.$getGivenName(),
+      familyName: person.$getSurname(),
+      deathDate: year+''
+    }
+  };
+
+  var birth = person.$getBirth();
+  if(birth !== undefined) {
+    opportunity.gensearch.birthPlace = utils.getFactPlace(birth);
+    opportunity.gensearch.birthDate = utils.getFactYear(birth)+'';
+  }
+
+  // TODO enhance the genSearch Object
+
+  return opportunity;
+
+}
+},{"../util.js":14}],11:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person) {
@@ -287,7 +387,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":12}],10:[function(_dereq_,module,exports){
+},{"../util.js":14}],12:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person, sourceRefs) {
@@ -338,7 +438,7 @@ module.exports = function(person, sourceRefs) {
   }
   
 }
-},{"../util.js":12}],11:[function(_dereq_,module,exports){
+},{"../util.js":14}],13:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person, sourceRefs) {
@@ -389,7 +489,7 @@ module.exports = function(person, sourceRefs) {
   }
   
 }
-},{"../util.js":12}],12:[function(_dereq_,module,exports){
+},{"../util.js":14}],14:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date');
 
 module.exports = {
@@ -431,7 +531,7 @@ function getFactPlace(fact) {
   }
 
 }
-},{"gedcomx-date":19}],13:[function(_dereq_,module,exports){
+},{"gedcomx-date":21}],15:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -456,7 +556,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],14:[function(_dereq_,module,exports){
+},{}],16:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -521,14 +621,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],15:[function(_dereq_,module,exports){
+},{}],17:[function(_dereq_,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],16:[function(_dereq_,module,exports){
+},{}],18:[function(_dereq_,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1118,7 +1218,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,_dereq_("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":15,"FWaASH":14,"inherits":13}],17:[function(_dereq_,module,exports){
+},{"./support/isBuffer":17,"FWaASH":16,"inherits":15}],19:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     Simple = _dereq_('./simple.js');
 
@@ -1160,7 +1260,7 @@ Approximate.prototype.toFormalString = function() {
 }
 
 module.exports = Approximate;
-},{"./simple.js":22,"util":16}],18:[function(_dereq_,module,exports){
+},{"./simple.js":24,"util":18}],20:[function(_dereq_,module,exports){
 /**
  * A gedcomX Duration
  */
@@ -1417,7 +1517,7 @@ Duration.prototype.toFormalString = function() {
 }
 
 module.exports = Duration;
-},{}],19:[function(_dereq_,module,exports){
+},{}],21:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -1473,7 +1573,7 @@ GedcomXDate.getDuration = GedUtil.getDuration;
 GedcomXDate.daysInMonth = GedUtil.daysInMonth;
 
 module.exports = GedcomXDate;
-},{"./approximate.js":17,"./duration.js":18,"./range.js":20,"./recurring.js":21,"./simple.js":22,"./util.js":24}],20:[function(_dereq_,module,exports){
+},{"./approximate.js":19,"./duration.js":20,"./range.js":22,"./recurring.js":23,"./simple.js":24,"./util.js":26}],22:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -1598,7 +1698,7 @@ Range.prototype.toFormalString = function() {
 }
 
 module.exports = Range;
-},{"./approximate.js":17,"./duration.js":18,"./simple.js":22,"./util.js":24}],21:[function(_dereq_,module,exports){
+},{"./approximate.js":19,"./duration.js":20,"./simple.js":24,"./util.js":26}],23:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     GedUtil = _dereq_('./util.js'),
     Range = _dereq_('./range.js');
@@ -1684,7 +1784,7 @@ Recurring.prototype.toFormalString = function() {
 }
 
 module.exports = Recurring;
-},{"./range.js":20,"./util.js":24,"util":16}],22:[function(_dereq_,module,exports){
+},{"./range.js":22,"./util.js":26,"util":18}],24:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js');
 /**
  * The simplest representation of a date.
@@ -2096,7 +2196,7 @@ Simple.prototype.toFormalString = function() {
 }
 
 module.exports = Simple;
-},{"./util-global.js":23}],23:[function(_dereq_,module,exports){
+},{"./util-global.js":25}],25:[function(_dereq_,module,exports){
 module.exports = {
   daysInMonth: daysInMonth
 }
@@ -2140,7 +2240,7 @@ function daysInMonth(month, year) {
       throw new Error('Unknown Month');
   }
 }
-},{}],24:[function(_dereq_,module,exports){
+},{}],26:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js'),
     Duration = _dereq_('./duration.js'),
     Simple = _dereq_('./simple.js'),
@@ -2554,6 +2654,6 @@ function getObjFromDate(date, adjustTimezone) {
   }
   return obj;
 }
-},{"./approximate.js":17,"./duration.js":18,"./simple.js":22,"./util-global.js":23}]},{},[1])
+},{"./approximate.js":19,"./duration.js":20,"./simple.js":24,"./util-global.js":25}]},{},[1])
 (1)
 });
