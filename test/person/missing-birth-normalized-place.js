@@ -45,9 +45,7 @@ describe('missingBirthFormalPlace', function(){
           type: 'http://gedcomx.org/Birth',
           date: 'January 1, 1900',
           place: 'Provo, Utah, United States of America',
-          normalizedPlace: [{
-            value : 'Provo, Utah, United States of America'
-          }]
+          normalizedPlace: 'Provo, Utah, United States of America'
         })
       ]
     });
