@@ -32,6 +32,7 @@ mocha
 Note: make sure you install [jscoverage](https://github.com/visionmedia/node-jscoverage) globally before generating coverage.
 
 
+
 # Opportunity Schema
 ````javascript
 {
@@ -86,44 +87,55 @@ A gen-search object matching [schema](https://github.com/genealogysystems/gen-se
 
 # Opportunities
 
-## Person
-The method signature for these opportunity checks is **check(Person)**
-
-### missingBirth
+### missingBirth(Person)
 `person` - This opportunity will appear when there is no Birth fact or if the Birth fact has no place and date.
 
-### missingBirthDate
+### missingBirthDate(Person)
 `person` - This opportunity will appear when there is a Birth fact that has a place but no date.
 
-### missingBirthFormalDate
+### missingBirthFormalDate(Person)
 `cleanup` - This opportunity will appear when there is a Birth fact for a person with an original date but no formal date.
 
-### missingBirthPlace
-`person` - This opportunity will appear when there is a Birth fact that has a date but no place.
-
-### missingBirthNormalizedPlace
+### missingBirthNormalizedPlace(Person)
 `cleanup` - This opportunity will appear when there is a Birth fact for a person with an original place but no normalized place.
 
-### missingDeath
-`person` - This opportunity will appear when there is no Death fact or if the Death fact has no place and date.
+### missingBirthPlace(Person)
+`person` - This opportunity will appear when there is a Birth fact that has a date but no place.
 
-### missingDeathDate
-`person` - This opportunity will appear when there is a Death fact that has a place but no date.
-
-### missingDeathFormalDate
-`cleanup` - This opportunity will appear when there is a Death fact for a person with an original date but no formal date.
-
-### missingDeathPlace
-`person` - This opportunity will appear when there is a Death fact that has a date but no place.
-
-### missingDeathNormalizedPlace
-`cleanup` - This opportunity will appear when there is a Death fact for a person with an original place but no normalized place.
-
-## PersonSource
-The method signature for these opportunity checks is **check(Person, SourceRefs)**
-
-### missingBirthSource
+### missingBirthSource(Person, SourceRefs)
 `source` - This opportunity will appear when there is a Birth fact for a person with a place and date, and there is no sources attached to the person that are tagged "Birth".
 
-### missingDeathSource
+### missingDeath(Person)
+`person` - This opportunity will appear when there is no Death fact or if the Death fact has no place and date.
+
+### missingDeathDate(Person)
+`person` - This opportunity will appear when there is a Death fact that has a place but no date.
+
+### missingDeathFormalDate(Person)
+`cleanup` - This opportunity will appear when there is a Death fact for a person with an original date but no formal date.
+
+### missingDeathNormalizedPlace(Person)
+`cleanup` - This opportunity will appear when there is a Death fact for a person with an original place but no normalized place.
+
+### missingDeathPlace(Person)
+`person` - This opportunity will appear when there is a Death fact that has a date but no place.
+
+### missingDeathSource(Person, SourceRefs)
 `source` - This opportunity will appear when there is a Death fact for a person with a place and date, and there is no sources attached to the person that are tagged "Death".
+
+### missingMarriageDate(Wife, Husband, Marriage)
+`family` - This opportunity will appear when there is a Marriage fact that has a place but no date.
+
+### TODO missingMarriageFormalDate(Wife, Husband, Marriage)
+`cleanup` - This opportunity will appear when there is a Marriage fact for a person with an original date but no formal date.
+
+### TODO missingMarriageNormalizedPlace(Wife, Husband, Marriage)
+`cleanup` - This opportunity will appear when there is a Marriage fact for a person with an original place but no normalized place.
+
+### TODO missingMarriagePlace(Wife, Husband, Marriage)
+`family` - This opportunity will appear when there is a Marriage fact that has a date but no place.
+
+### TODO missingMarriageSource(Wife, Husband, Marriage, SourceRefs)
+`source` - This opportunity will appear when there is a Marriage fact for a person with a place and date, and there is no sources attached to the person that are tagged "Marriage".
+
+### TODO multipleMarriageFacts(Wife, Husband, Marriage, SourceRefs)
