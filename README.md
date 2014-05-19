@@ -126,7 +126,7 @@ A gen-search object matching [schema](https://github.com/genealogysystems/gen-se
 ### missingMarriageDate(Wife, Husband, Marriage)
 `family` - This opportunity will appear when there is a Marriage fact that has a place but no date.
 
-### TODO missingMarriageFormalDate(Wife, Husband, Marriage)
+### missingMarriageFormalDate(Wife, Husband, Marriage)
 `cleanup` - This opportunity will appear when there is a Marriage fact for a person with an original date but no formal date.
 
 ### TODO missingMarriageNormalizedPlace(Wife, Husband, Marriage)
@@ -138,4 +138,4 @@ A gen-search object matching [schema](https://github.com/genealogysystems/gen-se
 ### TODO missingMarriageSource(Wife, Husband, Marriage, SourceRefs)
 `source` - This opportunity will appear when there is a Marriage fact for a person with a place and date, and there is no sources attached to the person that are tagged "Marriage".
 
-### TODO multipleMarriageFacts(Wife, Husband, Marriage, SourceRefs)
+### TODO multipleMarriageFacts(Wife, Husband, Marriage)
