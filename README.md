@@ -129,7 +129,7 @@ A gen-search object matching [schema](https://github.com/genealogysystems/gen-se
 ### missingMarriageFormalDate(Wife, Husband, Marriage)
 `cleanup` - This opportunity will appear when there is a Marriage fact for a person with an original date but no formal date.
 
-### TODO missingMarriageNormalizedPlace(Wife, Husband, Marriage)
+### missingMarriageNormalizedPlace(Wife, Husband, Marriage)
 `cleanup` - This opportunity will appear when there is a Marriage fact for a person with an original place but no normalized place.
 
 ### missingMarriagePlace(Wife, Husband, Marriage)
