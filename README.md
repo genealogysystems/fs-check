@@ -132,7 +132,7 @@ A gen-search object matching [schema](https://github.com/genealogysystems/gen-se
 ### TODO missingMarriageNormalizedPlace(Wife, Husband, Marriage)
 `cleanup` - This opportunity will appear when there is a Marriage fact for a person with an original place but no normalized place.
 
-### TODO missingMarriagePlace(Wife, Husband, Marriage)
+### missingMarriagePlace(Wife, Husband, Marriage)
 `family` - This opportunity will appear when there is a Marriage fact that has a date but no place.
 
 ### TODO missingMarriageSource(Wife, Husband, Marriage, SourceRefs)
