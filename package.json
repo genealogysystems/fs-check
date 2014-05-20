@@ -18,7 +18,10 @@
     "build": "./node_modules/browserify/bin/cmd.js lib/index.js -s FSCheck -o fs-check.js"
   },
   "dependencies": {
-    "gedcomx-date": "^0.2.0"
+    "gedcomx-date": "^0.2.0",
+    "multiline": "^0.3.4",
+    "marked": "^0.3.2",
+    "mustache": "^0.8.1"
   },
   "devDependencies": {
     "chai": "~1.9.1",
