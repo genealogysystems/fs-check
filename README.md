@@ -1,37 +1,119 @@
 # fs-check
 A Research Opportunity finder library for FamilySearch, utilizing the [FamilySearch-javascript-sdk](https://github.com/rootsdev/familysearch-javascript-sdk). Best paired with [fs-traversal](https://github.com/genealogysystems/fs-traversal) for maximum tasty goodness.
 
-**TODO**
-
-* Consider adding `difficulty` to the opportunity schema.
-
-# Usage
+FSCheck is an object with opportunities arranged by function signature
 ````javascript
-// TODO
+{
+  // function(Person)
+  person: {...},
+  
+  // function(Person, SourceRefs)
+  personSource: {...},
+  
+  // function(Wife, Husband, Marriage)
+  marriage: {...},
+  
+  // function(Wife, Husband, Marriage, Sourcerefs)
+  marriageSource: {...},
+  
+  // function(Person, Children)
+  children: {...},
+  
+  // function(Person, Parents)
+  parents: {...},
+
+   // function(Person, Relationships, People)
+  relationships: {...}
+}
 ````
 
-## Node.js
-Unsuported for now. Waiting on [this issue](https://github.com/rootsdev/familysearch-javascript-sdk/issues/8) in the FamilySearch Javascript SDK.
+# Usage
+
+````javascript
+var FS = FamilySearch.init({});
+
+var traversal = FSTraversal(FS)
+      .order('wrd')
+      .person(function(person) {
+
+        // Person opportunities
+        _.each(FSCheck.person, function(check){
+          addOpportunity(check(person));
+        });
+
+        // Person source opportunities
+        person.$getSourceRefs().done(function(sourceResponse){
+          _.each(FSCheck.personSource, function(check){
+            addOpportunity(check(person, sourceResponse));
+          });
+        });
+
+      });
+
+// will be called with an opportunity object or undefined
+function addOpportunity(opportunity){
+  
+  if(!opportunity) return;
+  
+  console.log(opportunity);
+
+};
+
+````
 
 ## Browser
 Download [fs-check.js](fs-check.js) and enjoy.
 (Packaged with love by [browserify](http://browserify.org/))
 
-To rebuild run `npm run build` from the root directory.
+## Node.js
+Unsuported for now. Waiting on [this issue](https://github.com/rootsdev/familysearch-javascript-sdk/issues/8) in the FamilySearch Javascript SDK.
 
-# Tests
+# Opportunities
+A list of the opportunities that fs-check will search for.
 
-There is a very comprehensive test suite.
-````bash
-# To run the tests cd to the repo directory and run
-mocha
+## Problem
 
-# To generate the code coverage run
-./coverage/generate.sh
-````
-Note: make sure you install [jscoverage](https://github.com/visionmedia/node-jscoverage) globally before generating coverage.
+* [Death before Birth](lib/person/death-before-birth.js) - TODO
+* [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js) - TODO
+* [Child before Parents Marriage](lib/relationships/birth-before-parents-marriage.js) - TODO
+* [4 year birth gap](lib/children/birth-gap.js) - TODO When there are more than four years between two siblings
+* [Marriage with no Children](lib/relationships/marriage-with-no-children.js) - TODO
 
+## Cleanup
 
+* [Missing Normalized Birth Date](lib/person/missing-birth-formal-date.js)
+* [Missing Normalized Birth Place](lib/person/missing-birth-normalized-place.js)
+* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js) - TODO when there is more than 1 marriage fact
+* [Missing Normalized Marriage Date](lib/marriage/missing-marriage-formal-date.js)
+* [Missing Normalized Marriage Place](lib/marriage/missing-marriage-normalized-place.js)
+* [Missing Normalized Death Date](lib/person/missing-death-formal-date.js)
+* [Missing Normalized Death Place](lib/person/missing-death-normalized-place.js)
+* [Multiple Parents](lib/parents/multiple-parents) - TODO When there is more than 1 childOf ternary relationship
+
+## Source
+
+* [Missing Birth Source](lib/personSource/missing-birth-source.js)
+* [Missing Marriage Source](lib/marriageSource/missing-marriage-source.js) - TODO
+* [Missing Death Source](lib/personSource/missing-death-source.js)
+* [Missing Census](lib/personSource/missing-census-source.js) - TODO When person lived in US or UK and should be on a census
+
+## Person
+
+* [Missing Birth](lib/person/missing-birth.js)
+* [Missing Birth Date](lib/person/missing-birth-date.js)
+* [Missing Birth Place](lib/person/missing-birth-place.js)
+* [Missing Death](lib/person/missing-death.js)
+* [Missing Death Date](lib/person/missing-death-date.js)
+* [Missing Death Place](lib/person/missing-death-place.js)
+
+## Family
+
+* [Missing Parents](lib/parents/missing-parents.js) - TODO When both parents are missing
+* [Missing Father](lib/parents/missing-father.js) - TODO When father is missing but mother is not
+* [Missing Mother](lib/parents/missing-mother.js) - TODO When mother is missing but father is not
+* [Missing Marriage](lib/marriage/missing-marriage.js) - TODO When there are no marriage facts on a couple, or the one there is missing date and place
+* [Missing Marriage Date](lib/marriage/missing-marriage-date.js)
+* [Missing Marriage Place](lib/marriage/missing-marriage-place.js)
 
 # Opportunity Schema
 ````javascript
@@ -59,7 +141,7 @@ The title of the opportunity. Plain text only.
 
 ### description
 A description of the opportunity, including hints, notes, best practices, and generally anything that may be useful.
-The description may contain html.
+The description usually contains html.
 
 ### person
 The FamilySearch person that this opportunity is for. `person` will be a `FamilySearch.Person()` object.
@@ -85,57 +167,20 @@ An object containing parameters to use for a Find-A-Record Search. Must be a val
 ### gensearch
 A gen-search object matching [schema](https://github.com/genealogysystems/gen-search#schema) or `undefined.
 
-# Opportunities
+# Build
+Run `npm run build` from the root directory.
 
-### missingBirth(Person)
-`person` - This opportunity will appear when there is no Birth fact or if the Birth fact has no place and date.
+# Tests
 
-### missingBirthDate(Person)
-`person` - This opportunity will appear when there is a Birth fact that has a place but no date.
+There is a very comprehensive test suite.
+````bash
+# To run the tests cd to the repo directory and run
+mocha
 
-### missingBirthFormalDate(Person)
-`cleanup` - This opportunity will appear when there is a Birth fact for a person with an original date but no formal date.
+# To generate the code coverage run
+./coverage/generate.sh
+````
+Note: make sure you install [jscoverage](https://github.com/visionmedia/node-jscoverage) globally before generating coverage.
 
-### missingBirthNormalizedPlace(Person)
-`cleanup` - This opportunity will appear when there is a Birth fact for a person with an original place but no normalized place.
-
-### missingBirthPlace(Person)
-`person` - This opportunity will appear when there is a Birth fact that has a date but no place.
-
-### missingBirthSource(Person, SourceRefs)
-`source` - This opportunity will appear when there is a Birth fact for a person with a place and date, and there is no sources attached to the person that are tagged "Birth".
-
-### missingDeath(Person)
-`person` - This opportunity will appear when there is no Death fact or if the Death fact has no place and date.
-
-### missingDeathDate(Person)
-`person` - This opportunity will appear when there is a Death fact that has a place but no date.
-
-### missingDeathFormalDate(Person)
-`cleanup` - This opportunity will appear when there is a Death fact for a person with an original date but no formal date.
-
-### missingDeathNormalizedPlace(Person)
-`cleanup` - This opportunity will appear when there is a Death fact for a person with an original place but no normalized place.
-
-### missingDeathPlace(Person)
-`person` - This opportunity will appear when there is a Death fact that has a date but no place.
-
-### missingDeathSource(Person, SourceRefs)
-`source` - This opportunity will appear when there is a Death fact for a person with a place and date, and there is no sources attached to the person that are tagged "Death".
-
-### missingMarriageDate(Wife, Husband, Marriage)
-`family` - This opportunity will appear when there is a Marriage fact that has a place but no date.
-
-### missingMarriageFormalDate(Wife, Husband, Marriage)
-`cleanup` - This opportunity will appear when there is a Marriage fact for a person with an original date but no formal date.
-
-### missingMarriageNormalizedPlace(Wife, Husband, Marriage)
-`cleanup` - This opportunity will appear when there is a Marriage fact for a person with an original place but no normalized place.
-
-### missingMarriagePlace(Wife, Husband, Marriage)
-`family` - This opportunity will appear when there is a Marriage fact that has a date but no place.
-
-### TODO missingMarriageSource(Wife, Husband, Marriage, SourceRefs)
-`source` - This opportunity will appear when there is a Marriage fact for a person with a place and date, and there is no sources attached to the person that are tagged "Marriage".
-
-### TODO multipleMarriageFacts(Wife, Husband, Marriage)
+# License
+[MIT](LICENSE)
