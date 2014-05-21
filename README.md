@@ -16,6 +16,9 @@ FSCheck is an object with opportunities arranged by function signature
   // function(Wife, Husband, Marriage, Sourcerefs)
   marriageSource: {...},
   
+  // function(Person, Mother, Father, ChildRelationship)
+  child: {...},
+  
   // function(Person, Children)
   children: {...},
   
@@ -77,18 +80,18 @@ A list of the opportunities that fs-check will search for.
 * [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js)
 * [Child before Parents Marriage](lib/relationships/child-before-parents-marriage.js) - TODO
 * [4 year birth gap](lib/children/birth-gap.js) - TODO When there are more than four years between two siblings
-* [Marriage with no Children](lib/relationships/marriage-with-no-children.js)
+* [Marriage with no Children](lib/relationships/marriage-with-no-children.js) - TODO
 
 ## Cleanup
 
 * [Missing Normalized Birth Date](lib/person/missing-birth-formal-date.js)
 * [Missing Normalized Birth Place](lib/person/missing-birth-normalized-place.js)
-* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js)
+* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js) - TODO when there is more than 1 marriage fact
 * [Missing Normalized Marriage Date](lib/marriage/missing-marriage-formal-date.js)
 * [Missing Normalized Marriage Place](lib/marriage/missing-marriage-normalized-place.js)
 * [Missing Normalized Death Date](lib/person/missing-death-formal-date.js)
 * [Missing Normalized Death Place](lib/person/missing-death-normalized-place.js)
-* [Multiple Parents](lib/relationships/multiple-parents) - TODO When there is more than 1 childOf ternary relationship
+* [Multiple Parents](lib/parents/multiple-parents) - TODO When there is more than 1 childOf ternary relationship
 
 ## Source
 
@@ -108,9 +111,9 @@ A list of the opportunities that fs-check will search for.
 
 ## Family
 
-* [Missing Parents](lib/parents/missing-parents.js) - TODO When both parents are missing
-* [Missing Father](lib/parents/missing-father.js) - TODO When father is missing but mother is not
-* [Missing Mother](lib/parents/missing-mother.js) - TODO When mother is missing but father is not
+* [Missing Parents](lib/parents/missing-parents.js)
+* [Missing Father](lib/child/missing-father.js)
+* [Missing Mother](lib/child/missing-mother.js)
 * [Missing Marriage](lib/marriage/missing-marriage.js) - TODO When there are no marriage facts on a couple, or the one there is missing date and place
 * [Missing Marriage Date](lib/marriage/missing-marriage-date.js)
 * [Missing Marriage Place](lib/marriage/missing-marriage-place.js)

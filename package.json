@@ -15,7 +15,8 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "build": "./node_modules/browserify/bin/cmd.js lib/index.js -s FSCheck -o fs-check.js"
+    "test": "mocha",
+    "build": "browserify lib/index.js -s FSCheck -o fs-check.js"
   },
   "dependencies": {
     "gedcomx-date": "^0.2.0",
