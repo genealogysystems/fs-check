@@ -25,7 +25,7 @@ module.exports = function(child, mother, father, childRelationship) {
       * [Add a New Person to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-a-New-Person-to-Your-Existing-Tree)
       * [Updating Relationships Between Parents and Children](https://familysearch.org/ask/productSupport#/Adding-Changing-and-Deleting-Relationship-Types-between-Parents-and-Children)
     */}, {
-      mothername: mother.$getGivenName() + mother.$getSurname(),
+      mothername: mother.$getDisplayName(),
       crid: childRelationship.id
     });
 
@@ -79,7 +79,7 @@ module.exports = function(child, mother, father, childRelationship) {
       * [Add a New Person to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-a-New-Person-to-Your-Existing-Tree)
       * [Updating Relationships Between Parents and Children](https://familysearch.org/ask/productSupport#/Adding-Changing-and-Deleting-Relationship-Types-between-Parents-and-Children)
     */}, {
-      fathername: father.$getGivenName() + father.$getSurname(),
+      fathername: father.$getDisplayName(),
       crid: childRelationship.id
     });
 
@@ -222,12 +222,12 @@ module.exports = function(wife, husband, marriage) {
   var descr = utils.markdown(function(){/*
     Start with a general search in some of the popular online repositories.
     Finding a census can give you an approximate date by looking at the age of the oldest child, which would allow you to narrow your search further.
-    Once you have found a record with a marriage date, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
+    Once you have found a record with a marriage date, add it in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}).
 
     ## Help
 
     * [Adding a marriage date to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-  */}, {pid:  person.id});
+  */}, {crid:  marriage.id});
 
   var opportunity = {
     type: 'family',
@@ -389,7 +389,7 @@ module.exports = function(wife, husband, marriage) {
     }
 
     var descr = utils.markdown(function(){/*
-      Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Marriage Date {{couple}}.
+      View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the Marriage Date {{couple}}.
 
       ## Why?
       Standardization ensures that everyone knows when this event took place.
@@ -401,12 +401,12 @@ module.exports = function(wife, husband, marriage) {
       ## How?
       View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
 
-    */}, {pid:  person.id, couple: coupleDescr});
+    */}, {crid:  marriage.id, couple: coupleDescr});
 
     return {
       type: 'cleanup',
       title: 'Standardize a Marriage Date',
-      description: 'Go to FamilySearch and enter a formal date for this marriage.',
+      description: descr,
       person: person,
       findarecord: undefined,
       gensearch: undefined
@@ -461,7 +461,7 @@ module.exports = function(wife, husband, marriage) {
     }
 
     var descr = utils.markdown(function(){/*
-      Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Marriage Place {{couple}}.
+      View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the marriage place {{couple}}.
 
       ## Why?
       Standardization ensures that everyone knows where this event took place.
@@ -473,7 +473,7 @@ module.exports = function(wife, husband, marriage) {
       ## How?
       View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
 
-    */}, {pid:  person.id, couple: coupleDescr});
+    */}, {crid:  marriage.id, couple: coupleDescr});
 
     return {
       type: 'cleanup',
@@ -546,12 +546,12 @@ module.exports = function(wife, husband, marriage) {
 
   var descr = utils.markdown(function(){/*
     Start with a general search in some of the popular online repositories.
-    Once you have found a record with a marriage date, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
+    Once you have found a record with a marriage date, add it in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}).
 
     ## Help
 
     * [Adding a marriage place to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-  */}, {pid:  person.id});
+  */}, {crid:  marriage.id});
 
   var opportunity = {
     type: 'family',
@@ -631,17 +631,17 @@ module.exports = function(wife, husband, marriage) {
   var descr = utils.markdown(function(){/*
     The marriage {{couple}} has multiple marriage facts associated with it.
     This is unusual, and should be investigated.
-    Try to merge like information and reduce them down to 1 marriage fact
-    Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and correct this problem.
+    Try to merge like information and reduce them down to one marriage fact.
+    View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to correct this problem.
 
     ## Help
 
     * [Removing Marriage Facts in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-  */}, {pid:  person.id, couple: coupleDescr});
+  */}, {crid:  marriage.id, couple: coupleDescr});
 
   var opportunity = {
     type: 'cleanup',
-    title: 'Find a Marriage Date',
+    title: 'Multiple Marriage Facts',
     description: descr,
     person: person,
     findarecord: undefined,
@@ -698,7 +698,7 @@ module.exports = function(person, parents) {
   if(birthBeforeParentBirth.length > 0) {
 
     var descr = utils.markdown(function(){/*
-        {{personName}} (Born {{personBirth}}) was born before one or more of their parents.
+        {{personName}}, born {{personBirth}}, was born before one or more of their parents.
 
         {{#parents}}
         * [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{id}}) - {{birth}}
@@ -719,7 +719,7 @@ module.exports = function(person, parents) {
 
     var opportunity = {
       type: 'problem',
-      title: 'Person Born before their Parent(s)',
+      title: 'Person Born Before their Parent(s)',
       description: descr,
       person: person,
       findarecord: undefined,
@@ -749,13 +749,13 @@ module.exports = function(child, parents) {
       To find parents, start by searching collections containing birth records.
       If you haven't found a record in any of those collections, try expanding your search to some of the popular online repositories.
       If you still haven't found it, try using Find-A-Record to look for collections that are not available online (like microfilm).
-      When you find the father, add him to the tree and then add him as the father in [the child and parents relationship](https://familysearch.org/tree/#view=parentChildRelationship&relationshipId={{crid}}).
+      When you find the parents, add them to the tree in [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
       
       ## Help
       
       * [Add a New Person to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-a-New-Person-to-Your-Existing-Tree)
       * [Updating Relationships Between Parents and Children](https://familysearch.org/ask/productSupport#/Adding-Changing-and-Deleting-Relationship-Types-between-Parents-and-Children)
-    */});
+    */}, { pid: child.id });
 
     return {
       type: 'family',
@@ -830,7 +830,7 @@ module.exports = function(person) {
 
   var opportunity = {
     type: 'problem',
-    title: 'Person Dies before they were born',
+    title: 'Person Died Before They Were Born',
     description: descr,
     person: person,
     findarecord: undefined,
@@ -939,7 +939,6 @@ module.exports = function(person) {
 
       ## How?
       View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
     */}, {pid:  person.id});
 
     return {
@@ -1354,7 +1353,7 @@ module.exports = function(person) {
 
   var descr = utils.markdown(function(){/*
       Start with a general search in some of the popular online repositories.
-      If they lived in the United States within the last 100 years, the sociak Security Death Index is a good place to start.
+      If they lived in the United States within the last 100 years, the SociaL Security Death Index is a good place to start.
       Once you have found a record of the death, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
 
       ## Help
@@ -1527,7 +1526,6 @@ module.exports = function(person, relationships, people) {
     return;
   }
 
-
   if(relationships.getChildIds().length == 0) {
 
     var descr = utils.markdown(function(){/*
@@ -1568,7 +1566,7 @@ module.exports = function(person, relationships, people) {
   }
 
   var descr = utils.markdown(function(){/*
-      Usually a person has one set of parents.
+      A person usually only has one set of parents.
       If needed, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to correct this.
 
       ## Help

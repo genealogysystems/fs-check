@@ -237,6 +237,8 @@ describe('missingMarriageDate', function(){
           ]
         });
 
+    marriage.id = 'RRRR-RRR';
+    
     var opportunity = fsCheck(wife, husband, marriage);
 
     doc('missingMarriageDate', opportunity);

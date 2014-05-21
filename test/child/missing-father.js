@@ -45,10 +45,12 @@ describe('missingFather', function(){
         father,
         relationship = new FamilySearch.ChildAndParents({
           mother: mother,
-          child: child,
-          id: 'KWMX-123'
+          child: child
         });
-        
+    
+    mother.display = { name: 'Thelma Louise' };
+    relationship.id = 'RRRR-RRR';
+    
     var opportunity = fsCheck(child, mother, father, relationship);
     
     doc('missingFather', opportunity);

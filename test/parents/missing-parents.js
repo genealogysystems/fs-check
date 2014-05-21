@@ -31,7 +31,10 @@ describe('missingParents', function(){
               place: 'Provo, Utah, United States of America'
             })
           ]
-        });        
+        });
+
+    child.id = 'PPPP-PPP';
+        
     var opportunity = fsCheck(child, []);
     
     doc('missingParents', opportunity);
