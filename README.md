@@ -86,7 +86,7 @@ A list of the opportunities that fs-check will search for.
 
 * [Missing Normalized Birth Date](lib/person/missing-birth-formal-date.js)
 * [Missing Normalized Birth Place](lib/person/missing-birth-normalized-place.js)
-* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js) - TODO when there is more than 1 marriage fact
+* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js)
 * [Missing Normalized Marriage Date](lib/marriage/missing-marriage-formal-date.js)
 * [Missing Normalized Marriage Place](lib/marriage/missing-marriage-normalized-place.js)
 * [Missing Normalized Death Date](lib/person/missing-death-formal-date.js)
