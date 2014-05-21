@@ -309,6 +309,8 @@ describe('missingMarriageSource', function(){
         }),
         sources = [];
 
+    marriage.id = 'MMMM-MMM';
+    
     var opportunity = fsCheck(wife, husband, marriage, sources);
 
     doc('missingMarriageSource', opportunity);
