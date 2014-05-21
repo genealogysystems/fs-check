@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'parents','birth-before-parents-birth.js'));
+    fsCheck = require(path.join(libPath, 'parents','birth-before-parents-birth.js')),
+    doc = require('../../docs/util.js');
 
 describe('birthBeforeParentsBirth', function(){
 
@@ -204,6 +205,8 @@ describe('birthBeforeParentsBirth', function(){
 
 
     var opportunity = fsCheck(person, parents);
+
+    doc('birthBeforeParentsBirth', opportunity);
 
     expect(opportunity.type).to.equal('problem');
     expect(opportunity).to.have.property('title');
