@@ -245,6 +245,10 @@ describe('missingMarriageSource', function(){
         }),
         sources = [];
 
+    wife.display = {name: 'Thelma Louise'};
+    husband.display = {name: 'Bob Freemer'};
+    marriage.id = 'MMMM-MMM';
+
     var opportunity = fsCheck(wife, husband, marriage, sources);
 
     doc('missingMarriageSource', opportunity);
@@ -308,12 +312,8 @@ describe('missingMarriageSource', function(){
           ]
         }),
         sources = [];
-
-    marriage.id = 'MMMM-MMM';
     
     var opportunity = fsCheck(wife, husband, marriage, sources);
-
-    doc('missingMarriageSource', opportunity);
     
     expect(opportunity.type).to.equal('source');
     expect(opportunity).to.have.property('title');
