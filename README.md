@@ -96,7 +96,7 @@ A list of the opportunities that fs-check will search for.
 ## Source
 
 * [Missing Birth Source](lib/personSource/missing-birth-source.js)
-* [Missing Marriage Source](lib/marriageSource/missing-marriage-source.js) - TODO
+* [Missing Marriage Source](lib/marriageSource/missing-marriage-source.js)
 * [Missing Death Source](lib/personSource/missing-death-source.js)
 * [Missing Census](lib/personSource/missing-census-source.js) - TODO When person lived in US or UK and should be on a census
 
