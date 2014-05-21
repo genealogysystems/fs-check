@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'child', 'missing-father.js'));
+    fsCheck = require(path.join(libPath, 'child', 'missing-father.js')),
+    doc = require('../../docs/util.js');
 
 describe('missingFather', function(){
 
@@ -49,7 +50,9 @@ describe('missingFather', function(){
         });
         
     var opportunity = fsCheck(child, mother, father, relationship);
-        
+    
+    doc('missingFather', opportunity);
+    
     expect(opportunity).to.exist;
     expect(opportunity.type).to.equal('family');
     expect(opportunity).to.have.property('title');

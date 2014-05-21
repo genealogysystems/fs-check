@@ -80,13 +80,13 @@ A list of the opportunities that fs-check will search for.
 * [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js)
 * [Child before Parents Marriage](lib/relationships/child-before-parents-marriage.js) - TODO
 * [4 year birth gap](lib/children/birth-gap.js) - TODO When there are more than four years between two siblings
-* [Marriage with no Children](lib/relationships/marriage-with-no-children.js) - TODO
+* [Marriage with no Children](lib/relationships/marriage-with-no-children.js)
 
 ## Cleanup
 
 * [Missing Normalized Birth Date](lib/person/missing-birth-formal-date.js)
 * [Missing Normalized Birth Place](lib/person/missing-birth-normalized-place.js)
-* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js) - TODO when there is more than 1 marriage fact
+* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js)
 * [Missing Normalized Marriage Date](lib/marriage/missing-marriage-formal-date.js)
 * [Missing Normalized Marriage Place](lib/marriage/missing-marriage-normalized-place.js)
 * [Missing Normalized Death Date](lib/person/missing-death-formal-date.js)
@@ -171,11 +171,12 @@ An object containing parameters to use for a Find-A-Record Search. Must be a val
 A gen-search object matching [schema](https://github.com/genealogysystems/gen-search#schema) or `undefined`.
 
 # Contributing
-Every pull request that adds a check should contain four things:
+Every pull request that adds a check should contain the following things:
 
 1. A check that returns ONE opportunity. (Look at existing checks and follow the conventions)
 1. An update to [lib/index.js](lib/index.js) to register your check.
 1. A set of test cases that provide 100% code coverage for your check.
+1. One instance of `doc('checkName', opportunity)` in one of your test cases to document your check for gh-pages.
 1. An update to the README listing and linking your check.
 
 Be careful not to add a check that overlaps with another check.
