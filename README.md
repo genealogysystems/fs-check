@@ -190,7 +190,7 @@ mocha
 # To generate the code coverage run
 ./coverage/generate.sh
 ````
-Note: make sure you install [jscoverage](https://github.com/visionmedia/node-jscoverage) globally before generating coverage.
+Note: make sure you install [mocha](http://visionmedia.github.io/mocha/) and [jscoverage](https://github.com/visionmedia/node-jscoverage) globally before generating coverage.
 
 # License
 [MIT](LICENSE)
