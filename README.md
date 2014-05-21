@@ -16,6 +16,9 @@ FSCheck is an object with opportunities arranged by function signature
   // function(Wife, Husband, Marriage, Sourcerefs)
   marriageSource: {...},
   
+  // function(Person, Mother, Father, ChildRelationship)
+  child: {...},
+  
   // function(Person, Children)
   children: {...},
   
