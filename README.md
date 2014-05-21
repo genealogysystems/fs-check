@@ -1,7 +1,7 @@
 # fs-check
 A Research Opportunity finder library for FamilySearch, utilizing the [FamilySearch-javascript-sdk](https://github.com/rootsdev/familysearch-javascript-sdk). Best paired with [fs-traversal](https://github.com/genealogysystems/fs-traversal) for maximum tasty goodness.
 
-FSCheck is an object with opportunities arranged by function signature
+FSCheck is an object with opportunities arranged by function signature. This was done to match the function signatures provided by fs-traversal.
 ````javascript
 {
   // function(Person)
@@ -73,13 +73,12 @@ Unsuported for now. Waiting on [this issue](https://github.com/rootsdev/familyse
 
 # Opportunities
 A list of the opportunities that fs-check will search for.
+To see what the opportunities look like, see [http://genealogysystems.github.io/fs-check/](http://genealogysystems.github.io/fs-check/).
 
 ## Problem
 
 * [Death before Birth](lib/person/death-before-birth.js)
 * [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js)
-* [Child before Parents Marriage](lib/relationships/child-before-parents-marriage.js) - TODO
-* [4 year birth gap](lib/children/birth-gap.js) - TODO When there are more than four years between two siblings
 * [Marriage with no Children](lib/relationships/marriage-with-no-children.js)
 
 ## Cleanup
@@ -98,7 +97,6 @@ A list of the opportunities that fs-check will search for.
 * [Missing Birth Source](lib/personSource/missing-birth-source.js)
 * [Missing Marriage Source](lib/marriageSource/missing-marriage-source.js)
 * [Missing Death Source](lib/personSource/missing-death-source.js)
-* [Missing Census](lib/personSource/missing-census-source.js) - TODO When person lived in US or UK and should be on a census
 
 ## Person
 
