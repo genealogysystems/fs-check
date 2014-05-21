@@ -74,8 +74,8 @@ A list of the opportunities that fs-check will search for.
 ## Problem
 
 * [Death before Birth](lib/person/death-before-birth.js)
-* [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js) - TODO
-* [Child before Parents Marriage](lib/relationships/birth-before-parents-marriage.js) - TODO
+* [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js)
+* [Child before Parents Marriage](lib/relationships/child-before-parents-marriage.js) - TODO
 * [4 year birth gap](lib/children/birth-gap.js) - TODO When there are more than four years between two siblings
 * [Marriage with no Children](lib/relationships/marriage-with-no-children.js) - TODO
 
