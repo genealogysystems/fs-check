@@ -165,7 +165,17 @@ An object containing parameters to use for a Find-A-Record Search. Must be a val
 * `radius` - The radius of the Find-A-Record Search in meters. May be `undefined`.
 
 ### gensearch
-A gen-search object matching [schema](https://github.com/genealogysystems/gen-search#schema) or `undefined.
+A gen-search object matching [schema](https://github.com/genealogysystems/gen-search#schema) or `undefined`.
+
+# Contributing
+Every pull request that adds a check should contain four things:
+
+1. A check that returns ONE opportunity. (Look at existing checks and follow the conventions)
+1. An update to [lib/index.js](lib/index.js) to register your check.
+1. A set of test cases that provide 100% code coverage for your check.
+1. An update to the README listing and linking your check.
+
+Be careful not to add a check that overlaps with another check.
 
 # Build
 Run `npm run build` from the root directory.
