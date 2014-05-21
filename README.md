@@ -91,7 +91,7 @@ A list of the opportunities that fs-check will search for.
 * [Missing Normalized Marriage Place](lib/marriage/missing-marriage-normalized-place.js)
 * [Missing Normalized Death Date](lib/person/missing-death-formal-date.js)
 * [Missing Normalized Death Place](lib/person/missing-death-normalized-place.js)
-* [Multiple Parents](lib/parents/multiple-parents) - TODO When there is more than 1 childOf ternary relationship
+* [Multiple Parents](lib/relationships/multiple-parents)
 
 ## Source
 
