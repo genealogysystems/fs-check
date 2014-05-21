@@ -18,14 +18,19 @@
         $.getJSON('docs/opportunities.json').done(function(opportunities){
           $.each(opportunities, function(key, opportunity){
             $('#' + opportunity.type + '-list').append(
-              $('<a href="#" class="list-group-item">' + key + '</a>').click(function(){
+              $('<a id="opp-' + key + '" href="#' + key + '" class="list-group-item">' + key + '</a>').click(function(){
                 $('.active').removeClass('active');
                 $(this).addClass('active');
                 displayOpportunity(opportunity);
               })
             );
           });
-          $('#left a.list-group-item:first').click();
+          
+          if(location.hash && $('#opp-' + location.hash.substr(1))){
+            $('#opp-' + location.hash.substr(1)).click();
+          } else {
+            $('#left a.list-group-item:first').click();
+          }
         });
       });
       

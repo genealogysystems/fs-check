@@ -110,6 +110,8 @@ describe('missingDeathPlace', function(){
         })
       ]
     });
+    
+    person.id = 'PPPP-PPP';
 
     var opportunity = fsCheck(person);
 

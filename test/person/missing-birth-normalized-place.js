@@ -68,6 +68,8 @@ describe('missingBirthFormalPlace', function(){
         })
       ]
     });
+    
+    person.id = 'PPPP-PPP';
 
     var opportunity = fsCheck(person);
 

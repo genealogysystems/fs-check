@@ -106,6 +106,10 @@ describe('missingMarriageNormalizedPlace', function(){
             })
           ]
         });
+        
+    marriage.id = 'MMMM-MMM';
+    husband.display = { name: 'Elmer Fudd' };
+    wife.display = { name: 'Thelma Lousie' };
 
     var opportunity = fsCheck(wife, husband, marriage);
 
