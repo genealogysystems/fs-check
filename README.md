@@ -77,7 +77,7 @@ A list of the opportunities that fs-check will search for.
 * [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js)
 * [Child before Parents Marriage](lib/relationships/child-before-parents-marriage.js) - TODO
 * [4 year birth gap](lib/children/birth-gap.js) - TODO When there are more than four years between two siblings
-* [Marriage with no Children](lib/relationships/marriage-with-no-children.js) - TODO
+* [Marriage with no Children](lib/relationships/marriage-with-no-children.js)
 
 ## Cleanup
 
@@ -88,7 +88,7 @@ A list of the opportunities that fs-check will search for.
 * [Missing Normalized Marriage Place](lib/marriage/missing-marriage-normalized-place.js)
 * [Missing Normalized Death Date](lib/person/missing-death-formal-date.js)
 * [Missing Normalized Death Place](lib/person/missing-death-normalized-place.js)
-* [Multiple Parents](lib/parents/multiple-parents) - TODO When there is more than 1 childOf ternary relationship
+* [Multiple Parents](lib/relationships/multiple-parents) - TODO When there is more than 1 childOf ternary relationship
 
 ## Source
 
