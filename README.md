@@ -114,7 +114,7 @@ A list of the opportunities that fs-check will search for.
 * [Missing Parents](lib/parents/missing-parents.js)
 * [Missing Father](lib/child/missing-father.js)
 * [Missing Mother](lib/child/missing-mother.js)
-* [Missing Marriage](lib/marriage/missing-marriage.js) - TODO When there are no marriage facts on a couple, or the one there is missing date and place
+* [Missing Marriage Fact](lib/marriage/missing-marriage-fact.js)
 * [Missing Marriage Date](lib/marriage/missing-marriage-date.js)
 * [Missing Marriage Place](lib/marriage/missing-marriage-place.js)
 
