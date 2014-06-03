@@ -156,6 +156,19 @@ describe('util', function(){
           };
       expect(fn).to.not.throw(Error);
     });
+    
+    it('should return undefined for "Deceased"', function() {
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Death',
+        date: {
+          original: 'Deceased'
+        }
+      });
+
+      var year = util.getFactYear(fact);
+
+      expect(year).to.not.exist;
+    });
 
   });
 
