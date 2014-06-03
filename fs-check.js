@@ -1743,7 +1743,14 @@ function getFactYear(fact) {
     } catch(error) {}
   } else if(fact.$getDate()) {
     var date = fact.$getDate();
-    return /^\d{4}$/.test(date) ? date : new Date(date).getFullYear();
+    if(/^\d{4}$/.test(date)){
+      return date;
+    } else {
+     var year = new Date(date).getFullYear();
+     if(parseInt(year) == year){
+      return year;
+     }
+    }
   }
 }
 
@@ -2793,7 +2800,7 @@ function GedcomXDate(str) {
 /**
  * The version of this library.
  */
-GedcomXDate.version = '0.2.0';
+GedcomXDate.version = '0.2.1';
 
 /**
  * Expose addDuration.
@@ -3453,13 +3460,13 @@ function daysInMonth(month, year) {
     case 1:
     case 3:
     case 5:
-    case 6:
+    case 7:
     case 8:
     case 10:
     case 12:
       return 31;
     case 4:
-    case 7:
+    case 6:
     case 9:
     case 11:
       return 30;

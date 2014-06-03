@@ -7,7 +7,7 @@
     "Family History"
   ],
   "homepage": "https://github.com/genealogysystems/fs-check",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git@github.com:genealogysystems/fs-check.git"
@@ -19,7 +19,7 @@
     "build": "browserify lib/index.js -s FSCheck -o fs-check.js"
   },
   "dependencies": {
-    "gedcomx-date": "^0.2.0",
+    "gedcomx-date": "^0.2.1",
     "multiline": "^0.3.4",
     "marked": "^0.3.2",
     "mustache": "^0.8.1"
