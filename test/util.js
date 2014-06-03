@@ -144,6 +144,18 @@ describe('util', function(){
 
       expect(year).to.equal(1905);
     });
+    
+    it('should catch the exception thrown by parsing an invalid GEDCOMX date', function() {
+      var fact = new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            formalDate: '+1900-02-31',
+            place: 'Provo, Utah, United States of America'
+          }),
+          fn = function(){
+            util.getFactYear(fact);
+          };
+      expect(fn).to.not.throw(Error);
+    });
 
   });
 
