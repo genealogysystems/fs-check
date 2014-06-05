@@ -160,9 +160,7 @@ describe('util', function(){
     it('should return undefined for "Deceased"', function() {
       var fact = new FamilySearch.Fact({
         type: 'http://gedcomx.org/Death',
-        date: {
-          original: 'Deceased'
-        }
+        date: 'Deceased'
       });
 
       var year = util.getFactYear(fact);
@@ -195,6 +193,141 @@ describe('util', function(){
       expect(html).to.equal("<p>number one\nnumber two\nmissing </p>\n");
     });
 
+  });
+  
+  describe('#gensearchPerson()', function(){
+  
+    it('should return an object with just givenName', function(){
+      var person = new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Female',
+        names: [
+          new FamilySearch.Name({
+            givenName: 'Mary'
+          })
+        ]
+      });
+      var gensearch = util.gensearchPerson(person);
+      expect(gensearch).to.deep.equal({
+        givenName: 'Mary'
+      });
+    });
+    
+    it('should return an object with familyName', function(){
+      var person = new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Female',
+        names: [
+          new FamilySearch.Name({
+            surname: 'Adams'
+          })
+        ]
+      });
+      var gensearch = util.gensearchPerson(person);
+      expect(gensearch).to.deep.equal({
+        familyName: 'Adams'
+      });
+    });
+    
+    it('should return an object with birthDate', function(){
+      var person = new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Female',
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            date: 'January 1, 1900',
+            formalDate: '+1900-01-01',
+          })
+        ]
+      });
+      var gensearch = util.gensearchPerson(person);
+      expect(gensearch).to.deep.equal({
+        birthDate: '1900'
+      });
+    });
+    
+    it('should return an object with birthPlace', function(){
+      var person = new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Female',
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            place: 'Provo, Utah, Utah, United States'
+          })
+        ]
+      });
+      var gensearch = util.gensearchPerson(person);
+      expect(gensearch).to.deep.equal({
+        birthPlace: 'Provo, Utah, Utah, United States'
+      });
+    });
+    
+    it('should return an object with deathDate', function(){
+      var person = new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Female',
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Death',
+            date: 'January 1, 1900',
+            formalDate: '+1900-01-01',
+          })
+        ]
+      });
+      var gensearch = util.gensearchPerson(person);
+      expect(gensearch).to.deep.equal({
+        deathDate: '1900'
+      });
+    });
+    
+    it('should return an object with deathPlace', function(){
+      var person = new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Female',
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Death',
+            place: 'Provo, Utah, Utah, United States'
+          })
+        ]
+      });
+      var gensearch = util.gensearchPerson(person);
+      expect(gensearch).to.deep.equal({
+        deathPlace: 'Provo, Utah, Utah, United States'
+      });
+    });
+    
+    it('should return a gensearch object with name, birth, and death info', function(){
+      var person = new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Female',
+        names: [
+          new FamilySearch.Name({
+            givenName: 'Mary',
+            surname: 'Adams'
+          })
+        ],
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            date: 'January 1, 1900',
+            formalDate: '+1900-01-01',
+            place: 'Provo, Utah, United States'
+          }),
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Death',
+            date: 'January 1, 2000',
+            formalDate: '+2000-01-01',
+            place: 'Orem, Utah, United States'
+          })
+        ]
+      });
+      var gensearch = util.gensearchPerson(person);
+      expect(gensearch).to.deep.equal({
+        givenName: 'Mary',
+        familyName: 'Adams',
+        birthDate: '1900',
+        birthPlace: 'Provo, Utah, United States',
+        deathDate: '2000',
+        deathPlace: 'Orem, Utah, United States'
+      });
+    });
+  
   });
 
 });
