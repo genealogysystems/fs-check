@@ -24,6 +24,7 @@ describe('missingName', function(){
   
   it('should return an opportunity when there is no name', function(){
     var opportunity = fsCheck(new FamilySearch.Person());
+    doc('missingName', opportunity);
     expect(opportunity).to.exist;
     expect(opportunity.type).to.equal('person');
     expect(opportunity).to.have.property('title');
