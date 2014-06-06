@@ -106,6 +106,8 @@ To see what the opportunities look like, see [http://genealogysystems.github.io/
 * [Missing Death](lib/person/missing-death.js)
 * [Missing Death Date](lib/person/missing-death-date.js)
 * [Missing Death Place](lib/person/missing-death-place.js)
+* [Missing Given Name](lib/person/missing-given-name.js)
+* [Missing Name](lib/person/missing-name.js)
 
 ## Family
 
