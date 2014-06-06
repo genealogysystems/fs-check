@@ -157,6 +157,15 @@ describe('util', function(){
       expect(fn).to.not.throw(Error);
     });
     
+    it('should return the original year', function(){
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcoms.org/Death',
+        date: '1901'
+      });
+      var year = util.getFactYear(fact);
+      expect(year).to.equal('1901');
+    });
+    
     it('should return undefined for "Deceased"', function() {
       var fact = new FamilySearch.Fact({
         type: 'http://gedcomx.org/Death',
