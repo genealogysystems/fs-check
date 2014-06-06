@@ -19,7 +19,7 @@
     "build": "browserify lib/index.js -s FSCheck -o fs-check.js"
   },
   "dependencies": {
-    "gedcomx-date": "^0.2.1",
+    "gedcomx-date": "^0.2.2",
     "multiline": "^0.3.4",
     "marked": "^0.3.2",
     "mustache": "^0.8.1"

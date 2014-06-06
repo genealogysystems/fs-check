@@ -75,32 +75,6 @@ Unsuported for now. Waiting on [this issue](https://github.com/rootsdev/familyse
 A list of the opportunities that fs-check will search for.
 To see what the opportunities look like, see [http://genealogysystems.github.io/fs-check/](http://genealogysystems.github.io/fs-check/).
 
-## Problem
-
-* [Death before Birth](lib/person/death-before-birth.js)
-* [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js)
-* [Marriage with no Children](lib/relationships/marriage-with-no-children.js)
-
-## Cleanup
-
-* [Many Alternate Names](lib/person/many-alternate-names.js)
-* [Or In Name](lib/person/or-in-name.js)
-* [Unsusual Characters in Name](lib/person/unusual-characters-in-name.js)
-* [Missing Normalized Birth Date](lib/person/missing-birth-formal-date.js)
-* [Missing Normalized Birth Place](lib/person/missing-birth-normalized-place.js)
-* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js)
-* [Missing Normalized Marriage Date](lib/marriage/missing-marriage-formal-date.js)
-* [Missing Normalized Marriage Place](lib/marriage/missing-marriage-normalized-place.js)
-* [Missing Normalized Death Date](lib/person/missing-death-formal-date.js)
-* [Missing Normalized Death Place](lib/person/missing-death-normalized-place.js)
-* [Multiple Parents](lib/relationships/multiple-parents)
-
-## Source
-
-* [Missing Birth Source](lib/personSource/missing-birth-source.js)
-* [Missing Marriage Source](lib/marriageSource/missing-marriage-source.js)
-* [Missing Death Source](lib/personSource/missing-death-source.js)
-
 ## Person
 
 * [Missing Birth](lib/person/missing-birth.js)
@@ -121,6 +95,33 @@ To see what the opportunities look like, see [http://genealogysystems.github.io/
 * [Missing Marriage Fact](lib/marriage/missing-marriage-fact.js)
 * [Missing Marriage Date](lib/marriage/missing-marriage-date.js)
 * [Missing Marriage Place](lib/marriage/missing-marriage-place.js)
+
+## Source
+
+* [Missing Birth Source](lib/personSource/missing-birth-source.js)
+* [Missing Marriage Source](lib/marriageSource/missing-marriage-source.js)
+* [Missing Death Source](lib/personSource/missing-death-source.js)
+
+## Problem
+
+* [Death before Birth](lib/person/death-before-birth.js)
+* [Birth before Parents Birth](lib/parents/birth-before-parents-birth.js)
+* [Child Born Before Parent's Marriage](lib/relationships/child-before-parents-marriage.js)
+* [Marriage with no Children](lib/relationships/marriage-with-no-children.js)
+
+## Cleanup
+
+* [Many Alternate Names](lib/person/many-alternate-names.js)
+* [Or In Name](lib/person/or-in-name.js)
+* [Unsusual Characters in Name](lib/person/unusual-characters-in-name.js)
+* [Missing Normalized Birth Date](lib/person/missing-birth-formal-date.js)
+* [Missing Normalized Birth Place](lib/person/missing-birth-normalized-place.js)
+* [Multiple Marriage Facts](lib/marriage/multiple-marriage-facts.js)
+* [Missing Normalized Marriage Date](lib/marriage/missing-marriage-formal-date.js)
+* [Missing Normalized Marriage Place](lib/marriage/missing-marriage-normalized-place.js)
+* [Missing Normalized Death Date](lib/person/missing-death-formal-date.js)
+* [Missing Normalized Death Place](lib/person/missing-death-normalized-place.js)
+* [Multiple Parents](lib/relationships/multiple-parents)
 
 # Opportunity Schema
 ````javascript
