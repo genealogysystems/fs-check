@@ -109,6 +109,7 @@ To see what the opportunities look like, see [http://genealogysystems.github.io/
 * [Missing Given Name](lib/person/missing-given-name.js)
 * [Missing Name](lib/person/missing-name.js)
 * [Missing Surname](lib/person/missing-surname.js)
+* [Or In Name](lib/person/or-in-name.js)
 * [Unsusual Characters in Name](lib/person/unusual-characters-in-name.js)
 
 ## Family

@@ -3,17 +3,17 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'person','unusual-characters-in-name.js')),
+    fsCheck = require(path.join(libPath, 'person','or-in-name.js')),
     doc = require('../../docs/util.js');
 
-describe('unusualCharactersInName', function(){
+describe('orInName', function(){
 
   it('should return nothing when there is no name', function(){
     var opportunity = fsCheck(new FamilySearch.Person());
     expect(opportunity).to.not.exist;
   });
 
-  it('should return nothing when there is a name with no special characters', function(){
+  it('should return nothing when there is a name with no or', function(){
     var person = new FamilySearch.Person({
       gender: 'http://gedcomx.org/Female',
       names: [
@@ -26,33 +26,24 @@ describe('unusualCharactersInName', function(){
     expect(opportunity).to.not.exist;
   });
   
-  it('should return an opportunity when the preferred name has unusual characters', function(){
+  it('should return nothing when there is a name with or as a substring', function(){
     var person = new FamilySearch.Person({
+      gender: 'http://gedcomx.org/Female',
       names: [
         new FamilySearch.Name({
-          fullText: 'Joe?'
+          fullText: 'Theodore Adams'
         })
       ]
     });
-    person.id = 'PPPP-PPP';
     var opportunity = fsCheck(person);
-    doc('unusualCharactersInName', opportunity);
-    expect(opportunity).to.exist;
-    expect(opportunity.type).to.equal('cleanup');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity.description).to.contain('These characters are not normally found in names.');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.not.exist;
-    expect(opportunity.gensearch).to.not.exist;
+    expect(opportunity).to.not.exist;
   });
   
-  it('should return an opportunity that discusses alternate names', function(){
+  it('should return an opportunity when the preferred name has an or', function(){
     var opportunity = fsCheck(new FamilySearch.Person({
       names: [
         new FamilySearch.Name({
-          fullText: 'Joe (Joey)'
+          fullText: 'Joe or Joey'
         })
       ]
     }));
@@ -60,14 +51,14 @@ describe('unusualCharactersInName', function(){
     expect(opportunity.type).to.equal('cleanup');
     expect(opportunity).to.have.property('title');
     expect(opportunity).to.have.property('description');
-    expect(opportunity.description).to.contain('Remove the alternate annotations');
+    expect(opportunity.description).to.contain('preferred');
     expect(opportunity).to.have.property('person');
     expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
     expect(opportunity.findarecord).to.not.exist;
     expect(opportunity.gensearch).to.not.exist;
   });
   
-  it('should return nothing when the alternate names have no special characters', function(){
+  it('should return nothing when the alternate names have no or', function(){
     var opportunity = fsCheck(new FamilySearch.Person({
       names: [
         new FamilySearch.Name({
@@ -83,39 +74,42 @@ describe('unusualCharactersInName', function(){
     expect(opportunity).to.not.exist;
   });
   
-  it('should return an opportunity when the alternate names have special characters', function(){
-    var opportunity = fsCheck(new FamilySearch.Person({
+  it('should return an opportunity when the alternate names have an or', function(){
+    var person = new FamilySearch.Person({
       names: [
         new FamilySearch.Name({
           fullText: 'Joe',
           preferred: true
         }),
         new FamilySearch.Name({
-          fullText: 'Joey?',
+          fullText: 'Joey or Joseph',
           preferred: false
         })
       ]
-    }));
+    });
+    person.id = 'PPPP-PPP';
+    var opportunity = fsCheck(person);
+    doc('orInName', opportunity);
     expect(opportunity).to.exist;
     expect(opportunity.type).to.equal('cleanup');
     expect(opportunity).to.have.property('title');
     expect(opportunity).to.have.property('description');
-    expect(opportunity.description).to.contain('Update these names');
+    expect(opportunity.description).to.contain('These alternate names');
     expect(opportunity).to.have.property('person');
     expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
     expect(opportunity.findarecord).to.not.exist;
     expect(opportunity.gensearch).to.not.exist;
   });
   
-  it('should return an opportunity when the preferred and alternate names have special characters', function(){
+  it('should return an opportunity when the preferred and alternate names have an or', function(){
     var opportunity = fsCheck(new FamilySearch.Person({
       names: [
         new FamilySearch.Name({
-          fullText: 'Joe?',
+          fullText: 'Joe or Joseph',
           preferred: true
         }),
         new FamilySearch.Name({
-          fullText: 'Joey?',
+          fullText: 'Joey or Joe',
           preferred: false
         })
       ]
@@ -124,7 +118,7 @@ describe('unusualCharactersInName', function(){
     expect(opportunity.type).to.equal('cleanup');
     expect(opportunity).to.have.property('title');
     expect(opportunity).to.have.property('description');
-    expect(opportunity.description).to.contain('These characters are not normally found in names.');
+    expect(opportunity.description).to.contain('preferred');
     expect(opportunity).to.have.property('person');
     expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
     expect(opportunity.findarecord).to.not.exist;
