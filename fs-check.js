@@ -2006,8 +2006,8 @@ module.exports = function(person, relationships, persons) {
         badMarriage = false;
     
     // Collect all available formal marriage dates
-    for(var i = 0; i < marriageFacts.length; i++){
-      var fact = marriageFacts[i];
+    for(var j = 0; j < marriageFacts.length; j++){
+      var fact = marriageFacts[j];
       if(fact.type === 'http://gedcomx.org/Marriage'){
         var date = fact.$getFormalDate();
         if(date){
