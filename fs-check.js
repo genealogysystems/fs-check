@@ -52,7 +52,7 @@ module.exports = function(child, mother, father, childRelationship) {
   }
   
 }
-},{"../util.js":30}],2:[function(_dereq_,module,exports){
+},{"../util.js":35}],2:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(child, mother, father, childRelationship) {
@@ -106,11 +106,12 @@ module.exports = function(child, mother, father, childRelationship) {
   }
   
 }
-},{"../util.js":30}],3:[function(_dereq_,module,exports){
+},{"../util.js":35}],3:[function(_dereq_,module,exports){
 module.exports = {
   // function(Person)
   person: {
     deathBeforeBirth: _dereq_('./person/death-before-birth.js'),
+    manyAlternateNames: _dereq_('./person/many-alternate-names.js'),
     missingBirth: _dereq_('./person/missing-birth.js'),
     missingBirthDate: _dereq_('./person/missing-birth-date.js'),
     missingBirthFormalDate: _dereq_('./person/missing-birth-formal-date.js'),
@@ -122,7 +123,10 @@ module.exports = {
     missingDeathPlace: _dereq_('./person/missing-death-place.js'),
     missingDeathNormalizedPlace: _dereq_('./person/missing-death-normalized-place.js'),
     missingGivenName: _dereq_('./person/missing-given-name.js'),
-    missingName: _dereq_('./person/missing-name.js')
+    missingName: _dereq_('./person/missing-name.js'),
+    missingSurname: _dereq_('./person/missing-surname.js'),
+    orInName: _dereq_('./person/or-in-name.js'),
+    unusualCharactersInName: _dereq_('./person/unusual-characters-in-name.js')
   },
   // function(Person, SourceRefs)
   personSource: {
@@ -158,11 +162,12 @@ module.exports = {
   },
   // function(Person, Relationships, People)
   relationships: {
+    childBeforeMarriage: _dereq_('./relationships/child-before-parents-marriage.js'),
     marriageWithNoChildren: _dereq_('./relationships/marriage-with-no-children.js'),
     multipleParents: _dereq_('./relationships/multiple-parents.js')
   }
 }
-},{"./child/missing-father.js":1,"./child/missing-mother.js":2,"./marriage/missing-marriage-date.js":4,"./marriage/missing-marriage-fact.js":5,"./marriage/missing-marriage-formal-date.js":6,"./marriage/missing-marriage-normalized-place.js":7,"./marriage/missing-marriage-place.js":8,"./marriage/multiple-marriage-facts.js":9,"./marriageSource/missing-marriage-source.js":10,"./parents/birth-before-parents-birth.js":11,"./parents/missing-parents.js":12,"./person/death-before-birth.js":13,"./person/missing-birth-date.js":14,"./person/missing-birth-formal-date.js":15,"./person/missing-birth-normalized-place.js":16,"./person/missing-birth-place.js":17,"./person/missing-birth.js":18,"./person/missing-death-date.js":19,"./person/missing-death-formal-date.js":20,"./person/missing-death-normalized-place.js":21,"./person/missing-death-place.js":22,"./person/missing-death.js":23,"./person/missing-given-name.js":24,"./person/missing-name.js":25,"./personSource/missing-birth-source.js":26,"./personSource/missing-death-source.js":27,"./relationships/marriage-with-no-children.js":28,"./relationships/multiple-parents.js":29}],4:[function(_dereq_,module,exports){
+},{"./child/missing-father.js":1,"./child/missing-mother.js":2,"./marriage/missing-marriage-date.js":4,"./marriage/missing-marriage-fact.js":5,"./marriage/missing-marriage-formal-date.js":6,"./marriage/missing-marriage-normalized-place.js":7,"./marriage/missing-marriage-place.js":8,"./marriage/multiple-marriage-facts.js":9,"./marriageSource/missing-marriage-source.js":10,"./parents/birth-before-parents-birth.js":11,"./parents/missing-parents.js":12,"./person/death-before-birth.js":13,"./person/many-alternate-names.js":14,"./person/missing-birth-date.js":15,"./person/missing-birth-formal-date.js":16,"./person/missing-birth-normalized-place.js":17,"./person/missing-birth-place.js":18,"./person/missing-birth.js":19,"./person/missing-death-date.js":20,"./person/missing-death-formal-date.js":21,"./person/missing-death-normalized-place.js":22,"./person/missing-death-place.js":23,"./person/missing-death.js":24,"./person/missing-given-name.js":25,"./person/missing-name.js":26,"./person/missing-surname.js":27,"./person/or-in-name.js":28,"./person/unusual-characters-in-name.js":29,"./personSource/missing-birth-source.js":30,"./personSource/missing-death-source.js":31,"./relationships/child-before-parents-marriage.js":32,"./relationships/marriage-with-no-children.js":33,"./relationships/multiple-parents.js":34}],4:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -266,7 +271,7 @@ module.exports = function(wife, husband, marriage) {
   return opportunity;
 
 }
-},{"../util.js":30}],5:[function(_dereq_,module,exports){
+},{"../util.js":35}],5:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if there is a marriage but no marriage fact,
  * or there is 1 marriage fact with no date and place
@@ -343,7 +348,7 @@ module.exports = function(wife, husband, marriage) {
   return opportunity;
 
 }
-},{"../util.js":30}],6:[function(_dereq_,module,exports){
+},{"../util.js":35}],6:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -415,7 +420,7 @@ module.exports = function(wife, husband, marriage) {
     };
   }
 }
-},{"../util.js":30}],7:[function(_dereq_,module,exports){
+},{"../util.js":35}],7:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -487,7 +492,7 @@ module.exports = function(wife, husband, marriage) {
     };
   }
 }
-},{"../util.js":30}],8:[function(_dereq_,module,exports){
+},{"../util.js":35}],8:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -590,7 +595,7 @@ module.exports = function(wife, husband, marriage) {
   return opportunity;
 
 }
-},{"../util.js":30}],9:[function(_dereq_,module,exports){
+},{"../util.js":35}],9:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is more than one marriage fact
@@ -655,7 +660,7 @@ module.exports = function(wife, husband, marriage) {
   return opportunity;
 
 }
-},{"../util.js":30}],10:[function(_dereq_,module,exports){
+},{"../util.js":35}],10:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Marriage fact exists
@@ -770,7 +775,7 @@ module.exports = function(wife, husband, marriage, sourceRefs) {
   return opportunity;
 
 }
-},{"../util.js":30}],11:[function(_dereq_,module,exports){
+},{"../util.js":35}],11:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has a birth fact
@@ -847,7 +852,7 @@ module.exports = function(person, parents) {
 
   }
 }
-},{"../util.js":30}],12:[function(_dereq_,module,exports){
+},{"../util.js":35}],12:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(child, parents) {
@@ -895,7 +900,7 @@ module.exports = function(child, parents) {
   }
   
 }
-},{"../util.js":30}],13:[function(_dereq_,module,exports){
+},{"../util.js":35}],13:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -957,7 +962,53 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":30}],14:[function(_dereq_,module,exports){
+},{"../util.js":35}],14:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. There are 5 or more alternate names
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = function(person) {
+
+  var names = person.$getNames();
+
+  // Compare to 6 instead of 5 to allow for the preferred name
+  if(names && names.length >= 6) {
+
+    var alternates = [];
+    for(var i = 0; i < names.length; i++){
+      if(!names[i].preferred){
+        alternates.push(names[i].$getFullText());
+      }
+    }
+  
+    var descr = utils.markdown(function(){/*
+      When a person has many alternate names they are often duplicates, slight misspellings, or differ only in punctuation.
+      Consider deleting some of the alternate names that aren't necessary in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
+
+      {{#names}}
+      * {{.}}
+      {{/names}}
+      
+      ## Help
+  
+      * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
+      * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
+      * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)
+    */}, {pid: person.id, names: alternates});
+
+    return {
+      type: 'cleanup',
+      title: 'Many Alternate Names',
+      description: descr,
+      person: person,
+      findarecord: undefined,
+      gensearch: undefined
+    };
+  }
+}
+},{"../util.js":35}],15:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -1023,7 +1074,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":30}],15:[function(_dereq_,module,exports){
+},{"../util.js":35}],16:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -1068,7 +1119,7 @@ module.exports = function(person) {
     };
   }
 }
-},{"../util.js":30}],16:[function(_dereq_,module,exports){
+},{"../util.js":35}],17:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -1114,7 +1165,7 @@ module.exports = function(person) {
     };
   }
 }
-},{"../util.js":30}],17:[function(_dereq_,module,exports){
+},{"../util.js":35}],18:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -1179,7 +1230,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":30}],18:[function(_dereq_,module,exports){
+},{"../util.js":35}],19:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no birth fact OR place and date are both undefined
@@ -1232,7 +1283,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":30}],19:[function(_dereq_,module,exports){
+},{"../util.js":35}],20:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1295,7 +1346,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":30}],20:[function(_dereq_,module,exports){
+},{"../util.js":35}],21:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1341,7 +1392,7 @@ module.exports = function(person) {
     };
   }
 }
-},{"../util.js":30}],21:[function(_dereq_,module,exports){
+},{"../util.js":35}],22:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1387,7 +1438,7 @@ module.exports = function(person) {
     };
   }
 }
-},{"../util.js":30}],22:[function(_dereq_,module,exports){
+},{"../util.js":35}],23:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1449,7 +1500,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":30}],23:[function(_dereq_,module,exports){
+},{"../util.js":35}],24:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no death fact OR place and date are both undefined
@@ -1503,7 +1554,7 @@ module.exports = function(person) {
   return opportunity;
 
 }
-},{"../util.js":30}],24:[function(_dereq_,module,exports){
+},{"../util.js":35}],25:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a given name but has a surname
@@ -1521,11 +1572,17 @@ module.exports = function(person) {
       This person is missing a given name. It's possible that the name is known but not filled in.
       Check to see if the given name appears in the list of alternate names or in any of the attached records.
       It is possible that the person never had a given name, such as a child that died at birth.
+      
+      ## Help
+  
+      * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
+      * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
+      * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)  
     */});
 
     return {
       type: 'person',
-      title: 'Missing the Given Name',
+      title: 'Missing a Given Name',
       description: descr,
       person: person,
       findarecord: undefined,
@@ -1533,7 +1590,7 @@ module.exports = function(person) {
     };
   }
 }
-},{"../util.js":30}],25:[function(_dereq_,module,exports){
+},{"../util.js":35}],26:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no name
@@ -1551,6 +1608,9 @@ module.exports = function(person) {
 
       ## Help
   
+      * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
+      * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
+      * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)
       * [Deleting a person from Family Tree](https://familysearch.org/ask/productSupport#/Deleting-a-Person-from-the-System)
     */});
 
@@ -1564,7 +1624,234 @@ module.exports = function(person) {
     };
   }
 }
-},{"../util.js":30}],26:[function(_dereq_,module,exports){
+},{"../util.js":35}],27:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. The preferred name does not have a surname but does have a given name
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = function(person) {
+
+  var givenName = person.$getGivenName(),
+      surname = person.$getSurname();
+
+  if(givenName && (surname === undefined || surname === '')) {
+
+    var descr = utils.markdown(function(){/*
+      This person is missing a surname. It's possible that the surname is known but not filled in.
+      Check to see if the surname appears in the list of alternate names or in any of the attached records.
+      In most areas of the world, the surname can be inferred if the names of the parents are known.
+      
+      ## Help
+  
+      * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
+      * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
+      * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)  
+    */});
+
+    return {
+      type: 'person',
+      title: 'Missing a Surname',
+      description: descr,
+      person: person,
+      findarecord: undefined,
+      gensearch: utils.gensearchPerson(person)
+    };
+  }
+}
+},{"../util.js":35}],28:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. The person's preferred name has an "or" in it (Joe or Joey Adams)
+ *  2. The person's preferred name doesn't have an or but an alternate name does
+ */
+var utils = _dereq_('../util.js'),
+    regex = / or /;
+
+// TODO: suggest what the new preferred name and alternate names should be
+//       this can easily be done by examining the given name and surname separately
+    
+module.exports = function(person) {
+
+  var descr,
+      name = person.$getPreferredName(),
+      nameText = name && name.$getFullText() ? name.$getFullText() : '',
+      nameMatches = nameText.match(regex);
+
+  if(nameMatches) {
+
+    descr = utils.markdown(function(){/*
+      This person's name has an "or" in it which is incorrectly used to document alternate given names or alternate surnames.
+      It is better to add the alternate form as a separate name altogether.
+      In the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}), add the alternate form as an
+      alternate name then remove it from the person's preferred name.
+      
+      ## Help
+  
+      * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
+      * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
+      * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)      
+    */}, { pid: person.id });
+  } 
+  
+  // If the preferred name doesn't have any unusual characters
+  // then examine the alternate names
+  else if(person.$getNames().length > 1){
+    
+    var names = person.$getNames(),
+        badNames = [];
+        
+    for(var i = 0; i < names.length; i++){
+      
+      var name = names[i],
+          fullText = name.$getFullText();
+      
+      // Skip the preferred name
+      if(name.preferred) continue;
+
+      if(fullText && fullText.match(regex) !== null){
+        badNames.push(fullText);
+      }
+    }
+    
+    if(badNames.length > 0){
+      descr = utils.markdown(function(){/*
+        These alternate names have an "or" in it which is often incorrectly used to document alternate given names or alternate surnames.
+        It is better to add the alternate form as a separate alternate name instead.
+        In the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}), add the alternate form as
+        another alternate name and remove it from the original alternate name.
+        
+        {{#badNames}}
+        * {{.}}
+        {{/badNames}}
+        
+        ## Help
+    
+        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
+        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
+        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)      
+      */}, {
+        badNames: badNames,
+        pid: person.id
+      });
+    }
+  }
+  
+  if(descr){
+    return {
+      type: 'cleanup',
+      title: 'Incorrect Alternate Name Format',
+      description: descr,
+      person: person,
+      findarecord: undefined,
+      gensearch: undefined
+    };
+  }
+}
+},{"../util.js":35}],29:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. There are unusual characters in the preferred name
+ *  2. There are no unusual characters in the preferred name but there are unusual characters in an alternate name
+ */
+var utils = _dereq_('../util.js'),
+    badChars = /[\{\}\[\]\(\)\<\>\!\@\#\$\%\^\&\*\+\=\/\|\\\?\_]/g;
+
+// TODO: suggest what the new preferred name and alternate names should be
+//       this can easily be done by examining the given name and surname separately
+    
+module.exports = function(person) {
+
+  var name = person.$getPreferredName(),
+      nameText = name && name.$getFullText() ? name.$getFullText() : '',
+      nameMatches = nameText.match(badChars);
+
+  if(nameMatches) {
+
+    var descr = utils.markdown(function(){/*
+      This person has the following unusual characters in their name: {{chars}}.
+      {{#brackets}}
+      These characters are often used to annotate an alternate given name or surname, but this is better done by adding an alternate name.
+      Remove the alternate annotations from the preferred name and add them as alternate names.
+      {{/brackets}}
+      {{^brackets}}      
+      These characters are not normally found in names. Update the person's name in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to remove the unusual characters.
+      {{/brackets}}      
+      
+      ## Help
+  
+      * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
+      * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
+      * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)      
+    */}, {
+      chars: '`' + nameMatches.join('`, `') + '`',
+      pid: person.id,
+      brackets: nameText.match(/(\([^\)]*\))|(\{[^\}]*\})|(\[[^\]]*\])|(\<[^\>]*\>)/) !== null
+    });
+
+    return {
+      type: 'cleanup',
+      title: 'Unusual Characters in a Name',
+      description: descr,
+      person: person,
+      findarecord: undefined,
+      gensearch: undefined
+    };
+  } 
+  
+  // If the preferred name doesn't have any unusual characters
+  // then examine the alternate names
+  else if(person.$getNames().length > 1){
+    
+    var names = person.$getNames(),
+        badNames = [];
+        
+    for(var i = 0; i < names.length; i++){
+      
+      var name = names[i],
+          fullText = name.$getFullText();
+      
+      // Skip the preferred name
+      if(name.preferred) continue;
+
+      if(fullText && fullText.match(badChars) !== null){
+        badNames.push(fullText);
+      }
+    }
+    
+    if(badNames.length > 0){
+      var descr = utils.markdown(function(){/*
+        These alternate names have characters which normally do not appear in names:
+        
+        {{#badNames}}
+        * {{.}}
+        {{/badNames}}
+        
+        Update these names in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to remove the unusual characters.   
+        
+        ## Help
+    
+        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
+        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
+        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)      
+      */}, {
+        badNames: badNames,
+        pid: person.id
+      });
+
+      return {
+        type: 'cleanup',
+        title: 'Unusual Characters in a Name',
+        description: descr,
+        person: person,
+        findarecord: undefined,
+        gensearch: undefined
+      };
+    }
+  }
+}
+},{"../util.js":35}],30:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person, sourceRefs) {
@@ -1627,7 +1914,7 @@ module.exports = function(person, sourceRefs) {
   }
   
 }
-},{"../util.js":30}],27:[function(_dereq_,module,exports){
+},{"../util.js":35}],31:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = function(person, sourceRefs) {
@@ -1690,7 +1977,150 @@ module.exports = function(person, sourceRefs) {
   }
   
 }
-},{"../util.js":30}],28:[function(_dereq_,module,exports){
+},{"../util.js":35}],32:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  - The person has a marriage with children where at least one of the children
+ *    was born before the marriage.
+ */
+var utils = _dereq_('../util.js'),
+    GedcomXDate = _dereq_('gedcomx-date');
+
+module.exports = function(person, relationships, persons) {
+
+  var marriages = relationships.getSpouseRelationships(),
+      badMarriages = [];
+  
+  // Short-circuit if there are no marriages
+  if(marriages.length === 0){
+    return;
+  }
+  
+  // For each marriage that has a marriage date,
+  // look to see if the children were born before the marriage
+  for(var i = 0; i < marriages.length; i++){
+    
+    var marriage = marriages[i],
+        marriageFacts = marriage.$getFacts(),
+        marriageDates = [],
+        badMarriage = false;
+    
+    // Collect all available formal marriage dates
+    for(var i = 0; i < marriageFacts.length; i++){
+      var fact = marriageFacts[i];
+      if(fact.type === 'http://gedcomx.org/Marriage'){
+        var date = fact.$getFormalDate();
+        if(date){
+          marriageDates.push(date);
+        }
+      }
+    }
+    
+    // Sort the marriage dates to find the earliest one
+    marriageDates.sort(compareDates);
+    
+    if(marriageDates.length === 0){
+      continue;
+    }
+    
+    var marriageDate = marriageDates[0];
+    
+    // Get a list of children in this marriage
+    var children = relationships.getChildRelationshipsOf(marriage.$getSpouseId(person.id));
+    
+    // Short circuit if there are no children in this marriage
+    if(children.length === 0){
+      continue;
+    }
+    
+    // For each child in this marriage, check to see if they
+    // have a birth date and if it's before the marriage date
+    for(var i = 0; i < children.length && !badMarriage; i++){
+    
+      var rel = children[i],
+          childId = rel.$getChildId(),
+          child;
+    
+      for(var i = 0; i < persons.length; i++){
+        if(persons[i].id === childId){
+          child = persons[i];
+        }
+      }
+      
+      // Short-circuit if we can't find the child. This should never happen.
+      if(!child){
+        continue;
+      }
+      
+      var birth = child.$getBirth();
+      
+      // Short-circuit if the child has no birth fact
+      if(!birth){
+        continue;
+      }
+      
+      var birthDate = birth.$getFormalDate();
+      
+      // Short-circuit if the birth fact doesn't have a formal date
+      if(!birthDate){
+        continue;
+      }
+      
+      if(compareDates(marriageDate, birthDate) === 1){
+        badMarriage = true;
+        badMarriages.push(marriage);
+      }
+    }
+  }
+
+  if(badMarriages.length > 0) {
+  
+    var spouses = [];
+    for(var i = 0; i < badMarriages.length; i++){
+      var spouseId = marriage.$getSpouseId(person.id);
+      for(var i = 0; i < persons.length; i++){
+        if(persons[i].id === spouseId){
+          spouses.push(persons[i].display.name);
+        }
+      }
+    }
+
+    var descr = utils.markdown(function(){/*
+        It is abnormal for a child to be born before a couple is married. Check the marriages  with the
+        following people to verify that the marriage date and children's birth dates are correct.
+        
+        {{#spouses}}
+        * {{.}}
+        {{/spouses}}
+
+        ## Help
+    
+        * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
+      */}, {
+        pid:  person.id,
+        spouses: spouses
+      });
+
+    return opportunity = {
+      type: 'problem',
+      title: 'Child Born Before Marriage',
+      description: descr,
+      person: person,
+      findarecord: undefined,
+      gensearch: undefined
+    };
+  }
+}
+
+function compareDates(date1, date2){
+  try {
+    GedcomXDate.getDuration(new GedcomXDate(date1), new GedcomXDate(date2));
+    return -1;
+  } catch(e) {
+    return 1;
+  }
+};
+},{"../util.js":35,"gedcomx-date":42}],33:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has one or more marriages
@@ -1730,7 +2160,7 @@ module.exports = function(person, relationships, people) {
 
   }
 }
-},{"../util.js":30}],29:[function(_dereq_,module,exports){
+},{"../util.js":35}],34:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has more than one parent relationship
@@ -1766,7 +2196,7 @@ module.exports = function(person, relationships, people) {
   return opportunity;
 
 }
-},{"../util.js":30}],30:[function(_dereq_,module,exports){
+},{"../util.js":35}],35:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date'),
     multiline = _dereq_('multiline'),
     marked = _dereq_('marked'),
@@ -1885,7 +2315,7 @@ function gensearchPerson(person){
   
   return gensearch;
 }
-},{"gedcomx-date":37,"marked":43,"multiline":44,"mustache":46}],31:[function(_dereq_,module,exports){
+},{"gedcomx-date":42,"marked":48,"multiline":49,"mustache":51}],36:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -1910,7 +2340,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],32:[function(_dereq_,module,exports){
+},{}],37:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -1975,14 +2405,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],33:[function(_dereq_,module,exports){
+},{}],38:[function(_dereq_,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],34:[function(_dereq_,module,exports){
+},{}],39:[function(_dereq_,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -2572,7 +3002,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,_dereq_("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":33,"FWaASH":32,"inherits":31}],35:[function(_dereq_,module,exports){
+},{"./support/isBuffer":38,"FWaASH":37,"inherits":36}],40:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     Simple = _dereq_('./simple.js');
 
@@ -2614,7 +3044,7 @@ Approximate.prototype.toFormalString = function() {
 }
 
 module.exports = Approximate;
-},{"./simple.js":40,"util":34}],36:[function(_dereq_,module,exports){
+},{"./simple.js":45,"util":39}],41:[function(_dereq_,module,exports){
 /**
  * A gedcomX Duration
  */
@@ -2871,7 +3301,7 @@ Duration.prototype.toFormalString = function() {
 }
 
 module.exports = Duration;
-},{}],37:[function(_dereq_,module,exports){
+},{}],42:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -2904,7 +3334,7 @@ function GedcomXDate(str) {
 /**
  * The version of this library.
  */
-GedcomXDate.version = '0.2.1';
+GedcomXDate.version = '0.2.2';
 
 /**
  * Expose addDuration.
@@ -2927,7 +3357,7 @@ GedcomXDate.getDuration = GedUtil.getDuration;
 GedcomXDate.daysInMonth = GedUtil.daysInMonth;
 
 module.exports = GedcomXDate;
-},{"./approximate.js":35,"./duration.js":36,"./range.js":38,"./recurring.js":39,"./simple.js":40,"./util.js":42}],38:[function(_dereq_,module,exports){
+},{"./approximate.js":40,"./duration.js":41,"./range.js":43,"./recurring.js":44,"./simple.js":45,"./util.js":47}],43:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -3052,7 +3482,7 @@ Range.prototype.toFormalString = function() {
 }
 
 module.exports = Range;
-},{"./approximate.js":35,"./duration.js":36,"./simple.js":40,"./util.js":42}],39:[function(_dereq_,module,exports){
+},{"./approximate.js":40,"./duration.js":41,"./simple.js":45,"./util.js":47}],44:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     GedUtil = _dereq_('./util.js'),
     Range = _dereq_('./range.js');
@@ -3138,7 +3568,7 @@ Recurring.prototype.toFormalString = function() {
 }
 
 module.exports = Recurring;
-},{"./range.js":38,"./util.js":42,"util":34}],40:[function(_dereq_,module,exports){
+},{"./range.js":43,"./util.js":47,"util":39}],45:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js');
 /**
  * The simplest representation of a date.
@@ -3550,7 +3980,7 @@ Simple.prototype.toFormalString = function() {
 }
 
 module.exports = Simple;
-},{"./util-global.js":41}],41:[function(_dereq_,module,exports){
+},{"./util-global.js":46}],46:[function(_dereq_,module,exports){
 module.exports = {
   daysInMonth: daysInMonth
 }
@@ -3594,7 +4024,7 @@ function daysInMonth(month, year) {
       throw new Error('Unknown Month');
   }
 }
-},{}],42:[function(_dereq_,module,exports){
+},{}],47:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js'),
     Duration = _dereq_('./duration.js'),
     Simple = _dereq_('./simple.js'),
@@ -3871,7 +4301,7 @@ function getDuration(startDate, endDate) {
     duration = ('0000'+(end.year-start.year)).substr(-4,4)+'Y'+duration;
   }
 
-  if(duration == '') {
+  if(end.year-start.year < 0 || duration == '') {
     throw new Error('Start Date must be less than End Date');
   }
 
@@ -4008,7 +4438,7 @@ function getObjFromDate(date, adjustTimezone) {
   }
   return obj;
 }
-},{"./approximate.js":35,"./duration.js":36,"./simple.js":40,"./util-global.js":41}],43:[function(_dereq_,module,exports){
+},{"./approximate.js":40,"./duration.js":41,"./simple.js":45,"./util-global.js":46}],48:[function(_dereq_,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -5278,7 +5708,7 @@ if (typeof exports === 'object') {
 }());
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],44:[function(_dereq_,module,exports){
+},{}],49:[function(_dereq_,module,exports){
 'use strict';
 var stripIndent = _dereq_('strip-indent');
 
@@ -5304,7 +5734,7 @@ multiline.stripIndent = function (fn) {
 	return stripIndent(multiline(fn));
 };
 
-},{"strip-indent":45}],45:[function(_dereq_,module,exports){
+},{"strip-indent":50}],50:[function(_dereq_,module,exports){
 'use strict';
 module.exports = function (str) {
 	var match = str.match(/^[ \t]*(?=[^\s])/gm);
@@ -5319,7 +5749,7 @@ module.exports = function (str) {
 	return indent > 0 ? str.replace(re, '') : str;
 };
 
-},{}],46:[function(_dereq_,module,exports){
+},{}],51:[function(_dereq_,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
