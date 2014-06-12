@@ -1,4 +1,3 @@
-/*
 var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
     path = require('path'),
     fs = require('fs'),
@@ -7,12 +6,41 @@ var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
 
 describe('FSCheck', function(){
 
-  it('should have proper properties', function(){
-    expect(FSCheck).to.have.property('person');
-    expect(FSCheck).to.have.property('personSource');
-    expect(FSCheck).to.have.property('marriage');
-    expect(FSCheck).to.have.property('marriageSource');
+  it('should expose three functions', function(){
+    expect(Object.keys(FSCheck)).to.have.length(3);
+    expect(FSCheck).to.have.property('id');
+    expect(FSCheck).to.have.property('signature');
+    expect(FSCheck).to.have.property('type');
+  });
+  
+  describe('FSCheck.id', function(){
+  
+    it('should return the correct check', function(){
+      var check = FSCheck.id('birthBeforeParentsBirth');
+      expect(check.id).to.equal('birthBeforeParentsBirth');
+      expect(check.title).to.equal('Person Born Before their Parent(s)');
+      expect(check.type).to.equal('problem');
+      expect(check.signature).to.equal('parents');
+    });
+  
+  });
+  
+  describe('FSCheck.signature', function(){
+    
+    it('should return correct number of parents checks', function(){
+      var checks = FSCheck.signature('parents');
+      expect(checks).to.have.length(1);
+    });
+    
+  });
+  
+  describe('FSCheck.type', function(){
+  
+    it('should return correct number of problem checks', function(){
+      var checks = FSCheck.type('problem');
+      expect(checks).to.have.length(1);
+    });
+  
   });
 
 });
-*/
