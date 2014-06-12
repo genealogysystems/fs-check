@@ -1,3 +1,4 @@
+/*
 var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
     path = require('path'),
     fs = require('fs'),
@@ -14,3 +15,4 @@ describe('FSCheck', function(){
   });
 
 });
+*/
