@@ -3,7 +3,7 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks', 'birth-before-parents-birth.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('birthBeforeParentsBirth'),
     doc = require('../../docs/util.js');
 
 describe('birthBeforeParentsBirth', function(){
