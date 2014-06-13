@@ -4,7 +4,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
     fsCheck = require(path.join(libPath, 'index.js')).id('birthBeforeParentsBirth'),
-    doc = require('../../docs/util.js');
+    doc = require('../../docs/util.js'),
+    utils = require('../test-utils.js');
 
 describe('birthBeforeParentsBirth', function(){
 
@@ -14,9 +15,7 @@ describe('birthBeforeParentsBirth', function(){
       names: [],
       facts: []
     });
-
     var opportunity = fsCheck.check(person, []);
-
     expect(opportunity).to.equal(undefined);
   });
 
@@ -31,9 +30,7 @@ describe('birthBeforeParentsBirth', function(){
         })
       ]
     });
-
     var opportunity = fsCheck.check(person, []);
-
     expect(opportunity).to.equal(undefined);
   });
 
@@ -50,9 +47,7 @@ describe('birthBeforeParentsBirth', function(){
         })
       ]
     });
-
     var opportunity = fsCheck.check(person, []);
-
     expect(opportunity).to.equal(undefined);
   });
 
@@ -69,7 +64,6 @@ describe('birthBeforeParentsBirth', function(){
         })
       ]
     });
-
     var parents = [
       new FamilySearch.Person({
         gender: 'http://gedcomx.org/Female',
@@ -84,9 +78,7 @@ describe('birthBeforeParentsBirth', function(){
         ]
       })
     ];
-
     var opportunity = fsCheck.check(person, parents);
-
     expect(opportunity).to.equal(undefined);
   });
 
@@ -140,9 +132,7 @@ describe('birthBeforeParentsBirth', function(){
         ]
       })
     ];
-
     var opportunity = fsCheck.check(person, parents);
-
     expect(opportunity).to.equal(undefined);
   });
 
@@ -161,7 +151,6 @@ describe('birthBeforeParentsBirth', function(){
     });
     person.id = 'XXX-123';
     person.display = {name: 'Thing One',birthDate: 'January 1, 1820'}
-
     var parents = [
       new FamilySearch.Person({
         gender: 'http://gedcomx.org/Female',
@@ -202,19 +191,13 @@ describe('birthBeforeParentsBirth', function(){
     parents[0].display = {name: 'Thelma Louise', birthDate: 'January 1, 1900'}
     parents[1].id = 'XXX-789';
     parents[1].display = {name: 'Bob Freemer', birthDate: 'January 1, 1895'}
-
-
+    
     var opportunity = fsCheck.check(person, parents);
-
     doc('birthBeforeParentsBirth', opportunity);
-
+    utils.validateOpportunitySchema(opportunity);
+    expect(opportunity.id).to.match(/^birthBeforeParentsBirth:/);
     expect(opportunity.type).to.equal('problem');
     expect(opportunity.title).to.equal('Person Born Before their Parent(s)');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity.gensearch).to.equal(undefined);
   });
 
 });
