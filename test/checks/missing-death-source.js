@@ -1,6 +1,5 @@
 var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     path = require('path'),
-    fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
     fsCheck = require(path.join(libPath, 'index.js')).id('missingDeathSource'),
