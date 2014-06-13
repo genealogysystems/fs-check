@@ -3,8 +3,9 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks', 'child-before-parents-marriage.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('childBeforeMarriage'),
     doc = require('../../docs/util.js'),
+    utils = require('../test-utils.js'),
     GedcomXDate = require('gedcomx-date');
 
 describe('childBeforeMarriage', function(){
@@ -13,7 +14,7 @@ describe('childBeforeMarriage', function(){
     var relationships = {
       getSpouseRelationships: function(){ return [] }
     };
-    var opportunity = fsCheck(new FamilySearch.Person(), relationships, []);
+    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, []);
     expect(opportunity).to.not.exist;
   });
   
@@ -25,7 +26,7 @@ describe('childBeforeMarriage', function(){
         ]
       }
     };
-    var opportunity = fsCheck(new FamilySearch.Person(), relationships, []);
+    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, []);
     expect(opportunity).to.not.exist;
   });
   
@@ -45,7 +46,7 @@ describe('childBeforeMarriage', function(){
       },
       getChildRelationshipsOf: function(){ return []; }
     };
-    var opportunity = fsCheck(new FamilySearch.Person(), relationships, []);
+    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, []);
     expect(opportunity).to.not.exist;
   });
   
@@ -75,7 +76,7 @@ describe('childBeforeMarriage', function(){
         ]; 
       }
     };
-    var opportunity = fsCheck(new FamilySearch.Person(), relationships, persons);
+    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
     expect(opportunity).to.not.exist;
   });
   
@@ -112,7 +113,7 @@ describe('childBeforeMarriage', function(){
         ]; 
       }
     };
-    var opportunity = fsCheck(new FamilySearch.Person(), relationships, persons);
+    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
     expect(opportunity).to.not.exist;
   });
   
@@ -149,7 +150,7 @@ describe('childBeforeMarriage', function(){
         ]; 
       }
     };
-    var opportunity = fsCheck(new FamilySearch.Person(), relationships, persons);
+    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
     expect(opportunity).to.not.exist;
   });
   
@@ -176,7 +177,7 @@ describe('childBeforeMarriage', function(){
         ]; 
       }
     };
-    var opportunity = fsCheck(new FamilySearch.Person(), relationships, persons);
+    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
     expect(opportunity).to.not.exist;
   });
 
@@ -218,17 +219,10 @@ describe('childBeforeMarriage', function(){
         ]; 
       }
     };
-    var opportunity = fsCheck(new FamilySearch.Person(), relationships, persons);
+    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
     doc('childBeforeMarriage', opportunity);
-    expect(opportunity).to.exist;
-    expect(opportunity.type).to.equal('problem');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
+    utils.validateSchema(opportunity, 'childBeforeMarriage', 'problem', 'Child Born Before Marriage');
     expect(opportunity.description).to.contain('Mary Adams');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity.gensearch).to.equal(undefined);
   });
 
 });

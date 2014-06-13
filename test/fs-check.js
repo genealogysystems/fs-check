@@ -27,6 +27,9 @@ describe('FSCheck', function(){
   
   describe('FSCheck.signature', function(){
     
+    // TODO validate signature of check functions
+    //      to make sure they have the correct arguments
+    
     it('should return correct number of parents checks', function(){
       var checks = FSCheck.signature('parents');
       expect(checks).to.have.length(1);

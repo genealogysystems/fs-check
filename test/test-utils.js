@@ -3,10 +3,14 @@ var expect = require('chai').expect,
 
 module.exports = {
 
-  validateOpportunitySchema: function(opportunity, findarecord, gensearch){
+  validateSchema: function(opportunity, id, type, title, findarecord, gensearch){
+    expect(opportunity).to.exist;
     expect(opportunity).to.have.property('id');
+    expect(opportunity.id).to.match(new RegExp('^' + id + ':'));
     expect(opportunity).to.have.property('type');
+    expect(opportunity.type).to.equal(type);
     expect(opportunity).to.have.property('title');
+    expect(opportunity.title).to.equal(title);
     expect(opportunity).to.have.property('description');
     expect(opportunity).to.have.property('person');
     expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
