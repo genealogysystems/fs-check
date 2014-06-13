@@ -221,7 +221,11 @@ describe('childBeforeMarriage', function(){
     };
     var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
     doc('childBeforeMarriage', opportunity);
-    utils.validateSchema(opportunity, 'childBeforeMarriage', 'problem', 'Child Born Before Marriage');
+    utils.validateSchema(opportunity, {
+      id: 'childBeforeMarriage', 
+      type: 'problem', 
+      title: 'Child Born Before Marriage'
+    });
     expect(opportunity.description).to.contain('Mary Adams');
   });
 

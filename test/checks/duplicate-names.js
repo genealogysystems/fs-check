@@ -3,13 +3,14 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks','duplicate-names.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('duplicateNames'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('duplicateNames', function(){
 
   it('should return nothing when there is no name', function(){
-    var opportunity = fsCheck(new FamilySearch.Person());
+    var opportunity = fsCheck.check(new FamilySearch.Person());
     expect(opportunity).to.not.exist;
   });
   
@@ -30,7 +31,7 @@ describe('duplicateNames', function(){
         })
       ]
     });
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
     expect(opportunity).to.not.exist;
   });
   
@@ -51,16 +52,13 @@ describe('duplicateNames', function(){
         })
       ]
     });
-    var opportunity = fsCheck(person);
-    expect(opportunity).to.exist;
-    expect(opportunity.type).to.equal('cleanup');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
+    var opportunity = fsCheck.check(person);
+    utils.validateSchema(opportunity, {
+      id: 'duplicateNames',
+      type: 'cleanup',
+      title: 'Duplicate Names'
+    });
     expect(opportunity.description.match(/<ul>/g).length).to.equal(2);
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.not.exist;
-    expect(opportunity.gensearch).to.not.exist;
   });
   
   it('should return an opportunity with multiple groups when there are multiple duplicates', function(){
@@ -85,7 +83,7 @@ describe('duplicateNames', function(){
       ]
     });
     person.id = 'PPPP-PPP';
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
     doc('duplicateNames', opportunity);
     expect(opportunity).to.exist;
     expect(opportunity.type).to.equal('cleanup');

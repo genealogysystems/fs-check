@@ -208,7 +208,11 @@ describe('deathBeforeBirth', function(){
     var opportunity = fsCheck.check(person);
 
     doc('deathBeforeBirth', opportunity);
-    utils.validateSchema(opportunity, 'deathBeforeBirth', 'problem', 'Person Died Before They Were Born');
+    utils.validateSchema(opportunity, {
+      id: 'deathBeforeBirth', 
+      type: 'problem', 
+      title: 'Person Died Before They Were Born'
+    });
   });
 
 });

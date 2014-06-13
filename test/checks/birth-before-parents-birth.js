@@ -194,7 +194,11 @@ describe('birthBeforeParentsBirth', function(){
     
     var opportunity = fsCheck.check(person, parents);
     doc('birthBeforeParentsBirth', opportunity);
-    utils.validateSchema(opportunity, 'birthBeforeParentsBirth', 'problem', 'Person Born Before their Parent(s)');
+    utils.validateSchema(opportunity, {
+      id: 'birthBeforeParentsBirth', 
+      type: 'problem',
+      title: 'Person Born Before their Parent(s)'
+    });
   });
 
 });

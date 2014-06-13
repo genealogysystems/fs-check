@@ -6,6 +6,8 @@ var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
 
 describe('FSCheck', function(){
 
+  // TODO validate schema of all checks
+
   it('should expose three functions', function(){
     expect(Object.keys(FSCheck)).to.have.length(3);
     expect(FSCheck).to.have.property('id');
