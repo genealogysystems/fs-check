@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks','missing-death.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('missingDeath'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('missingDeath', function(){
@@ -22,7 +23,7 @@ describe('missingDeath', function(){
       ]
     });
 
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -39,7 +40,7 @@ describe('missingDeath', function(){
       facts: []
     });
 
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
 
     expect(opportunity.type).to.equal('person');
     expect(opportunity).to.have.property('title');
@@ -63,35 +64,6 @@ describe('missingDeath', function(){
       ],
       facts: [
         new FamilySearch.Fact({
-          type: 'http://gedcomx.org/Death'
-        })
-      ]
-    });
-
-    var opportunity = fsCheck(person);
-
-    expect(opportunity.type).to.equal('person');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity).to.have.property('gensearch');
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
-  });
-
-  it('should return an opportunity including birth info', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Male',
-      names: [
-        new FamilySearch.Name({
-          givenName: 'Bob',
-          surname: 'Freemer'
-        })
-      ],
-      facts: [
-        new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
           date: 'January 1, 1900',
           formalDate: '+1900-01-01',
@@ -102,21 +74,10 @@ describe('missingDeath', function(){
     
     person.id = 'PPPP-PPP';
 
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
 
     doc('missingDeath', opportunity);
-
-    expect(opportunity.type).to.equal('person');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity).to.have.property('gensearch');
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
-    expect(opportunity.gensearch.birthPlace).to.equal('Provo, Utah, United States of America');
-    expect(opportunity.gensearch.birthDate).to.equal('1900');
+    utils.validateSchema(fsCheck, opportunity, false, true);
   });
 
 });

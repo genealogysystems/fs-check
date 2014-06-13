@@ -1,9 +1,9 @@
 var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     path = require('path'),
-    fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks','missing-death-normalized-place.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('missingDeathFormalPlace'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('missingDeathFormalPlace', function(){
@@ -15,7 +15,7 @@ describe('missingDeathFormalPlace', function(){
       facts: []
     });
 
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -32,7 +32,7 @@ describe('missingDeathFormalPlace', function(){
       ]
     });
 
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -51,7 +51,7 @@ describe('missingDeathFormalPlace', function(){
       ]
     });
 
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -71,17 +71,10 @@ describe('missingDeathFormalPlace', function(){
     
     person.id = 'PPPP-PPP';
 
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
 
     doc('missingDeathFormalPlace', opportunity);
-
-    expect(opportunity.type).to.equal('cleanup');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity.gensearch).to.equal(undefined);
+    utils.validateSchema(fsCheck, opportunity);
   });
 
 });

@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks','missing-death-source.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('missingDeathSource'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('missingDeathSource', function(){
@@ -19,7 +20,7 @@ describe('missingDeathSource', function(){
       getSourceRefs: function() {return [];}
     };
 
-    var opportunity = fsCheck(person, sourceRefs);
+    var opportunity = fsCheck.check(person, sourceRefs);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -42,7 +43,7 @@ describe('missingDeathSource', function(){
       }
     };
 
-    var opportunity = fsCheck(person, sourceRefs);
+    var opportunity = fsCheck.check(person, sourceRefs);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -65,7 +66,7 @@ describe('missingDeathSource', function(){
       }
     };
 
-    var opportunity = fsCheck(person, sourceRefs);
+    var opportunity = fsCheck.check(person, sourceRefs);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -93,7 +94,7 @@ describe('missingDeathSource', function(){
       }
     };
 
-    var opportunity = fsCheck(person, sourceRefs);
+    var opportunity = fsCheck.check(person, sourceRefs);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -122,19 +123,12 @@ describe('missingDeathSource', function(){
       }
     };
 
-    var opportunity = fsCheck(person, sourceRefs);
-
-    expect(opportunity.type).to.equal('source');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity).to.have.property('findarecord');
+    var opportunity = fsCheck.check(person, sourceRefs);
+    utils.validateSchema(fsCheck, opportunity, true, true);
     expect(opportunity.findarecord.tags).to.deep.equal(['death']);
-    expect(opportunity.findarecord.from).to.equal(1890);
-    expect(opportunity.findarecord.to).to.equal(1910);
+    expect(opportunity.findarecord.from).to.equal(1897);
+    expect(opportunity.findarecord.to).to.equal(1903);
     expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
-    expect(opportunity).to.have.property('gensearch');
     expect(opportunity.gensearch.givenName).to.equal('Bob');
     expect(opportunity.gensearch.familyName).to.equal('Freemer');
     expect(opportunity.gensearch.deathPlace).to.equal('Provo, Utah, United States of America');
@@ -171,21 +165,14 @@ describe('missingDeathSource', function(){
     
     person.id = 'PPPP-PPP';
 
-    var opportunity = fsCheck(person, sourceRefs);
+    var opportunity = fsCheck.check(person, sourceRefs);
     
     doc('missingDeathSource', opportunity);
-    
-    expect(opportunity.type).to.equal('source');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity).to.have.property('findarecord');
+    utils.validateSchema(fsCheck, opportunity, true, true);
     expect(opportunity.findarecord.tags).to.deep.equal(['death']);
-    expect(opportunity.findarecord.from).to.equal(1890);
-    expect(opportunity.findarecord.to).to.equal(1910);
+    expect(opportunity.findarecord.from).to.equal(1897);
+    expect(opportunity.findarecord.to).to.equal(1903);
     expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
-    expect(opportunity).to.have.property('gensearch');
     expect(opportunity.gensearch.givenName).to.equal('Bob');
     expect(opportunity.gensearch.familyName).to.equal('Freemer');
     expect(opportunity.gensearch.deathPlace).to.equal('Provo, Utah, United States of America');
