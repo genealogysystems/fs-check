@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks','multiple-parents.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('multipleParents'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('multipleParents', function(){
@@ -22,7 +23,7 @@ describe('multipleParents', function(){
 
     var people = [];
 
-    var opportunity = fsCheck(person, relationships, people);
+    var opportunity = fsCheck.check(person, relationships, people);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -41,7 +42,7 @@ describe('multipleParents', function(){
 
     var people = [];
 
-    var opportunity = fsCheck(person, relationships, people);
+    var opportunity = fsCheck.check(person, relationships, people);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -60,17 +61,10 @@ describe('multipleParents', function(){
 
     var people = [];
 
-    var opportunity = fsCheck(person, relationships, people);
+    var opportunity = fsCheck.check(person, relationships, people);
 
     doc('multipleParents', opportunity);
-
-    expect(opportunity.type).to.equal('cleanup');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity.gensearch).to.equal(undefined);
+    utils.validateSchema(fsCheck, opportunity);
   });
 
 });
