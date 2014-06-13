@@ -6,6 +6,8 @@ var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
 
 describe('FSCheck', function(){
 
+  // TODO need a way to make sure that no two checks have the same id
+
   // TODO validate schema of all checks
 
   it('should expose three functions', function(){
