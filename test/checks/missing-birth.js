@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks','missing-birth.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('missingBirth'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('missingBirth', function(){
@@ -22,7 +23,7 @@ describe('missingBirth', function(){
       ]
     });
 
-    var opportunity = fsCheck(person);
+    var opportunity = fsCheck.check(person);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -39,17 +40,8 @@ describe('missingBirth', function(){
       facts: []
     });
 
-    var opportunity = fsCheck(person);
-
-    expect(opportunity.type).to.equal('person');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity).to.have.property('gensearch');
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
+    var opportunity = fsCheck.check(person);
+    utils.validateSchema(fsCheck, opportunity, false, true);
   });
 
   it('should return an opportunity when there is a birth but no date AND place', function() {
@@ -68,17 +60,8 @@ describe('missingBirth', function(){
       ]
     });
 
-    var opportunity = fsCheck(person);
-
-    expect(opportunity.type).to.equal('person');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity).to.have.property('gensearch');
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
+    var opportunity = fsCheck.check(person);
+    utils.validateSchema(fsCheck, opportunity, false, true);
   });
 
   it('should return an opportunity including death info', function() {
@@ -102,21 +85,9 @@ describe('missingBirth', function(){
     
     person.id = 'PPPP-PPP';
 
-    var opportunity = fsCheck(person);
-
+    var opportunity = fsCheck.check(person);
     doc('missingBirth', opportunity);
-
-    expect(opportunity.type).to.equal('person');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity).to.have.property('gensearch');
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
-    expect(opportunity.gensearch.deathPlace).to.equal('Provo, Utah, United States of America');
-    expect(opportunity.gensearch.deathDate).to.equal('1900');
+    utils.validateSchema(fsCheck, opportunity, false, true);
   });
 
 });

@@ -53,11 +53,7 @@ describe('duplicateNames', function(){
       ]
     });
     var opportunity = fsCheck.check(person);
-    utils.validateSchema(opportunity, {
-      id: 'duplicateNames',
-      type: 'cleanup',
-      title: 'Duplicate Names'
-    });
+    utils.validateSchema(fsCheck, opportunity);
     expect(opportunity.description.match(/<ul>/g).length).to.equal(2);
   });
   
@@ -85,15 +81,8 @@ describe('duplicateNames', function(){
     person.id = 'PPPP-PPP';
     var opportunity = fsCheck.check(person);
     doc('duplicateNames', opportunity);
-    expect(opportunity).to.exist;
-    expect(opportunity.type).to.equal('cleanup');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
+    utils.validateSchema(fsCheck, opportunity);
     expect(opportunity.description.match(/<ul>/g).length).to.equal(3);
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.not.exist;
-    expect(opportunity.gensearch).to.not.exist;
   });
   
 });
