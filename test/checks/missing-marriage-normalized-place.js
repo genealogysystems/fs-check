@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks','missing-marriage-normalized-place.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('missingMarriageNormalizedPlace'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('missingMarriageNormalizedPlace', function(){
@@ -17,7 +18,7 @@ describe('missingMarriageNormalizedPlace', function(){
           facts: []
         });
 
-    var opportunity = fsCheck(wife, husband, marriage);
+    var opportunity = fsCheck.check(wife, husband, marriage);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -44,7 +45,7 @@ describe('missingMarriageNormalizedPlace', function(){
           ]
         });
 
-    var opportunity = fsCheck(wife, husband, marriage);
+    var opportunity = fsCheck.check(wife, husband, marriage);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -64,7 +65,7 @@ describe('missingMarriageNormalizedPlace', function(){
           ]
         });
 
-    var opportunity = fsCheck(wife, husband, marriage);
+    var opportunity = fsCheck.check(wife, husband, marriage);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -86,7 +87,7 @@ describe('missingMarriageNormalizedPlace', function(){
           ]
         });
 
-    var opportunity = fsCheck(wife, husband, marriage);
+    var opportunity = fsCheck.check(wife, husband, marriage);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -111,18 +112,11 @@ describe('missingMarriageNormalizedPlace', function(){
     husband.display = { name: 'Elmer Fudd' };
     wife.display = { name: 'Thelma Lousie' };
 
-    var opportunity = fsCheck(wife, husband, marriage);
+    var opportunity = fsCheck.check(wife, husband, marriage);
 
     doc('missingMarriageNormalizedPlace', opportunity);
-
-    expect(opportunity.type).to.equal('cleanup');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
+    utils.validateSchema(fsCheck, opportunity);
     expect(opportunity.person).to.equal(wife);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity.gensearch).to.equal(undefined);
   });
 
   it('should move opportunity to husband when wife is missing', function() {
@@ -140,16 +134,9 @@ describe('missingMarriageNormalizedPlace', function(){
           ]
         });
 
-    var opportunity = fsCheck(wife, husband, marriage);
-
-    expect(opportunity.type).to.equal('cleanup');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
+    var opportunity = fsCheck.check(wife, husband, marriage);
+    utils.validateSchema(fsCheck, opportunity);
     expect(opportunity.person).to.equal(husband);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity.gensearch).to.equal(undefined);
   });
 
   it('should return nothing when husband and wife are undefined', function() {
@@ -168,7 +155,7 @@ describe('missingMarriageNormalizedPlace', function(){
           ]
         });
 
-    var opportunity = fsCheck(wife, husband, marriage);
+    var opportunity = fsCheck.check(wife, husband, marriage);
 
     expect(opportunity).to.equal(undefined);
   });

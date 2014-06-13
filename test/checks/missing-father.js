@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks', 'missing-father.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('missingFather'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('missingFather', function(){
@@ -13,7 +14,7 @@ describe('missingFather', function(){
         mother = new FamilySearch.Person({}),
         father = new FamilySearch.Person({}),
         relationship = new FamilySearch.ChildAndParents(),
-        opportunity = fsCheck(child, mother, father, relationship);
+        opportunity = fsCheck.check(child, mother, father, relationship);
     expect(opportunity).to.equal(undefined);
   });
   
@@ -51,22 +52,14 @@ describe('missingFather', function(){
     mother.display = { name: 'Thelma Louise' };
     relationship.id = 'RRRR-RRR';
     
-    var opportunity = fsCheck(child, mother, father, relationship);
+    var opportunity = fsCheck.check(child, mother, father, relationship);
     
     doc('missingFather', opportunity);
-    
-    expect(opportunity).to.exist;
-    expect(opportunity.type).to.equal('family');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity).to.have.property('findarecord');
+    utils.validateSchema(fsCheck, opportunity, true, true);
     expect(opportunity.findarecord.tags).to.deep.equal(['birth']);
-    expect(opportunity.findarecord.from).to.equal(1890);
-    expect(opportunity.findarecord.to).to.equal(1910);
+    expect(opportunity.findarecord.from).to.equal(1897);
+    expect(opportunity.findarecord.to).to.equal(1903);
     expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
-    expect(opportunity).to.have.property('gensearch');
     expect(opportunity.gensearch.givenName).to.equal('Bob');
     expect(opportunity.gensearch.familyName).to.equal('Freemer');
     expect(opportunity.gensearch.birthPlace).to.equal('Provo, Utah, United States of America');

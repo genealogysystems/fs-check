@@ -4,6 +4,8 @@ var expect = require('chai').expect,
 module.exports = {
 
   validateSchema: function(check, opportunity, findarecord, gensearch){
+    expect(opportunity).to.exist;
+    
     expect(opportunity).to.contain.keys(['id','type','title','description','person']);
     expect(opportunity.id).to.match(new RegExp('^' + check.id + ':'));
     expect(opportunity.type).to.equal(check.type);

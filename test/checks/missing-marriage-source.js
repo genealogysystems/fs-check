@@ -3,7 +3,8 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     fs = require('fs'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'checks','missing-marriage-source.js')),
+    fsCheck = require(path.join(libPath, 'index.js')).id('missingMarriageSource'),
+    utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
 describe('missingMarriageSource', function(){
@@ -18,7 +19,7 @@ describe('missingMarriageSource', function(){
         }),
         sources = [];
 
-    var opportunity = fsCheck(wife, husband, marriage, sources);
+    var opportunity = fsCheck.check(wife, husband, marriage, sources);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -40,7 +41,7 @@ describe('missingMarriageSource', function(){
         }),
         sources = [];
 
-    var opportunity = fsCheck(wife, husband, marriage, sources);
+    var opportunity = fsCheck.check(wife, husband, marriage, sources);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -84,7 +85,7 @@ describe('missingMarriageSource', function(){
         }),
         sources = [];
 
-    var opportunity = fsCheck(wife, husband, marriage, sources);
+    var opportunity = fsCheck.check(wife, husband, marriage, sources);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -120,7 +121,7 @@ describe('missingMarriageSource', function(){
         }),
         sources = [];
 
-    var opportunity = fsCheck(wife, husband, marriage, sources);
+    var opportunity = fsCheck.check(wife, husband, marriage, sources);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -157,7 +158,7 @@ describe('missingMarriageSource', function(){
         }),
         sources = [];
 
-    var opportunity = fsCheck(wife, husband, marriage, sources);
+    var opportunity = fsCheck.check(wife, husband, marriage, sources);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -195,7 +196,7 @@ describe('missingMarriageSource', function(){
         }),
         sources = ['1'];
 
-    var opportunity = fsCheck(wife, husband, marriage, sources);
+    var opportunity = fsCheck.check(wife, husband, marriage, sources);
 
     expect(opportunity).to.equal(undefined);
   });
@@ -249,21 +250,14 @@ describe('missingMarriageSource', function(){
     husband.display = {name: 'Bob Freemer'};
     marriage.id = 'MMMM-MMM';
 
-    var opportunity = fsCheck(wife, husband, marriage, sources);
+    var opportunity = fsCheck.check(wife, husband, marriage, sources);
 
     doc('missingMarriageSource', opportunity);
-    
-    expect(opportunity.type).to.equal('source');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity).to.have.property('findarecord');
+    utils.validateSchema(fsCheck, opportunity, true, true);
     expect(opportunity.findarecord.tags).to.deep.equal(['marriage']);
     expect(opportunity.findarecord.from).to.equal(1890);
     expect(opportunity.findarecord.to).to.equal(1910);
     expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
-    expect(opportunity).to.have.property('gensearch');
     expect(opportunity.gensearch.givenName).to.equal('Thelma');
     expect(opportunity.gensearch.familyName).to.equal('Louise');
     expect(opportunity.gensearch.marriagePlace).to.equal('Provo, Utah, United States of America');
@@ -313,19 +307,12 @@ describe('missingMarriageSource', function(){
         }),
         sources = [];
     
-    var opportunity = fsCheck(wife, husband, marriage, sources);
-    
-    expect(opportunity.type).to.equal('source');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity).to.have.property('findarecord');
+    var opportunity = fsCheck.check(wife, husband, marriage, sources);
+    utils.validateSchema(fsCheck, opportunity, true, true);
     expect(opportunity.findarecord.tags).to.deep.equal(['marriage']);
     expect(opportunity.findarecord.from).to.equal(1890);
     expect(opportunity.findarecord.to).to.equal(1910);
     expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
-    expect(opportunity).to.have.property('gensearch');
     expect(opportunity.gensearch.givenName).to.equal('Bob');
     expect(opportunity.gensearch.familyName).to.equal('Freemer');
     expect(opportunity.gensearch.marriagePlace).to.equal('Provo, Utah, United States of America');
