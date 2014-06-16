@@ -192,8 +192,9 @@ module.exports = {
       }
 
       var descr = utils.markdown(function(){/*
-          It is abnormal for a child to be born before a couple is married. Check the marriages  with the
-          following people to verify that the marriage date and children's birth dates are correct.
+          It is abnormal for a child to be born before a couple is married. Check the marriages with the
+          following people to verify that the marriage date and children's birth dates and fix any incorrect 
+          information in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
           
           {{#spouses}}
           * {{.}}
@@ -793,12 +794,7 @@ module.exports = {
           to: (year)? year+3:undefined,
           place: place
         },
-        gensearch: {
-          givenName: person.$getGivenName(),
-          familyName: person.$getSurname(),
-          birthPlace: place,
-          birthDate: year+'',
-        }
+        gensearch: utils.gensearchPerson(person)
       };
     }
     
@@ -1353,10 +1349,6 @@ module.exports = {
 
     var person = wife,
         spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
 
     // If we have more than one marriage fact, don't run
     var facts = marriage.$getFacts(),
@@ -1378,14 +1370,18 @@ module.exports = {
     }
 
     var descr = utils.markdown(function(){/*
-      Start with a general search in some of the popular online repositories.
+      The marriage between {{wife.display.name}} and {{husband.display.name}} has no marriage date or place. To find marriage information, start with a general search in some of the popular online repositories.
       Finding a census can give you an approximate date by looking at the age of the oldest child, which would allow you to narrow your search further.
-      Once you have found information about the marriage, update the [couple's relationship](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}).
+      Once you have found information about the marriage, update the [couple's relationship](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) in the Family Tree.
 
       ## Help
 
       * [Adding a marriage date to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-    */}, {crid: marriage.id});
+    */}, {
+      crid: marriage.id,
+      wife: wife,
+      husband: husband
+    });
 
     var opportunity = {
       id: this.id + ':' + person.id,
@@ -1538,7 +1534,7 @@ module.exports = {
       }
 
       var descr = utils.markdown(function(){/*
-        View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the marriage place {{couple}}.
+        The marriage place of `{{place}}` has not been standardized for the marriage {{couple}}. View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the marriage place.
 
         ## Why?
         Standardization ensures that everyone knows where this event took place.
@@ -1550,7 +1546,11 @@ module.exports = {
         ## How?
         View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
 
-      */}, {crid:  marriage.id, couple: coupleDescr});
+      */}, {
+        crid: marriage.id, 
+        couple: coupleDescr,
+        place: marriageFact.$getPlace()
+      });
 
       return {
         id: this.id + ':' + person.id,
