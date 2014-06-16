@@ -1,8 +1,7 @@
 var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
     path = require('path'),
     expect = require('chai').expect,
-    FSCheck = require(path.join(libPath, 'index.js')),
-    ids = {};
+    FSCheck = require(path.join(libPath, 'index.js'));
 
 describe('FSCheck', function(){
 
@@ -19,7 +18,23 @@ describe('FSCheck', function(){
     it('should return proper number of checks', function(){
       var checks = FSCheck.all();
       expect(checks).to.have.length(34);
+    });
+    
+    it('checks should all have the correct format', function(){
+      var checks = FSCheck.all();
       validateChecks(checks);
+    });
+    
+    it('checks should all have unique ids', function(){
+      var checks = FSCheck.all();
+      // If calling fscheck by the check's id returns the
+      // check itself for all checks then we know that all
+      // checks have a unique id because if they didn't then
+      // requesting a check by itss id would return whichever
+      // check duplicated its id and stamped over it
+      for(var i = 0; i < checks.length; i++){
+        expect(FSCheck.id(checks[i].id)).to.equal(checks[i]);
+      }
     });
     
   });
@@ -116,10 +131,6 @@ function validateCheck(check){
   try {
     expect(check).to.exist;
     expect(check).to.have.keys(['id','title','type','signature','check']);
-    
-    // Validate unique ID
-    expect(ids[check.id]).to.not.exist;
-    ids[check.id] = check;
     
     // Validate type
     expect(['source','person','family','problem','cleanup']).to.include.members([check.type]);
