@@ -195,6 +195,7 @@ describe('childBeforeMarriage', function(){
     persons[0].id = 'CHILD';
     persons[1].id = 'SPOUSE';
     persons[1].display = { name: 'Mary Adams' };
+    
     var marriages = [
       new FamilySearch.Couple({
         facts: [
@@ -206,6 +207,7 @@ describe('childBeforeMarriage', function(){
       })
     ];
     marriages[0].$getSpouseId = function(){ return 'SPOUSE'; };
+    
     var relationships = {
       getSpouseRelationships: function(){ 
         return marriages;
@@ -218,7 +220,11 @@ describe('childBeforeMarriage', function(){
         ]; 
       }
     };
-    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
+    
+    var person = new FamilySearch.Person();
+    person.id = 'PPPP-PPP';
+    
+    var opportunity = fsCheck.check(person, relationships, persons);
     doc('childBeforeMarriage', opportunity);
     utils.validateSchema(fsCheck, opportunity);
     expect(opportunity.description).to.contain('Mary Adams');
