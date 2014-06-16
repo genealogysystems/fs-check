@@ -101,6 +101,8 @@ describe('missingMarriageFact', function(){
         });
 
     marriage.id = 'RRRR-RRR';
+    husband.display = { name: 'Bob Freemer' };
+    wife.display = { name: 'Thelma Louise' };
         
     var opportunity = fsCheck.check(wife, husband, marriage);
     
@@ -153,36 +155,6 @@ describe('missingMarriageFact', function(){
     expect(opportunity.gensearch.familyName).to.equal('Louise');
     expect(opportunity.gensearch.spouseGivenName).to.equal('Bob');
     expect(opportunity.gensearch.spouseFamilyName).to.equal('Freemer');
-  });
-
-  it('should set person to husband and spouse to undefined when wife is missing', function() {
-    var husband = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Male',
-          names: [
-            new FamilySearch.Name({
-              givenName: 'Bob',
-              surname: 'Freemer'
-            })
-          ]
-        }),
-        wife = undefined,
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
-          facts: [
-            new FamilySearch.Fact({
-              type: 'http://gedcomx.org/Marriage'
-            })
-          ]
-        });
-
-    var opportunity = fsCheck.check(wife, husband, marriage);
-    utils.validateSchema(fsCheck, opportunity, false, true);
-    expect(opportunity.person).to.equal(husband);
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
-    expect(opportunity.gensearch.spouseGivenName).to.equal(undefined);
-    expect(opportunity.gensearch.spouseFamilyName).to.equal(undefined);
   });
 
 });
