@@ -6,11 +6,22 @@ var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
 
 describe('FSCheck', function(){
 
-  it('should expose three functions', function(){
-    expect(Object.keys(FSCheck)).to.have.length(3);
+  it('should expose four functions', function(){
+    expect(Object.keys(FSCheck)).to.have.length(4);
+    expect(FSCheck).to.have.property('all');
     expect(FSCheck).to.have.property('id');
     expect(FSCheck).to.have.property('signature');
     expect(FSCheck).to.have.property('type');
+  });
+  
+  describe('FSCheck.all', function(){
+    
+    it('should return proper number of checks', function(){
+      var checks = FSCheck.all();
+      expect(checks).to.have.length(34);
+      validateChecks(checks);
+    });
+    
   });
   
   describe('FSCheck.id', function(){
@@ -29,44 +40,37 @@ describe('FSCheck', function(){
     
     it('should return correct number of person checks', function(){
       var checks = FSCheck.signature('person');
-      expect(checks).to.have.length(17);
-      validateChecks(checks);
+      expect(checks).to.have.length(18);
     });
     
     it('should return correct number of personSource checks', function(){
       var checks = FSCheck.signature('personSource');
       expect(checks).to.have.length(2);
-      validateChecks(checks);
     });
     
     it('should return correct number of marriage checks', function(){
       var checks = FSCheck.signature('marriage');
       expect(checks).to.have.length(6);
-      validateChecks(checks);
     });
     
     it('should return correct number of marriageSource checks', function(){
       var checks = FSCheck.signature('marriageSource');
       expect(checks).to.have.length(1);
-      validateChecks(checks);
     });
     
     it('should return correct number of child checks', function(){
       var checks = FSCheck.signature('child');
       expect(checks).to.have.length(2);
-      validateChecks(checks);
     });
     
     it('should return correct number of parents checks', function(){
       var checks = FSCheck.signature('parents');
       expect(checks).to.have.length(2);
-      validateChecks(checks);
     });
     
     it('should return correct number of relationships checks', function(){
       var checks = FSCheck.signature('relationships');
       expect(checks).to.have.length(3);
-      validateChecks(checks);
     });
     
   });
