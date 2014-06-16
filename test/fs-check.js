@@ -6,11 +6,13 @@ var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
 describe('FSCheck', function(){
 
   it('should expose four functions', function(){
-    expect(Object.keys(FSCheck)).to.have.length(4);
+    expect(Object.keys(FSCheck)).to.have.length(6);
     expect(FSCheck).to.have.property('all');
     expect(FSCheck).to.have.property('id');
     expect(FSCheck).to.have.property('signature');
+    expect(FSCheck).to.have.property('signatures');
     expect(FSCheck).to.have.property('type');
+    expect(FSCheck).to.have.property('types');
   });
   
   describe('FSCheck.all', function(){
@@ -49,6 +51,14 @@ describe('FSCheck', function(){
       expect(check.signature).to.equal('parents');
     });
   
+  });
+  
+  describe('FSCheck.signatures', function(){
+    
+    it('should return correct number of signatures', function(){
+      expect(FSCheck.signatures()).to.have.members(['person','personSource','marriage','marriageSource','child','parents','relationships']);
+    });
+    
   });
   
   describe('FSCheck.signature', function(){
@@ -117,6 +127,14 @@ describe('FSCheck', function(){
       expect(checks).to.have.length(4);
     });
   
+  });
+  
+  describe('FSCheck.types', function(){
+    
+    it('should return correct number of types', function(){
+      expect(FSCheck.types()).to.have.members(['person','source','family','problem','cleanup']);
+    });
+    
   });
 
 });

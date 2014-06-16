@@ -16,7 +16,9 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha",
-    "build": "browserify lib/index.js -s FSCheck -o fs-check.js"
+    "build": "browserify lib/index.js -s FSCheck -o fs-check.js",
+    "docs": "node docs/checks-list.js && ./docs/build.sh",
+    "coverage": "./coverage/generate.sh"
   },
   "dependencies": {
     "gedcomx-date": "^0.2.2",
