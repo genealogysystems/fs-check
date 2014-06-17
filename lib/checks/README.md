@@ -59,6 +59,10 @@ Checks are organized in two ways: by function signature and by type. The functio
 
 * [Find a Marriage Record](missingMarriageSource.js)
 
+### Duplicates
+
+* [Possible Duplicate Persons](possibleDuplicates.js)
+
 ## Type
 
 ### Problem
@@ -81,6 +85,7 @@ Checks are organized in two ways: by function signature and by type. The functio
 * [Multiple Marriage Facts](multipleMarriageFacts.js)
 * [Multiple Parent Relationships](multipleParents.js)
 * [Incorrect Alternate Name Format](orInName.js)
+* [Possible Duplicate Persons](possibleDuplicates.js)
 * [Unusual Characters in a Name](unusualCharactersInName.js)
 
 ### Person
