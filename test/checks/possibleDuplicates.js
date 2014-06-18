@@ -13,6 +13,14 @@ describe('possibleDuplicates', function(){
     expect(opportunity).to.not.exist;
   });
   
+  // https://github.com/rootsdev/familysearch-javascript-sdk/issues/69
+  it('should return nothing when count is undefined', function(){
+    var matches = {
+      getResultsCount: function(){}
+    };
+    var opportunity = fsCheck.check(new FamilySearch.Person(), matches);
+    expect(opportunity).to.not.exist;
+  });
 
   it('should return an opportunity when there are matches', function() {
     var person = new FamilySearch.Person();
