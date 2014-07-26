@@ -21,9 +21,7 @@ describe('marriageWithNoChildren', function(){
       getChildIds: function() {return [];}
     }
 
-    var people = [];
-
-    var opportunity = fsCheck.check(person, relationships, people);
+    var opportunity = fsCheck.check(person, relationships, {});
 
     expect(opportunity).to.equal(undefined);
   });
@@ -41,9 +39,7 @@ describe('marriageWithNoChildren', function(){
       getChildIds: function() {return ['2','3'];}
     }
 
-    var people = [];
-
-    var opportunity = fsCheck.check(person, relationships, people);
+    var opportunity = fsCheck.check(person, relationships, {});
 
     expect(opportunity).to.equal(undefined);
   });
@@ -61,9 +57,7 @@ describe('marriageWithNoChildren', function(){
       getChildIds: function() {return [];}
     }
 
-    var people = [];
-
-    var opportunity = fsCheck.check(person, relationships, people);
+    var opportunity = fsCheck.check(person, relationships, {});
     doc('marriageWithNoChildren', opportunity);
     utils.validateSchema(fsCheck, opportunity);
   });
