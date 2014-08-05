@@ -2172,17 +2172,28 @@ module.exports = {
   signature: 'duplicates',
   check: function(person, matches) {
   
+    // Short-circuit if there are no matches
     var count = matches.getResultsCount();
-  
-    // Needs to check for undefined too because of
-    // https://github.com/rootsdev/familysearch-javascript-sdk/issues/69
-    // It can be removed when that bug is closed
-    if(count === 0 || count === undefined) {
+    if(count === 0){
       return;
     }
-
+  
+    // Ignore results of low confidence like the web client does
+    var goodMatches = 0,
+        results = matches.getSearchResults();
+    for(var i = 0; i < results.length; i++){
+      if(results[i].confidence >= 3){
+        goodMatches++;
+      }
+    }
+    
+    // Short-circuit if we have no good matches
+    if(goodMatches === 0){
+      return;
+    }
+  
     var descr = utils.markdown(function(){/*
-        FamilySearch has identified {{count}} {{people}} as potential duplicates of {{person.display.name}}.
+        FamilySearch has identified {{count}} {{people}} {{person.display.name}}.
         Review the [list of duplicates](https://familysearch.org/tree/#view=possibleDuplicates&person={{person.id}}) in FamilySearch.
         Merge duplicate persons and mark incorrect matches as "Not a Match".
 
@@ -2191,8 +2202,8 @@ module.exports = {
         * [Merging duplicate records in Family Tree](https://familysearch.org/ask/productSupport#/Merging-Duplicate-Records-in-Family-Tree-1381814853391)
       */}, {
         person: person,
-        count: count,
-        people: count === 1 ? 'person' : 'people'
+        count: goodMatches,
+        people: goodMatches === 1 ? 'person as a potential duplicate' : 'people as potential duplicates'
       });
 
     return {
