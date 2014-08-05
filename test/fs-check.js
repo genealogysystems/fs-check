@@ -5,16 +5,17 @@ var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
 
 describe('FSCheck', function(){
 
-  it('should expose four functions', function(){
-    expect(Object.keys(FSCheck)).to.have.length(6);
+  it('should expose seven functions', function(){
+    expect(Object.keys(FSCheck)).to.have.length(7);
     expect(FSCheck).to.have.property('all');
     expect(FSCheck).to.have.property('id');
     expect(FSCheck).to.have.property('signature');
     expect(FSCheck).to.have.property('signatures');
     expect(FSCheck).to.have.property('type');
     expect(FSCheck).to.have.property('types');
+    expect(FSCheck).to.have.property('utils');
   });
-  
+
   describe('FSCheck.all', function(){
     
     it('should return proper number of checks', function(){

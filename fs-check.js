@@ -2328,6 +2328,8 @@ module.exports = {
   }
 };
 },{"../util.js":37}],36:[function(_dereq_,module,exports){
+var utils = _dereq_('./util.js');
+
 var checks = [
   _dereq_('./checks/birthBeforeParentsBirth.js'),
   _dereq_('./checks/childBeforeMarriage.js'),
@@ -2439,10 +2441,20 @@ module.exports = {
       list.push(t);
     }
     return list;
+  },
+  
+  /**
+   * Expose useful internals
+   */
+  utils: {
+    getFactYear: utils.getFactYear,
+    getFactPlace: utils.getFactPlace,
+    gensearchPerson: utils.gensearchPerson,
+    gedcomxDate: _dereq_('gedcomx-date')
   }
-
+  
 };
-},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/deathBeforeBirth.js":3,"./checks/duplicateNames.js":4,"./checks/manyAlternateNames.js":5,"./checks/marriageWithNoChildren.js":6,"./checks/missingBirth.js":7,"./checks/missingBirthDate.js":8,"./checks/missingBirthFormalDate.js":9,"./checks/missingBirthFormalPlace.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathFormalDate.js":15,"./checks/missingDeathFormalPlace.js":16,"./checks/missingDeathPlace.js":17,"./checks/missingDeathSource.js":18,"./checks/missingFather.js":19,"./checks/missingGivenName.js":20,"./checks/missingMarriageDate.js":21,"./checks/missingMarriageFact.js":22,"./checks/missingMarriageFormalDate.js":23,"./checks/missingMarriageNormalizedPlace.js":24,"./checks/missingMarriagePlace.js":25,"./checks/missingMarriageSource.js":26,"./checks/missingMother.js":27,"./checks/missingName.js":28,"./checks/missingParents.js":29,"./checks/missingSurname.js":30,"./checks/multipleMarriageFacts.js":31,"./checks/multipleParents.js":32,"./checks/orInName.js":33,"./checks/possibleDuplicates.js":34,"./checks/unusualCharactersInName.js":35}],37:[function(_dereq_,module,exports){
+},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/deathBeforeBirth.js":3,"./checks/duplicateNames.js":4,"./checks/manyAlternateNames.js":5,"./checks/marriageWithNoChildren.js":6,"./checks/missingBirth.js":7,"./checks/missingBirthDate.js":8,"./checks/missingBirthFormalDate.js":9,"./checks/missingBirthFormalPlace.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathFormalDate.js":15,"./checks/missingDeathFormalPlace.js":16,"./checks/missingDeathPlace.js":17,"./checks/missingDeathSource.js":18,"./checks/missingFather.js":19,"./checks/missingGivenName.js":20,"./checks/missingMarriageDate.js":21,"./checks/missingMarriageFact.js":22,"./checks/missingMarriageFormalDate.js":23,"./checks/missingMarriageNormalizedPlace.js":24,"./checks/missingMarriagePlace.js":25,"./checks/missingMarriageSource.js":26,"./checks/missingMother.js":27,"./checks/missingName.js":28,"./checks/missingParents.js":29,"./checks/missingSurname.js":30,"./checks/multipleMarriageFacts.js":31,"./checks/multipleParents.js":32,"./checks/orInName.js":33,"./checks/possibleDuplicates.js":34,"./checks/unusualCharactersInName.js":35,"./util.js":37,"gedcomx-date":44}],37:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date'),
     multiline = _dereq_('multiline'),
     marked = _dereq_('marked'),

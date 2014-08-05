@@ -2,9 +2,17 @@ var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
     path = require('path'),
     expect = require('chai').expect,
     FamilySearch = require('../vendor/familysearch-javascript-sdk.js'),
+    FSCheck = require(path.join(libPath, 'index.js')),
     util = require(path.join(libPath, 'util.js'));
 
 describe('util', function(){
+
+  it('utils exposes 4 functions', function(){
+    expect(FSCheck.utils).to.have.property('getFactYear');
+    expect(FSCheck.utils).to.have.property('getFactPlace');
+    expect(FSCheck.utils).to.have.property('gedcomxDate');
+    expect(FSCheck.utils).to.have.property('gensearchPerson');
+  });
 
   describe('#getFactPlace()', function(){
 

@@ -62,7 +62,7 @@ Return a list of all checks that match the given type.
 var checks = FSCheck.type('cleanup');
 ```
 
-### id()
+### id(id)
 
 Return the check that matches the given ID
 
@@ -147,6 +147,33 @@ An object containing parameters to use for a Find-A-Record Search. Must be a val
 ### gensearch
 
 A gen-search object matching [schema](https://github.com/genealogysystems/gen-search#schema) or `undefined`.
+
+# Utilities
+
+These function are used internally but are exposed in case they can be useful for users of fs-check.
+
+### utils.getFactYear(fact)
+
+Extract the year (integer) from a [Fact](http://rootsdev.org/familysearch-javascript-sdk/#/api/fact.types:constructor.Fact), when possible. May return undefined.
+
+### utils.getFactPlace(fact)
+
+Extract the place string from a [Fact](http://rootsdev.org/familysearch-javascript-sdk/#/api/fact.types:constructor.Fact), when possible. May return undefined.
+
+### utils.gensearchPerson(person)
+
+Return a basic [gen-search](https://github.com/genealogysystems/gen-search) object for a [Person](http://rootsdev.org/familysearch-javascript-sdk/#/api/person.types:constructor.Person). Includes the following properties, when possible:
+
+* givenName
+* familyName
+* birthPlace
+* birthDate
+* deathPlace
+* deathDate
+
+### utils.gedcomxDate
+
+Expose [gedcomx-date-js](https://github.com/trepo/gedcomx-date-js).
 
 # Contributing
 Every pull request that adds a check should contain the following things:
