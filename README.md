@@ -54,12 +54,28 @@ Return a list of all checks that match the given signature.
 var checks = FSCheck.signature('parents');
 ```
 
+### signatures()
+
+Get a list of all available signatures
+
+```javascript
+var signatures = FSCheck.signatures();
+```
+
 ### type()
 
 Return a list of all checks that match the given type.
 
 ```javascript
 var checks = FSCheck.type('cleanup');
+```
+
+### types()
+
+Get a list of all available types.
+
+```javascript
+var types = FSCheck.types();
 ```
 
 ### id(id)
