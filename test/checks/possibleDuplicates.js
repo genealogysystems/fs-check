@@ -30,7 +30,7 @@ describe('possibleDuplicates', function(){
     expect(opportunity.description).to.contain('1 person');
   });
   
-  it('should deetect two matches', function() {
+  it('should ignore low confidence matches', function() {
     var person = new FamilySearch.Person();
     person.id = 'PPPP-PPP';
     person.display = {

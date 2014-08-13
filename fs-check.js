@@ -78,7 +78,7 @@ module.exports = {
     }
   }
 }
-},{"../util.js":37}],2:[function(_dereq_,module,exports){
+},{"../util.js":38}],2:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  - The person has a marriage with children where at least one of the children
@@ -222,7 +222,7 @@ function compareDates(date1, date2){
     return 1;
   }
 };
-},{"../util.js":37,"gedcomx-date":44}],3:[function(_dereq_,module,exports){
+},{"../util.js":38,"gedcomx-date":45}],3:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -288,7 +288,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":37}],4:[function(_dereq_,module,exports){
+},{"../util.js":38}],4:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are duplicates names (ignoring capitalization and punctuation)
@@ -361,7 +361,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],5:[function(_dereq_,module,exports){
+},{"../util.js":38}],5:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are 5 or more alternate names
@@ -414,7 +414,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],6:[function(_dereq_,module,exports){
+},{"../util.js":38}],6:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has one or more marriages
@@ -461,7 +461,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],7:[function(_dereq_,module,exports){
+},{"../util.js":38}],7:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no birth fact OR place and date are both undefined
@@ -508,7 +508,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":37}],8:[function(_dereq_,module,exports){
+},{"../util.js":38}],8:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -566,7 +566,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":37}],9:[function(_dereq_,module,exports){
+},{"../util.js":38}],9:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -618,7 +618,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],10:[function(_dereq_,module,exports){
+},{"../util.js":38}],10:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -671,7 +671,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],11:[function(_dereq_,module,exports){
+},{"../util.js":38}],11:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -728,7 +728,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":37}],12:[function(_dereq_,module,exports){
+},{"../util.js":38}],12:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -793,7 +793,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":37}],13:[function(_dereq_,module,exports){
+},{"../util.js":38}],13:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no death fact OR place and date are both undefined
@@ -840,7 +840,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":37}],14:[function(_dereq_,module,exports){
+},{"../util.js":38}],14:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -896,7 +896,7 @@ module.exports = {
 
   }
 }
-},{"../util.js":37}],15:[function(_dereq_,module,exports){
+},{"../util.js":38}],15:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -949,7 +949,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],16:[function(_dereq_,module,exports){
+},{"../util.js":38}],16:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1002,7 +1002,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],17:[function(_dereq_,module,exports){
+},{"../util.js":38}],17:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1057,7 +1057,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":37}],18:[function(_dereq_,module,exports){
+},{"../util.js":38}],18:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1127,7 +1127,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":37}],19:[function(_dereq_,module,exports){
+},{"../util.js":38}],19:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1188,7 +1188,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":37}],20:[function(_dereq_,module,exports){
+},{"../util.js":38}],20:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a given name but has a surname
@@ -1231,7 +1231,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],21:[function(_dereq_,module,exports){
+},{"../util.js":38}],21:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1326,7 +1326,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":37}],22:[function(_dereq_,module,exports){
+},{"../util.js":38}],22:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if there is a marriage but no marriage fact,
  * or there is 1 marriage fact with no date and place
@@ -1395,7 +1395,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":37}],23:[function(_dereq_,module,exports){
+},{"../util.js":38}],23:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1474,7 +1474,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],24:[function(_dereq_,module,exports){
+},{"../util.js":38}],24:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1557,7 +1557,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],25:[function(_dereq_,module,exports){
+},{"../util.js":38}],25:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1651,7 +1651,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":37}],26:[function(_dereq_,module,exports){
+},{"../util.js":38}],26:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Marriage fact exists
@@ -1759,7 +1759,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":37}],27:[function(_dereq_,module,exports){
+},{"../util.js":38}],27:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1820,7 +1820,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":37}],28:[function(_dereq_,module,exports){
+},{"../util.js":38}],28:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no name
@@ -1861,7 +1861,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],29:[function(_dereq_,module,exports){
+},{"../util.js":38}],29:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1911,7 +1911,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":37}],30:[function(_dereq_,module,exports){
+},{"../util.js":38}],30:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a surname but does have a given name
@@ -1954,7 +1954,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],31:[function(_dereq_,module,exports){
+},{"../util.js":38}],31:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is more than one marriage fact
@@ -2022,7 +2022,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":37}],32:[function(_dereq_,module,exports){
+},{"../util.js":38}],32:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has more than one parent relationship
@@ -2062,7 +2062,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":37}],33:[function(_dereq_,module,exports){
+},{"../util.js":38}],33:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The person's preferred name has an "or" in it (Joe or Joey Adams)
@@ -2158,7 +2158,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],34:[function(_dereq_,module,exports){
+},{"../util.js":38}],34:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has possible matches
@@ -2217,7 +2217,59 @@ module.exports = {
     };
   }
 };
-},{"../util.js":37}],35:[function(_dereq_,module,exports){
+},{"../util.js":38}],35:[function(_dereq_,module,exports){
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'recordHints',
+  type: 'source',
+  title: 'Record Hints',
+  signature: 'recordHints',
+  check: function(person, matches) {
+
+    // Short-circuit if there are no hints
+    var count = matches.getResultsCount();
+    if(count === 0){
+      return;
+    }
+    
+    var results = matches.getSearchResults(),
+        titles = [];
+    for(var i = 0; i < results.length; i++){
+      titles.push(results[i].title);
+    }
+
+    var descr = utils.markdown(function(){/*
+        FamilySearch has found matching records for {{name}} in the following collections:
+
+        {{#titles}}
+        * {{.}}
+        {{/titles}}
+        
+        [Review these matches](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) and attach the sources to your tree.
+        
+        ## Help
+    
+        * [Record Hints](https://familysearch.org/ask/productSupport#/Record-Hints)
+      */}, {
+        titles: titles,
+        name: person.display.name,
+        pid: person.id
+      });
+
+    return {
+      id: this.id + ':' + person.id,
+      type: this.type,
+      title: this.title,
+      description: descr,
+      person: person,
+      findarecord: undefined,
+      gensearch: undefined
+    };
+
+  }
+};
+},{"../util.js":38}],36:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are unusual characters in the preferred name
@@ -2327,7 +2379,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":37}],36:[function(_dereq_,module,exports){
+},{"../util.js":38}],37:[function(_dereq_,module,exports){
 var utils = _dereq_('./util.js');
 
 var checks = [
@@ -2365,6 +2417,7 @@ var checks = [
   _dereq_('./checks/multipleParents.js'),
   _dereq_('./checks/orInName.js'),
   _dereq_('./checks/possibleDuplicates.js'),
+  _dereq_('./checks/recordHints.js'),
   _dereq_('./checks/unusualCharactersInName.js')
 ];
 
@@ -2454,7 +2507,7 @@ module.exports = {
   }
   
 };
-},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/deathBeforeBirth.js":3,"./checks/duplicateNames.js":4,"./checks/manyAlternateNames.js":5,"./checks/marriageWithNoChildren.js":6,"./checks/missingBirth.js":7,"./checks/missingBirthDate.js":8,"./checks/missingBirthFormalDate.js":9,"./checks/missingBirthFormalPlace.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathFormalDate.js":15,"./checks/missingDeathFormalPlace.js":16,"./checks/missingDeathPlace.js":17,"./checks/missingDeathSource.js":18,"./checks/missingFather.js":19,"./checks/missingGivenName.js":20,"./checks/missingMarriageDate.js":21,"./checks/missingMarriageFact.js":22,"./checks/missingMarriageFormalDate.js":23,"./checks/missingMarriageNormalizedPlace.js":24,"./checks/missingMarriagePlace.js":25,"./checks/missingMarriageSource.js":26,"./checks/missingMother.js":27,"./checks/missingName.js":28,"./checks/missingParents.js":29,"./checks/missingSurname.js":30,"./checks/multipleMarriageFacts.js":31,"./checks/multipleParents.js":32,"./checks/orInName.js":33,"./checks/possibleDuplicates.js":34,"./checks/unusualCharactersInName.js":35,"./util.js":37,"gedcomx-date":44}],37:[function(_dereq_,module,exports){
+},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/deathBeforeBirth.js":3,"./checks/duplicateNames.js":4,"./checks/manyAlternateNames.js":5,"./checks/marriageWithNoChildren.js":6,"./checks/missingBirth.js":7,"./checks/missingBirthDate.js":8,"./checks/missingBirthFormalDate.js":9,"./checks/missingBirthFormalPlace.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathFormalDate.js":15,"./checks/missingDeathFormalPlace.js":16,"./checks/missingDeathPlace.js":17,"./checks/missingDeathSource.js":18,"./checks/missingFather.js":19,"./checks/missingGivenName.js":20,"./checks/missingMarriageDate.js":21,"./checks/missingMarriageFact.js":22,"./checks/missingMarriageFormalDate.js":23,"./checks/missingMarriageNormalizedPlace.js":24,"./checks/missingMarriagePlace.js":25,"./checks/missingMarriageSource.js":26,"./checks/missingMother.js":27,"./checks/missingName.js":28,"./checks/missingParents.js":29,"./checks/missingSurname.js":30,"./checks/multipleMarriageFacts.js":31,"./checks/multipleParents.js":32,"./checks/orInName.js":33,"./checks/possibleDuplicates.js":34,"./checks/recordHints.js":35,"./checks/unusualCharactersInName.js":36,"./util.js":38,"gedcomx-date":45}],38:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date'),
     multiline = _dereq_('multiline'),
     marked = _dereq_('marked'),
@@ -2573,7 +2626,7 @@ function gensearchPerson(person){
   
   return gensearch;
 }
-},{"gedcomx-date":44,"marked":50,"multiline":51,"mustache":53}],38:[function(_dereq_,module,exports){
+},{"gedcomx-date":45,"marked":51,"multiline":52,"mustache":54}],39:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -2598,7 +2651,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],39:[function(_dereq_,module,exports){
+},{}],40:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2663,14 +2716,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],40:[function(_dereq_,module,exports){
+},{}],41:[function(_dereq_,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],41:[function(_dereq_,module,exports){
+},{}],42:[function(_dereq_,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3260,7 +3313,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,_dereq_("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":40,"FWaASH":39,"inherits":38}],42:[function(_dereq_,module,exports){
+},{"./support/isBuffer":41,"FWaASH":40,"inherits":39}],43:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     Simple = _dereq_('./simple.js');
 
@@ -3302,7 +3355,7 @@ Approximate.prototype.toFormalString = function() {
 }
 
 module.exports = Approximate;
-},{"./simple.js":47,"util":41}],43:[function(_dereq_,module,exports){
+},{"./simple.js":48,"util":42}],44:[function(_dereq_,module,exports){
 /**
  * A gedcomX Duration
  */
@@ -3559,7 +3612,7 @@ Duration.prototype.toFormalString = function() {
 }
 
 module.exports = Duration;
-},{}],44:[function(_dereq_,module,exports){
+},{}],45:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -3615,7 +3668,7 @@ GedcomXDate.getDuration = GedUtil.getDuration;
 GedcomXDate.daysInMonth = GedUtil.daysInMonth;
 
 module.exports = GedcomXDate;
-},{"./approximate.js":42,"./duration.js":43,"./range.js":45,"./recurring.js":46,"./simple.js":47,"./util.js":49}],45:[function(_dereq_,module,exports){
+},{"./approximate.js":43,"./duration.js":44,"./range.js":46,"./recurring.js":47,"./simple.js":48,"./util.js":50}],46:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -3740,7 +3793,7 @@ Range.prototype.toFormalString = function() {
 }
 
 module.exports = Range;
-},{"./approximate.js":42,"./duration.js":43,"./simple.js":47,"./util.js":49}],46:[function(_dereq_,module,exports){
+},{"./approximate.js":43,"./duration.js":44,"./simple.js":48,"./util.js":50}],47:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     GedUtil = _dereq_('./util.js'),
     Range = _dereq_('./range.js');
@@ -3826,7 +3879,7 @@ Recurring.prototype.toFormalString = function() {
 }
 
 module.exports = Recurring;
-},{"./range.js":45,"./util.js":49,"util":41}],47:[function(_dereq_,module,exports){
+},{"./range.js":46,"./util.js":50,"util":42}],48:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js');
 /**
  * The simplest representation of a date.
@@ -4238,7 +4291,7 @@ Simple.prototype.toFormalString = function() {
 }
 
 module.exports = Simple;
-},{"./util-global.js":48}],48:[function(_dereq_,module,exports){
+},{"./util-global.js":49}],49:[function(_dereq_,module,exports){
 module.exports = {
   daysInMonth: daysInMonth
 }
@@ -4282,7 +4335,7 @@ function daysInMonth(month, year) {
       throw new Error('Unknown Month');
   }
 }
-},{}],49:[function(_dereq_,module,exports){
+},{}],50:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js'),
     Duration = _dereq_('./duration.js'),
     Simple = _dereq_('./simple.js'),
@@ -4696,7 +4749,7 @@ function getObjFromDate(date, adjustTimezone) {
   }
   return obj;
 }
-},{"./approximate.js":42,"./duration.js":43,"./simple.js":47,"./util-global.js":48}],50:[function(_dereq_,module,exports){
+},{"./approximate.js":43,"./duration.js":44,"./simple.js":48,"./util-global.js":49}],51:[function(_dereq_,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -5966,7 +6019,7 @@ if (typeof exports === 'object') {
 }());
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],51:[function(_dereq_,module,exports){
+},{}],52:[function(_dereq_,module,exports){
 'use strict';
 var stripIndent = _dereq_('strip-indent');
 
@@ -5992,7 +6045,7 @@ multiline.stripIndent = function (fn) {
 	return stripIndent(multiline(fn));
 };
 
-},{"strip-indent":52}],52:[function(_dereq_,module,exports){
+},{"strip-indent":53}],53:[function(_dereq_,module,exports){
 'use strict';
 module.exports = function (str) {
 	var match = str.match(/^[ \t]*(?=[^\s])/gm);
@@ -6007,7 +6060,7 @@ module.exports = function (str) {
 	return indent > 0 ? str.replace(re, '') : str;
 };
 
-},{}],53:[function(_dereq_,module,exports){
+},{}],54:[function(_dereq_,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -6579,6 +6632,6 @@ module.exports = function (str) {
 
 }));
 
-},{}]},{},[36])
-(36)
+},{}]},{},[37])
+(37)
 });

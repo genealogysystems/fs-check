@@ -63,6 +63,10 @@ Checks are organized in two ways: by function signature and by type. The functio
 
 * [Possible Duplicate Persons](possibleDuplicates.js)
 
+### RecordHints
+
+* [Record Hints](recordHints.js)
+
 ## Type
 
 ### Problem
@@ -105,6 +109,7 @@ Checks are organized in two ways: by function signature and by type. The functio
 * [Find a Birth Record](missingBirthSource.js)
 * [Find a Death Record](missingDeathSource.js)
 * [Find a Marriage Record](missingMarriageSource.js)
+* [Record Hints](recordHints.js)
 
 ### Family
 

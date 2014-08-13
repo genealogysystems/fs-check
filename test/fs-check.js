@@ -20,7 +20,7 @@ describe('FSCheck', function(){
     
     it('should return proper number of checks', function(){
       var checks = FSCheck.all();
-      expect(checks).to.have.length(35);
+      expect(checks).to.have.length(36);
     });
     
     it('checks should all have the correct format', function(){
@@ -57,7 +57,7 @@ describe('FSCheck', function(){
   describe('FSCheck.signatures', function(){
     
     it('should return correct number of signatures', function(){
-      expect(FSCheck.signatures()).to.have.members(['person','personSource','marriage','marriageSource','child','parents','relationships','duplicates']);
+      expect(FSCheck.signatures()).to.have.members(['person','personSource','marriage','marriageSource','child','parents','relationships','duplicates','recordHints']);
     });
     
   });
@@ -99,13 +99,23 @@ describe('FSCheck', function(){
       expect(checks).to.have.length(3);
     });
     
+    it('should return correct number of duplicates checks', function(){
+      var checks = FSCheck.signature('duplicates');
+      expect(checks).to.have.length(1);
+    });
+    
+    it('should return correct number of recordHints checks', function(){
+      var checks = FSCheck.signature('recordHints');
+      expect(checks).to.have.length(1);
+    });
+    
   });
   
   describe('FSCheck.type', function(){
   
     it('should return correct number of source checks', function(){
       var checks = FSCheck.type('source');
-      expect(checks).to.have.length(3);
+      expect(checks).to.have.length(4);
     });
     
     it('should return correct number of person checks', function(){
@@ -164,6 +174,7 @@ function validateCheck(check){
       case 'children':
       case 'parents':
       case 'duplicates':
+      case 'recordHints':
         argsLength = 2;
         break;
       case 'marriage':
