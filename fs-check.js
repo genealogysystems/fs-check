@@ -3667,6 +3667,16 @@ GedcomXDate.getDuration = GedUtil.getDuration;
  */
 GedcomXDate.daysInMonth = GedUtil.daysInMonth;
 
+/**
+ * Expose now.
+ */
+GedcomXDate.now = GedUtil.now;
+
+/**
+ * Expose fromJSDate.
+ */
+GedcomXDate.fromJSDate = GedUtil.fromJSDate;
+
 module.exports = GedcomXDate;
 },{"./approximate.js":43,"./duration.js":44,"./range.js":46,"./recurring.js":47,"./simple.js":48,"./util.js":50}],46:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
@@ -4345,7 +4355,9 @@ module.exports = {
   getDuration: getDuration,
   daysInMonth: GlobalUtil.daysInMonth,
   addDuration: addDuration,
-  multiplyDuration: multiplyDuration
+  multiplyDuration: multiplyDuration,
+  now: now,
+  fromJSDate: fromJSDate
 }
 
 /**
@@ -4539,6 +4551,10 @@ function addDuration(startDate, duration) {
  * Returns the duration between the starting and ending date.
  */
 function getDuration(startDate, endDate) {
+  
+  if(!(startDate instanceof Simple && endDate instanceof Simple)){
+    throw new Error('Start and end dates must be simple dates');
+  }
   
   var start = getObjFromDate(startDate, true),
       end = getObjFromDate(endDate, true),
@@ -4749,6 +4765,21 @@ function getObjFromDate(date, adjustTimezone) {
   }
   return obj;
 }
+
+/**
+ * Returns a new single date representing the current date
+ */
+function now(){
+  return fromJSDate(new Date());
+}
+
+/**
+ * Return a simple date object from a JavaScript date object
+ */
+function fromJSDate(date){
+  // Remove the millisecond time component
+  return new Simple('+' + date.toISOString().replace(/\.\d{3}/,''));
+};
 },{"./approximate.js":43,"./duration.js":44,"./simple.js":48,"./util-global.js":49}],51:[function(_dereq_,module,exports){
 (function (global){
 /**

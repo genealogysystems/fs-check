@@ -7,7 +7,7 @@
     "Family History"
   ],
   "homepage": "https://github.com/genealogysystems/fs-check",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "repository": {
     "type": "git",
     "url": "git@github.com:genealogysystems/fs-check.git"
@@ -21,7 +21,7 @@
     "coverage": "./coverage/generate.sh"
   },
   "dependencies": {
-    "gedcomx-date": "^0.2.2",
+    "gedcomx-date": "git://github.com/genealogysystems/gedcomx-date-js.git#dev",
     "multiline": "^0.3.4",
     "marked": "^0.3.2",
     "mustache": "^0.8.1"
