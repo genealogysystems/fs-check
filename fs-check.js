@@ -3413,7 +3413,7 @@ Duration.prototype._parseNormalized = function(str) {
         if(valid.indexOf('Y') == -1) {
           throw new Error('Invalid Duration: years out of order');
         }
-        this._years = parseInt(currentNum);
+        this._years = parseInt(currentNum, 10);
         seen.push('Y');
         valid = valid.slice(valid.indexOf('Y')+1);
         currentNum = '';
@@ -3429,7 +3429,7 @@ Duration.prototype._parseNormalized = function(str) {
           if(valid.indexOf('Mi') == -1) {
             throw new Error('Invalid Duration: minutes out of order');
           }
-          this._minutes = parseInt(currentNum);
+          this._minutes = parseInt(currentNum, 10);
           seen.push('Mi');
           valid = valid.slice(valid.indexOf('Mi')+1);
           currentNum = '';
@@ -3443,7 +3443,7 @@ Duration.prototype._parseNormalized = function(str) {
           if(valid.indexOf('Mo') == -1) {
             throw new Error('Invalid Duration: months out of order');
           }
-          this._months = parseInt(currentNum);
+          this._months = parseInt(currentNum, 10);
           valid = valid.slice(valid.indexOf('Mo')+1);
           seen.push('Mo');
           currentNum = '';
@@ -3459,7 +3459,7 @@ Duration.prototype._parseNormalized = function(str) {
         if(valid.indexOf('D') == -1) {
           throw new Error('Invalid Duration: days out of order');
         }
-        this._days = parseInt(currentNum);
+        this._days = parseInt(currentNum, 10);
         seen.push('D');
         valid = valid.slice(valid.indexOf('D')+1);
         currentNum = '';
@@ -3477,7 +3477,7 @@ Duration.prototype._parseNormalized = function(str) {
         if(valid.indexOf('H') == -1) {
           throw new Error('Invalid Duration: hours out of order');
         }
-        this._hours = parseInt(currentNum);
+        this._hours = parseInt(currentNum, 10);
         seen.push('H');
         valid = valid.slice(valid.indexOf('H')+1);
         currentNum = '';
@@ -3493,7 +3493,7 @@ Duration.prototype._parseNormalized = function(str) {
           throw new Error('Invalid Duration: duplicate seconds');
         }
         // Note that you cannot have seconds out of order because it is last
-        this._seconds = parseInt(currentNum);
+        this._seconds = parseInt(currentNum, 10);
         seen.push('S');
         valid = [];
         currentNum = '';
@@ -3831,7 +3831,7 @@ function Recurring(str) {
     if(!(/^[0-9]+$/.test(countNum))) {
       throw new Error('Invalid recurrence count: not a number')
     }
-    this.count = parseInt(countNum);
+    this.count = parseInt(countNum, 10);
     if(this.count < 0) throw new Error('Invalid recurrence count');
   }
 
@@ -3930,7 +3930,7 @@ Simple.prototype._parse = function(str) {
   if(year.match(/^[+-][0-9]{4}$/) === null) {
     throw new Error('Invalid Date: Malformed year');
   }
-  this._year = parseInt(year);
+  this._year = parseInt(year, 10);
   offset += 5;
 
   if(offset == end) {
@@ -3955,7 +3955,7 @@ Simple.prototype._parse = function(str) {
   if(month.match(/^(0[1-9]|1[0-2])$/) === null) {
     throw new Error('Invalid Date: Malformed month');
   }
-  this._month = parseInt(month);
+  this._month = parseInt(month, 10);
   offset += 3;
 
   if(offset == end) {
@@ -4001,7 +4001,7 @@ Simple.prototype._parse = function(str) {
       }
       break;
   }
-  this._day = parseInt(day);
+  this._day = parseInt(day, 10);
   offset += 3;
 
   if(offset == end) return;
@@ -4044,7 +4044,7 @@ Simple.prototype._parseTime = function(str) {
       throw new Error('Invalid Date: Malformed hours');
     }
   }
-  this._hours = parseInt(hours);
+  this._hours = parseInt(hours, 10);
   offset += 2;
 
   if(offset == end) {
@@ -4071,7 +4071,7 @@ Simple.prototype._parseTime = function(str) {
   if(flag24 && minutes != '00') {
     throw new Error('Invalid Date: Hour of 24 requires 00 minutes');
   }
-  this._minutes = parseInt(minutes);
+  this._minutes = parseInt(minutes, 10);
   offset += 3;
 
   if(offset == end) {
@@ -4098,7 +4098,7 @@ Simple.prototype._parseTime = function(str) {
   if(flag24 && seconds != '00') {
     throw new Error('Invalid Date: Hour of 24 requires 00 seconds');
   }
-  this._seconds = parseInt(seconds);
+  this._seconds = parseInt(seconds, 10);
   offset += 3;
 
   if(offset == end) {
@@ -4141,7 +4141,7 @@ Simple.prototype._parseTimezone = function(str) {
   if(tzHours.match(/^[+-]([0-1][0-9]|2[0-3])$/) === null) {
     throw new Error('Invalid Date: Malformed timezone hours');
   }
-  this._tzHours = parseInt(tzHours);
+  this._tzHours = parseInt(tzHours, 10);
   // set tz minutes to clear out default local tz offset
   this._tzMinutes = 0;
   offset += 3;
@@ -4162,7 +4162,7 @@ Simple.prototype._parseTimezone = function(str) {
   if(tzMinutes.match(/^[0-5][0-9]$/) === null) {
     throw new Error('Invalid Date: Malformed timezone minutes');
   }
-  this._tzMinutes = parseInt(tzMinutes);
+  this._tzMinutes = parseInt(tzMinutes, 10);
   offset += 3;
 
   if(offset == end) {
