@@ -2,11 +2,11 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     path = require('path'),
     expect = require('chai').expect,
     FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('missingBirthFormalDate'),
+    fsCheck = require(path.join(libPath, 'index.js')).id('standardizeBirthDate'),
     utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
-describe('missingBirthFormalDate', function(){
+describe('standardizeBirthDate', function(){
 
   it('should return nothing when there is no birth', function() {
     var person = new FamilySearch.Person({
@@ -45,11 +45,11 @@ describe('missingBirthFormalDate', function(){
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
           date: 'January 1, 1900',
-          formalDate: '+1900-01-01',
           place: 'Provo, Utah, United States of America'
         })
       ]
     });
+    person.facts[0].date.normalized = [{ value: '1 January 1900' }];
 
     var opportunity = fsCheck.check(person);
 
@@ -73,7 +73,7 @@ describe('missingBirthFormalDate', function(){
 
     var opportunity = fsCheck.check(person);
 
-    doc('missingBirthFormalDate', opportunity);
+    doc('standardizeBirthDate', opportunity);
     utils.validateSchema(fsCheck, opportunity);
   });
 
