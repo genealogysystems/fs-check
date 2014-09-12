@@ -115,44 +115,4 @@ describe('standardizeMarriageDate', function(){
     expect(opportunity.person).to.equal(wife);
   });
 
-  it('should move opportunity to husband when wife is missing', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = undefined,
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
-          facts: [
-            new FamilySearch.Fact({
-              type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              place: 'Provo, Utah, United States of America'
-            })
-          ]
-        });
-
-    var opportunity = fsCheck.check(wife, husband, marriage);
-    utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.person).to.equal(husband);
-  });
-
-  it('should return nothing when husband and wife are undefined', function() {
-    var husband = undefined,
-        wife = undefined,
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
-          facts: [
-            new FamilySearch.Fact({
-              type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
-            })
-          ]
-        });
-
-    var opportunity = fsCheck.check(wife, husband, marriage);
-    expect(opportunity).to.equal(undefined);
-  });
-
 });

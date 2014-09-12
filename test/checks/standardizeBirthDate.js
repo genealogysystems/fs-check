@@ -70,6 +70,7 @@ describe('standardizeBirthDate', function(){
     });
     
     person.id = 'PPPP-PPP';
+    person.display = { name: 'Elmer Fudd' };
 
     var opportunity = fsCheck.check(person);
 
