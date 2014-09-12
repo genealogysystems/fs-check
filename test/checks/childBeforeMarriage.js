@@ -228,5 +228,166 @@ describe('childBeforeMarriage', function(){
     utils.validateSchema(fsCheck, opportunity);
     expect(opportunity.description).to.contain('Mary Adams');
   });
-
+  
+  it('should properly handle multiple marriages with problems', function(){
+    var persons = {
+      'CHILD1': new FamilySearch.Person({
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            formalDate: '+1899-05-10'
+          })
+        ]
+      }),
+      'CHILD2': new FamilySearch.Person({
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            formalDate: '+1901-05-10'
+          })
+        ]
+      }),
+      'SPOUSE1': new FamilySearch.Person(),
+      'SPOUSE2': new FamilySearch.Person()
+    };
+    persons.CHILD1.id = 'CHILD1';
+    persons.CHILD2.id = 'CHILD2';
+    persons.SPOUSE1.id = 'SPOUSE1';
+    persons.SPOUSE1.display = { name: 'Mary Adams' };
+    persons.SPOUSE2.id = 'SPOUSE2';
+    persons.SPOUSE2.display = { name: 'Sarah Jane' };
+    
+    var marriages = [
+      new FamilySearch.Couple({
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Marriage',
+            formalDate: '+1900-07-03'
+          })
+        ]
+      }),
+      new FamilySearch.Couple({
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Marriage',
+            formalDate: '+1900-10-03'
+          })
+        ]
+      })
+    ];
+    marriages[0].$getSpouseId = function(){ return 'SPOUSE1'; };
+    marriages[1].$getSpouseId = function(){ return 'SPOUSE2'; };
+    
+    var relationships = {
+      getSpouseRelationships: function(){ 
+        return marriages;
+      },
+      getChildRelationshipsOf: function(spouseId){ 
+        if(spouseId === 'SPOUSE1'){
+          return [
+            new FamilySearch.ChildAndParents({
+              child: 'CHILD1'
+            })
+          ];
+        } else {
+          return [
+            new FamilySearch.ChildAndParents({
+              child: 'CHILD1'
+            }),
+            new FamilySearch.ChildAndParents({
+              child: 'CHILD2'
+            })
+          ];
+        }
+      }
+    };
+    
+    var person = new FamilySearch.Person();
+    person.id = 'PPPP-PPP';
+    
+    var opportunity = fsCheck.check(person, relationships, persons);
+    utils.validateSchema(fsCheck, opportunity);
+    expect(opportunity.description).to.contain('Mary Adams');
+    expect(opportunity.description).to.contain('Sarah Jane');
+  });
+  
+  it('should properly handle multiple marriages where some have problems and others dont', function(){
+    var persons = {
+      'CHILD1': new FamilySearch.Person({
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            formalDate: '+1899-05-10'
+          })
+        ]
+      }),
+      'CHILD2': new FamilySearch.Person({
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            formalDate: '+1901-05-10'
+          })
+        ]
+      }),
+      'SPOUSE1': new FamilySearch.Person(),
+      'SPOUSE2': new FamilySearch.Person()
+    };
+    persons.CHILD1.id = 'CHILD1';
+    persons.CHILD2.id = 'CHILD2';
+    persons.SPOUSE1.id = 'SPOUSE1';
+    persons.SPOUSE1.display = { name: 'Mary Adams' };
+    persons.SPOUSE2.id = 'SPOUSE2';
+    persons.SPOUSE2.display = { name: 'Sarah Jane' };
+    
+    var marriages = [
+      new FamilySearch.Couple({
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Marriage',
+            formalDate: '+1900-07-03'
+          })
+        ]
+      }),
+      new FamilySearch.Couple({
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Marriage',
+            formalDate: '+1900-10-03'
+          })
+        ]
+      })
+    ];
+    marriages[0].$getSpouseId = function(){ return 'SPOUSE1'; };
+    marriages[1].$getSpouseId = function(){ return 'SPOUSE2'; };
+    
+    var relationships = {
+      getSpouseRelationships: function(){ 
+        return marriages;
+      },
+      getChildRelationshipsOf: function(spouseId){ 
+        if(spouseId === 'SPOUSE1'){
+          return [
+            new FamilySearch.ChildAndParents({
+              child: 'CHILD1'
+            })
+          ];
+        } else {
+          return [
+            new FamilySearch.ChildAndParents({
+              child: 'CHILD2'
+            })
+          ];
+        }
+      }
+    };
+    
+    var person = new FamilySearch.Person();
+    person.id = 'PPPP-PPP';
+    
+    var opportunity = fsCheck.check(person, relationships, persons);
+    utils.validateSchema(fsCheck, opportunity);
+    expect(opportunity.description).to.contain('Mary Adams');
+    expect(opportunity.description).to.not.contain('Sarah Jane');
+  });
+  
 });
