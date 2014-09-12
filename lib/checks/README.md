@@ -74,14 +74,12 @@ Checks are organized in two ways: by function signature and by type. The functio
 * [Person Born Before their Parent(s)](birthBeforeParentsBirth.js)
 * [Child Born Before Marriage](childBeforeMarriage.js)
 * [Person Died Before They Were Born](deathBeforeBirth.js)
-* [Marriage with no Children](marriageWithNoChildren.js)
 
 ### Cleanup
 
 * [Identical Names](duplicateNames.js)
 * [Many Alternate Names](manyAlternateNames.js)
 * [Multiple Marriage Facts](multipleMarriageFacts.js)
-* [Multiple Parent Relationships](multipleParents.js)
 * [Incorrect Alternate Name Format](orInName.js)
 * [Possible Duplicate Persons](possibleDuplicates.js)
 * [Standardize a Birth Date](standardizeBirthDate.js)
@@ -91,6 +89,17 @@ Checks are organized in two ways: by function signature and by type. The functio
 * [Standardize a Marriage Date](standardizeMarriageDate.js)
 * [Standardize a Marriage Place](standardizeMarriagePlace.js)
 * [Unusual Characters in a Name](unusualCharactersInName.js)
+
+### Family
+
+* [Marriage with no Children](marriageWithNoChildren.js)
+* [Missing a Father](missingFather.js)
+* [Find a Marriage Date](missingMarriageDate.js)
+* [Find a Marriage](missingMarriageFact.js)
+* [Find a Marriage Place](missingMarriagePlace.js)
+* [Missing a Mother](missingMother.js)
+* [Missing Parents](missingParents.js)
+* [Multiple Parent Relationships](multipleParents.js)
 
 ### Person
 
@@ -110,12 +119,3 @@ Checks are organized in two ways: by function signature and by type. The functio
 * [Find a Death Record](missingDeathSource.js)
 * [Find a Marriage Record](missingMarriageSource.js)
 * [Record Hints](recordHints.js)
-
-### Family
-
-* [Missing a Father](missingFather.js)
-* [Find a Marriage Date](missingMarriageDate.js)
-* [Find a Marriage](missingMarriageFact.js)
-* [Find a Marriage Place](missingMarriagePlace.js)
-* [Missing a Mother](missingMother.js)
-* [Missing Parents](missingParents.js)

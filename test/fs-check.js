@@ -125,17 +125,17 @@ describe('FSCheck', function(){
     
     it('should return correct number of family checks', function(){
       var checks = FSCheck.type('family');
-      expect(checks).to.have.length(6);
+      expect(checks).to.have.length(8);
     });
     
     it('should return correct number of cleanup checks', function(){
       var checks = FSCheck.type('cleanup');
-      expect(checks).to.have.length(13);
+      expect(checks).to.have.length(12);
     });
   
     it('should return correct number of problem checks', function(){
       var checks = FSCheck.type('problem');
-      expect(checks).to.have.length(4);
+      expect(checks).to.have.length(3);
     });
   
   });
