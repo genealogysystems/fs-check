@@ -22,18 +22,18 @@ Checks are organized in two ways: by function signature and by type. The functio
 * [Many Alternate Names](manyAlternateNames.js)
 * [Find a Birth](missingBirth.js)
 * [Find a Birth Date](missingBirthDate.js)
-* [Standardize a Birth Date](missingBirthFormalDate.js)
-* [Standardize a Birth Place](missingBirthFormalPlace.js)
 * [Find a Birth Place](missingBirthPlace.js)
 * [Find a Death](missingDeath.js)
 * [Find a Death Date](missingDeathDate.js)
-* [Standardize a Death Date](missingDeathFormalDate.js)
-* [Standardize a Death Place](missingDeathFormalPlace.js)
 * [Find a Death Place](missingDeathPlace.js)
 * [Missing a Given Name](missingGivenName.js)
 * [Missing a Name](missingName.js)
 * [Missing a Surname](missingSurname.js)
 * [Incorrect Alternate Name Format](orInName.js)
+* [Standardize a Birth Date](standardizeBirthDate.js)
+* [Standardize a Birth Place](standardizeBirthPlace.js)
+* [Standardize a Death Date](standardizeDeathDate.js)
+* [Standardize a Death Place](standardizeDeathPlace.js)
 * [Unusual Characters in a Name](unusualCharactersInName.js)
 
 ### PersonSource
@@ -50,10 +50,10 @@ Checks are organized in two ways: by function signature and by type. The functio
 
 * [Find a Marriage Date](missingMarriageDate.js)
 * [Find a Marriage](missingMarriageFact.js)
-* [Standardize a Marriage Date](missingMarriageFormalDate.js)
-* [Standardize a Marriage Place](missingMarriageNormalizedPlace.js)
 * [Find a Marriage Place](missingMarriagePlace.js)
 * [Multiple Marriage Facts](multipleMarriageFacts.js)
+* [Standardize a Marriage Date](standardizeMarriageDate.js)
+* [Standardize a Marriage Place](standardizeMarriagePlace.js)
 
 ### MarriageSource
 
@@ -80,16 +80,16 @@ Checks are organized in two ways: by function signature and by type. The functio
 
 * [Duplicate Names](duplicateNames.js)
 * [Many Alternate Names](manyAlternateNames.js)
-* [Standardize a Birth Date](missingBirthFormalDate.js)
-* [Standardize a Birth Place](missingBirthFormalPlace.js)
-* [Standardize a Death Date](missingDeathFormalDate.js)
-* [Standardize a Death Place](missingDeathFormalPlace.js)
-* [Standardize a Marriage Date](missingMarriageFormalDate.js)
-* [Standardize a Marriage Place](missingMarriageNormalizedPlace.js)
 * [Multiple Marriage Facts](multipleMarriageFacts.js)
 * [Multiple Parent Relationships](multipleParents.js)
 * [Incorrect Alternate Name Format](orInName.js)
 * [Possible Duplicate Persons](possibleDuplicates.js)
+* [Standardize a Birth Date](standardizeBirthDate.js)
+* [Standardize a Birth Place](standardizeBirthPlace.js)
+* [Standardize a Death Date](standardizeDeathDate.js)
+* [Standardize a Death Place](standardizeDeathPlace.js)
+* [Standardize a Marriage Date](standardizeMarriageDate.js)
+* [Standardize a Marriage Place](standardizeMarriagePlace.js)
 * [Unusual Characters in a Name](unusualCharactersInName.js)
 
 ### Person
