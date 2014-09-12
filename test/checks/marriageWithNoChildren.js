@@ -33,11 +33,15 @@ describe('marriageWithNoChildren', function(){
       facts: []
     });
     person.id = 'XXX-123';
+    person.display = { name: 'Mary Jane' };
 
-    var relationships = {
-      getSpouseIds: function() {return ['1'];},
-      getChildIds: function() {return ['2','3'];}
-    }
+    var relationships = generateRelationships({
+      spouse1: {
+        children: ['2','3'],
+        coupleId: 'CCC-CC1',
+        name: 'Joe Adams'
+      }
+    });
 
     var opportunity = fsCheck.check(person, relationships, {});
 
@@ -51,15 +55,127 @@ describe('marriageWithNoChildren', function(){
       facts: []
     });
     person.id = 'XXX-123';
+    person.display = { name: 'Mary Jane' };
 
-    var relationships = {
-      getSpouseIds: function() {return ['1'];},
-      getChildIds: function() {return [];}
-    }
+    var relationships = generateRelationships({
+      spouse1: {
+        children: [],
+        coupleId: 'CCC-CC1',
+        name: 'Joe Adams'
+      }
+    });
 
     var opportunity = fsCheck.check(person, relationships, {});
-    doc('marriageWithNoChildren', opportunity);
     utils.validateSchema(fsCheck, opportunity);
   });
+  
+  it('should return an opportunity when there are multiple marriages and one has no children', function(){
+    var person = new FamilySearch.Person({
+      gender: 'http://gedcomx.org/Female',
+      names: [],
+      facts: []
+    });
+    person.id = 'XXX-123';
+    person.display = { name: 'Mary Jane' };
 
+    var relationships = generateRelationships({
+      spouse1: {
+        children: [],
+        coupleId: 'CCC-CC1',
+        name: 'Joe Adams'
+      },
+      spouse2: {
+        children: ['2','3'],
+        coupleId: 'CCC-CC1',
+        name: 'Henry Hancock'
+      }
+    });
+
+    var opportunity = fsCheck.check(person, relationships, {});
+    utils.validateSchema(fsCheck, opportunity);
+  });
+  
+  it('should return an opportunity when there are multiple marriages and all have no children', function(){
+    var person = new FamilySearch.Person({
+      gender: 'http://gedcomx.org/Female',
+      names: [],
+      facts: []
+    });
+    person.id = 'XXX-123';
+    person.display = { name: 'Mary Jane' };
+
+    var relationships = generateRelationships({
+      spouse1: {
+        children: [],
+        coupleId: 'CCC-CC1',
+        name: 'Joe Adams'
+      },
+      spouse2: {
+        children: [],
+        coupleId: 'CCC-CC1',
+        name: 'Henry Hancock'
+      }
+    });
+
+    var opportunity = fsCheck.check(person, relationships, {});
+    utils.validateSchema(fsCheck, opportunity);
+    doc('marriageWithNoChildren', opportunity);
+  });
+  
+  it('should return nothing when there are multiple marriages with children', function(){
+    var person = new FamilySearch.Person({
+      gender: 'http://gedcomx.org/Female',
+      names: [],
+      facts: []
+    });
+    person.id = 'XXX-123';
+    person.display = { name: 'Mary Jane' };
+
+    var relationships = generateRelationships({
+      spouse1: {
+        children: ['2','3'],
+        coupleId: 'CCC-CC1',
+        name: 'Joe Adams'
+      },
+      spouse2: {
+        children: ['2','3'],
+        coupleId: 'CCC-CC1',
+        name: 'Henry Hancock'
+      }
+    });
+
+    var opportunity = fsCheck.check(person, relationships, {});
+    expect(opportunity).to.not.exist;
+  });
+
+  /**
+   * Return an object that mocks the FS SDK Relationships object
+   */
+  function generateRelationships(spouses){
+    return {
+      getSpouseIds: function(){
+        var ids = []
+        for(var i in spouses){
+          ids.push(i);
+        }
+        return ids;
+      },
+      getChildRelationshipsOf: function(spouseId){
+        return spouses[spouseId].children;
+      },
+      getSpouseRelationship: function(spouseId){
+        return {
+          id: spouses[spouseId].coupleId
+        };
+      },
+      getPerson: function(spouseId){
+        return {
+          id: spouseId,
+          $getDisplayName: function(){
+            return spouses[spouseId].name;
+          }
+        }
+      }
+    };
+  };
 });
