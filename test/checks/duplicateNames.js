@@ -51,6 +51,7 @@ describe('duplicateNames', function(){
         })
       ]
     });
+    person.display = { name: 'Mary Sue' };
     var opportunity = fsCheck.check(person);
     utils.validateSchema(fsCheck, opportunity);
     expect(opportunity.description.match(/<ul>/g).length).to.equal(2);
@@ -78,6 +79,7 @@ describe('duplicateNames', function(){
       ]
     });
     person.id = 'PPPP-PPP';
+    person.display = { name: 'Mary Sue' };
     var opportunity = fsCheck.check(person);
     doc('duplicateNames', opportunity);
     utils.validateSchema(fsCheck, opportunity);

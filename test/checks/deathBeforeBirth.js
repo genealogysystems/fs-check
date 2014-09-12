@@ -234,8 +234,8 @@ describe('deathBeforeBirth', function(){
         })
       ]
     });
-    
     person.id = 'PPPP-PPP';
+    person.display = { name: 'Mary Sue' };
 
     var opportunity = fsCheck.check(person);
 

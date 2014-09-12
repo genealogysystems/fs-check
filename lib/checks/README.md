@@ -18,7 +18,7 @@ Checks are organized in two ways: by function signature and by type. The functio
 ### Person
 
 * [Person Died Before They Were Born](deathBeforeBirth.js)
-* [Duplicate Names](duplicateNames.js)
+* [Identical Names](duplicateNames.js)
 * [Many Alternate Names](manyAlternateNames.js)
 * [Find a Birth](missingBirth.js)
 * [Find a Birth Date](missingBirthDate.js)
@@ -78,7 +78,7 @@ Checks are organized in two ways: by function signature and by type. The functio
 
 ### Cleanup
 
-* [Duplicate Names](duplicateNames.js)
+* [Identical Names](duplicateNames.js)
 * [Many Alternate Names](manyAlternateNames.js)
 * [Multiple Marriage Facts](multipleMarriageFacts.js)
 * [Multiple Parent Relationships](multipleParents.js)

@@ -15,33 +15,55 @@ module.exports = {
   check: function(person, parents) {
 
     var birthBeforeParentBirth = [],
-        birth = person.$getBirth();
-
-    // If we don't have a birth
-    if(!birth) {
-      return;
-    }
-
-    var birthDate = utils.getFactYear(birth)
-
-    // If we don't have a birth date
-    if(birthDate == undefined) {
-      return;
-    }
-
-    for(var x in parents) {
-      var parentBirth = parents[x].$getBirth();
-      if(parentBirth) {
-        var parentBirthDate = utils.getFactYear(parentBirth);
-        if(parentBirthDate && parentBirthDate >= birthDate) {
+        birth = person.$getBirth(),
+        addParent = function(parent){
           birthBeforeParentBirth.push({
-            id: parents[x].id,
-            name: parents[x].$getDisplayName(),
-            birth: parents[x].$getDisplayBirthDate()
+            id: parent.id,
+            name: parent.$getDisplayName(),
+            birth: parent.$getDisplayBirthDate()
           });
-        }
-      } 
+        };
+        
+    // If we don't have a birth
+    if(!birth || !birth.date) {
+      return;
+    }
+    
+    var birthYear = utils.getFactYear(birth);
 
+    // If we don't have a formal date then just compare years
+    if(!birth.$getFormalDate()) {
+      for(var i = 0; i < parents.length; i++){
+        var parentBirth = parents[i].$getBirth();
+        if(parentBirth) {
+          var parentBirthYear = utils.getFactYear(parentBirth);
+          if(parentBirthYear && parentBirthYear >= birthYear) {
+            addParent(parents[i]);
+          }
+        }
+      }
+    }
+    
+    // If we have a formal birth date for the person then
+    // do an exact comparison if the parents have a formal
+    // birth date. If the parents don't have a formal birth
+    // date then just compare years
+    else {
+      for(var i = 0; i < parents.length; i++){
+        var parentBirth = parents[i].$getBirth();
+        if(parentBirth){
+          if(parentBirth.$getFormalDate()){
+            if(utils.compareFormalDates(birth.$getFormalDate(), parentBirth.$getFormalDate()) === -1){
+              addParent(parents[i]);
+            }
+          } else {
+            var parentBirthYear = utils.getFactYear(parentBirth);
+            if(parentBirthYear && parentBirthYear >= birthYear) {
+              addParent(parents[i]);
+            }
+          }
+        } 
+      }
     }
 
     if(birthBeforeParentBirth.length > 0) {
@@ -123,7 +145,7 @@ module.exports = {
       }
       
       // Sort the marriage dates to find the earliest one
-      marriageDates.sort(compareDates);
+      marriageDates.sort(utils.compareFormalDates);
       
       if(marriageDates.length === 0){
         continue;
@@ -141,9 +163,9 @@ module.exports = {
       
       // For each child in this marriage, check to see if they
       // have a birth date and if it's before the marriage date
-      for(var i = 0; i < children.length && !badMarriage; i++){
+      for(var j = 0; j < children.length && !badMarriage; j++){
       
-        var rel = children[i],
+        var rel = children[j],
             childId = rel.$getChildId(),
             child = persons[childId];
         
@@ -166,7 +188,7 @@ module.exports = {
           continue;
         }
         
-        if(compareDates(marriageDate, birthDate) === 1){
+        if(utils.compareFormalDates(marriageDate, birthDate) === 1){
           badMarriage = true;
           badMarriages.push(marriage);
         }
@@ -177,7 +199,7 @@ module.exports = {
     
       var spouses = [];
       for(var i = 0; i < badMarriages.length; i++){
-        var spouseId = marriage.$getSpouseId(person.id),
+        var spouseId = badMarriages[i].$getSpouseId(person.id),
             spouse = persons[spouseId];
         if(spouse){
           spouses.push(spouse.display.name);
@@ -213,15 +235,6 @@ module.exports = {
     }
   }
 };
-
-function compareDates(date1, date2){
-  try {
-    GedcomXDate.getDuration(new GedcomXDate(date1), new GedcomXDate(date2));
-    return -1;
-  } catch(e) {
-    return 1;
-  }
-};
 },{"../util.js":38,"gedcomx-date":45}],3:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
@@ -239,43 +252,47 @@ module.exports = {
   signature: 'person',
   check: function(person) {
 
-    var birth = person.$getBirth();
+    var birth = person.$getBirth(),
+        death = person.$getDeath();
 
     // If we don't have a birth
-    if(!birth) {
+    if(!birth || !birth.date) {
       return;
     }
-
-    // If we don't have a birth date
-    if(utils.getFactYear(birth) == undefined) {
-      return;
-    }
-
-    var death = person.$getDeath();
-
+    
     // If we don't have a death
-    if(!death) {
+    if(!death || !death.date) {
       return;
     }
 
-    // If we don't have a death date
-    if(utils.getFactYear(death) == undefined) {
-      return;
+    // If either the birth or death date doesn't
+    // have a formal value then we just compare years
+    if(!birth.$getFormalDate() || !death.$getFormalDate()){
+      if(utils.getFactYear(death) >= utils.getFactYear(birth)) {
+        return;
+      }
     }
-
-    // If death >= birth
-    if(utils.getFactYear(death) >= utils.getFactYear(birth)) {
+    
+    // If they both have formal values then do an exact comparison
+    else if(utils.compareFormalDates(birth.$getFormalDate(), death.$getFormalDate()) !== 1) {
       return;
     }
 
     var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and update the person.
+        A person cannot die before they were born. Visit [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}})
+        in the Family Tree and fix the issue by doing one of the following:
+        
+        * Change the birth date to be before the death date
+        * Change the death date to be after the birth date
 
         ## Help
     
         * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
         * [Explaining approximate birth dates](https://familysearch.org/ask/productSupport#/Do-not-know-exact-birth-date-or-death-date)
-      */}, {pid:  person.id});
+      */}, {
+        pid: person.id,
+        name: person.display.name
+      });
 
     return {
       id: this.id + ':' + person.id,
@@ -298,7 +315,7 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'duplicateNames',
   type: 'cleanup',
-  title: 'Duplicate Names',
+  title: 'Identical Names',
   signature: 'person',
   check: function(person) {
 
@@ -332,14 +349,13 @@ module.exports = {
       var descr = utils.markdown(function(){/*
         This person has names which differ only by capitalization or punctuation.
         It is not necessary to document all of the different ways a name could be capitalized or punctuated.
-        Consider deleting some of the alternate names that aren't necessary in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
+        View [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) in the Family Tree and delete
+        some of the unnecessary names.
 
-        {{#duplicates}}
-        
+        {{#duplicates}}       
         {{#.}}
         * {{.}}
-        {{/.}}
-        
+        {{/.}}       
         {{/duplicates}}
         
         ## Help
@@ -347,7 +363,11 @@ module.exports = {
         * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
         * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
         * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)
-      */}, {pid: person.id, duplicates: duplicates});
+      */}, {
+        pid: person.id,
+        name: person.display.name,
+        duplicates: duplicates
+      });
 
       return {
         id: this.id + ':' + person.id,
@@ -570,111 +590,6 @@ module.exports = {
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
- *  2. There is an original date
- *  3. There is no formal date
- */
-var utils = _dereq_('../util.js');
-
-module.exports = {
-  id: 'missingBirthFormalDate',
-  type: 'cleanup',
-  title: 'Standardize a Birth Date',
-  signature: 'person',
-  check: function(person) {
-
-    var birth = person.$getBirth();
-
-    // If we have no birth return
-    if(!birth) {
-      return;
-    }
-
-    // If we have an original date without a formal date
-    if(birth.$getDate() !== undefined && birth.$getFormalDate() === undefined) {
-
-      var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Birth Date.
-
-        ## Why?
-        Standardization ensures that everyone knows when this event took place.
-        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example.
-        Is this March 11, 2000 or November 3, 2000?
-        By standardizing the date we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-      */}, {pid:  person.id});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
-      };
-    }
-  }
-};
-},{"../util.js":38}],10:[function(_dereq_,module,exports){
-/**
- * Returns an opportunity if:
- *  1. There is a birth fact
- *  2. There is an original place
- *  3. There is no normalized place
- */
-var utils = _dereq_('../util.js');
-
-module.exports = {
-  id: 'missingBirthFormalPlace',
-  type: 'cleanup',
-  title: 'Standardize a Birth Place',
-  signature: 'person',
-  check: function(person) {
-
-    var birth = person.$getBirth();
-
-    // If we have no birth return
-    if(!birth) {
-      return;
-    }
-
-    // If we have an original place without a normalized place
-    if(birth.$getPlace() !== undefined && birth.$getNormalizedPlace() === undefined) {
-
-      var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Birth Place.
-
-        ## Why?
-        Standardization ensures that everyone knows where this event took place.
-        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example.
-        Is this London England, London Kentucky, or London Ontario?
-        By standardizing the place we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {pid:  person.id});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
-      };
-    }
-  }
-};
-},{"../util.js":38}],11:[function(_dereq_,module,exports){
-/**
- * Returns an opportunity if:
- *  1. There is a birth fact
  *  2. There is no place
  *  3. There is a date
  */
@@ -728,7 +643,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],12:[function(_dereq_,module,exports){
+},{"../util.js":38}],10:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -793,7 +708,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":38}],13:[function(_dereq_,module,exports){
+},{"../util.js":38}],11:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no death fact OR place and date are both undefined
@@ -840,7 +755,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],14:[function(_dereq_,module,exports){
+},{"../util.js":38}],12:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -896,113 +811,7 @@ module.exports = {
 
   }
 }
-},{"../util.js":38}],15:[function(_dereq_,module,exports){
-/**
- * Returns an opportunity if:
- *  1. There is a death fact
- *  2. There is an original date
- *  3. There is no formal date
- */
-var utils = _dereq_('../util.js');
-
-module.exports = {
-  id: 'missingDeathFormalDate',
-  type: 'cleanup',
-  title: 'Standardize a Death Date',
-  signature: 'person',
-  check: function(person) {
-
-    var death = person.$getDeath();
-
-    // If we have no death return
-    if(!death) {
-      return;
-    }
-
-    // If we have an original date without a formal date
-    if(death.$getDate() !== undefined && death.$getFormalDate() === undefined) {
-
-      var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Death Date.
-
-        ## Why?
-        Standardization ensures that everyone knows when this event took place.
-        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example.
-        Is this March 11, 2000 or November 3, 2000?
-        By standardizing the date we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {pid:  person.id});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
-      };
-    }
-  }
-};
-},{"../util.js":38}],16:[function(_dereq_,module,exports){
-/**
- * Returns an opportunity if:
- *  1. There is a death fact
- *  2. There is an original place
- *  3. There is no normalized place
- */
-var utils = _dereq_('../util.js');
-
-module.exports = {
-  id: 'missingDeathFormalPlace',
-  type: 'cleanup',
-  title: 'Standardize a Death Place',
-  signature: 'person',
-  check: function(person) {
-
-    var death = person.$getDeath();
-
-    // If we have no death return
-    if(!death) {
-      return;
-    }
-
-    // If we have an original place without a normalized place
-    if(death.$getPlace() !== undefined && death.$getNormalizedPlace() === undefined) {
-
-      var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Death Place.
-
-        ## Why?
-        Standardization ensures that everyone knows where this event took place.
-        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example.
-        Is this London England, London Kentucky, or London Ontario?
-        By standardizing the place we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {pid:  person.id});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
-      };
-    }
-  }
-};
-},{"../util.js":38}],17:[function(_dereq_,module,exports){
+},{"../util.js":38}],13:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1057,7 +866,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],18:[function(_dereq_,module,exports){
+},{"../util.js":38}],14:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1127,7 +936,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":38}],19:[function(_dereq_,module,exports){
+},{"../util.js":38}],15:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1188,7 +997,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":38}],20:[function(_dereq_,module,exports){
+},{"../util.js":38}],16:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a given name but has a surname
@@ -1231,7 +1040,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],21:[function(_dereq_,module,exports){
+},{"../util.js":38}],17:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1326,7 +1135,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],22:[function(_dereq_,module,exports){
+},{"../util.js":38}],18:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if there is a marriage but no marriage fact,
  * or there is 1 marriage fact with no date and place
@@ -1395,169 +1204,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],23:[function(_dereq_,module,exports){
-/**
- * Returns an opportunity if:
- *  1. There is a wife OR husband
- *  2. There is only 1 marriage fact
- *  3. There is an original date
- *  4. There is no formal date
- */
-var utils = _dereq_('../util.js');
-
-module.exports = {
-  id: 'missingMarriageFormalDate',
-  type: 'cleanup',
-  title: 'Standardize a Marriage Date',
-  signature: 'marriage',
-  check: function(wife, husband, marriage) {
-
-    var person = wife,
-        spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
-    if(!person) {
-      return;
-    }
-
-    var marriageFact = marriage.$getMarriageFact();
-
-    // If we don't have exactly one marriage fact, don't run
-    var facts = marriage.$getFacts(),
-        count = 0;
-    for(var x in facts) {
-      if(facts[x].type == 'http://gedcomx.org/Marriage') {
-        count++;
-      }
-    }
-
-    if(count != 1) {
-      return;
-    }
-
-    // If we have an original date without a formal date
-    if(marriageFact.$getDate() !== undefined && marriageFact.$getFormalDate() === undefined) {
-
-      var coupleDescr = '';
-      if(wife && husband) {
-        coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
-      } else {
-        coupleDescr = 'for ' + person.$getDisplayName();
-      }
-
-      var descr = utils.markdown(function(){/*
-        View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the Marriage Date {{couple}}.
-
-        ## Why?
-        Standardization ensures that everyone knows when this event took place.
-        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example.
-        Is this March 11, 2000 or November 3, 2000?
-        By standardizing the date we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {crid:  marriage.id, couple: coupleDescr});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
-      };
-    }
-  }
-};
-},{"../util.js":38}],24:[function(_dereq_,module,exports){
-/**
- * Returns an opportunity if:
- *  1. There is a wife OR husband
- *  2. There is only 1 marriage fact
- *  3. There is an original place
- *  4. There is no normalized place
- */
-var utils = _dereq_('../util.js');
-
-module.exports = {
-  id: 'missingMarriageNormalizedPlace',
-  type: 'cleanup',
-  title: 'Standardize a Marriage Place',
-  signature: 'marriage',
-  check: function(wife, husband, marriage) {
-
-    var person = wife,
-        spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
-    if(!person) {
-      return;
-    }
-
-    var marriageFact = marriage.$getMarriageFact();
-
-    // If we don't have exactly one marriage fact, don't run
-    var facts = marriage.$getFacts(),
-        count = 0;
-    for(var x in facts) {
-      if(facts[x].type == 'http://gedcomx.org/Marriage') {
-        count++;
-      }
-    }
-
-    if(count != 1) {
-      return;
-    }
-
-    // If we have an original place without a normalized place
-    if(marriageFact.$getPlace() !== undefined && marriageFact.$getNormalizedPlace() === undefined) {
-
-      var coupleDescr = '';
-      if(wife && husband) {
-        coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
-      } else {
-        coupleDescr = 'for ' + person.$getDisplayName();
-      }
-
-      var descr = utils.markdown(function(){/*
-        The marriage place of `{{place}}` has not been standardized for the marriage {{couple}}. View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the marriage place.
-
-        ## Why?
-        Standardization ensures that everyone knows where this event took place.
-        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example.
-        Is this London England, London Kentucky, or London Ontario?
-        By standardizing the place we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {
-        crid: marriage.id, 
-        couple: coupleDescr,
-        place: marriageFact.$getPlace()
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
-      };
-    }
-  }
-};
-},{"../util.js":38}],25:[function(_dereq_,module,exports){
+},{"../util.js":38}],19:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1651,7 +1298,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],26:[function(_dereq_,module,exports){
+},{"../util.js":38}],20:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Marriage fact exists
@@ -1759,7 +1406,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],27:[function(_dereq_,module,exports){
+},{"../util.js":38}],21:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1820,7 +1467,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":38}],28:[function(_dereq_,module,exports){
+},{"../util.js":38}],22:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no name
@@ -1861,7 +1508,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],29:[function(_dereq_,module,exports){
+},{"../util.js":38}],23:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1911,7 +1558,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":38}],30:[function(_dereq_,module,exports){
+},{"../util.js":38}],24:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a surname but does have a given name
@@ -1954,7 +1601,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],31:[function(_dereq_,module,exports){
+},{"../util.js":38}],25:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is more than one marriage fact
@@ -2022,7 +1669,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],32:[function(_dereq_,module,exports){
+},{"../util.js":38}],26:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has more than one parent relationship
@@ -2062,7 +1709,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],33:[function(_dereq_,module,exports){
+},{"../util.js":38}],27:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The person's preferred name has an "or" in it (Joe or Joey Adams)
@@ -2158,7 +1805,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],34:[function(_dereq_,module,exports){
+},{"../util.js":38}],28:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has possible matches
@@ -2217,7 +1864,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],35:[function(_dereq_,module,exports){
+},{"../util.js":38}],29:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -2267,6 +1914,379 @@ module.exports = {
       gensearch: undefined
     };
 
+  }
+};
+},{"../util.js":38}],30:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. There is a birth fact
+ *  2. There is an original date
+ *  3. There is no formal date
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'standardizeBirthDate',
+  type: 'cleanup',
+  title: 'Standardize a Birth Date',
+  signature: 'person',
+  check: function(person) {
+
+    var birth = person.$getBirth();
+
+    // If we have no birth return
+    if(!birth) {
+      return;
+    }
+
+    // If we have an original date without a formal date
+    if(birth.$getDate() !== undefined && birth.$getNormalizedDate() === undefined) {
+
+      var descr = utils.markdown(function(){/*
+        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Birth Date.
+
+        ## Why?
+        Standardization ensures that everyone knows when this event took place.
+        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
+        Take `3/11/2000` for example.
+        Is this March 11, 2000 or November 3, 2000?
+        By standardizing the date we can avoid this confusion.
+
+        ## How?
+        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+      */}, {pid:  person.id});
+
+      return {
+        id: this.id + ':' + person.id,
+        type: this.type,
+        title: this.title,
+        description: descr,
+        person: person,
+        findarecord: undefined,
+        gensearch: undefined
+      };
+    }
+  }
+};
+},{"../util.js":38}],31:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. There is a birth fact
+ *  2. There is an original place
+ *  3. There is no normalized place
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'standardizeBirthPlace',
+  type: 'cleanup',
+  title: 'Standardize a Birth Place',
+  signature: 'person',
+  check: function(person) {
+
+    var birth = person.$getBirth();
+
+    // If we have no birth return
+    if(!birth) {
+      return;
+    }
+
+    // If we have an original place without a normalized place
+    if(birth.$getPlace() !== undefined && birth.$getNormalizedPlace() === undefined) {
+
+      var descr = utils.markdown(function(){/*
+        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Birth Place.
+
+        ## Why?
+        Standardization ensures that everyone knows where this event took place.
+        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
+        Take `London` for example.
+        Is this London England, London Kentucky, or London Ontario?
+        By standardizing the place we can avoid this confusion.
+
+        ## How?
+        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+
+      */}, {pid:  person.id});
+
+      return {
+        id: this.id + ':' + person.id,
+        type: this.type,
+        title: this.title,
+        description: descr,
+        person: person,
+        findarecord: undefined,
+        gensearch: undefined
+      };
+    }
+  }
+};
+},{"../util.js":38}],32:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. There is a death fact
+ *  2. There is an original date
+ *  3. There is no formal date
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'standardizeDeathDate',
+  type: 'cleanup',
+  title: 'Standardize a Death Date',
+  signature: 'person',
+  check: function(person) {
+
+    var death = person.$getDeath();
+
+    // If we have no death return
+    if(!death) {
+      return;
+    }
+
+    // If we have an original date without a formal date
+    if(death.$getDate() !== undefined && death.$getNormalizedDate() === undefined) {
+
+      var descr = utils.markdown(function(){/*
+        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Death Date.
+
+        ## Why?
+        Standardization ensures that everyone knows when this event took place.
+        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
+        Take `3/11/2000` for example.
+        Is this March 11, 2000 or November 3, 2000?
+        By standardizing the date we can avoid this confusion.
+
+        ## How?
+        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+
+      */}, {pid:  person.id});
+
+      return {
+        id: this.id + ':' + person.id,
+        type: this.type,
+        title: this.title,
+        description: descr,
+        person: person,
+        findarecord: undefined,
+        gensearch: undefined
+      };
+    }
+  }
+};
+},{"../util.js":38}],33:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. There is a death fact
+ *  2. There is an original place
+ *  3. There is no normalized place
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'standardizeDeathPlace',
+  type: 'cleanup',
+  title: 'Standardize a Death Place',
+  signature: 'person',
+  check: function(person) {
+
+    var death = person.$getDeath();
+
+    // If we have no death return
+    if(!death) {
+      return;
+    }
+
+    // If we have an original place without a normalized place
+    if(death.$getPlace() !== undefined && death.$getNormalizedPlace() === undefined) {
+
+      var descr = utils.markdown(function(){/*
+        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Death Place.
+
+        ## Why?
+        Standardization ensures that everyone knows where this event took place.
+        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
+        Take `London` for example.
+        Is this London England, London Kentucky, or London Ontario?
+        By standardizing the place we can avoid this confusion.
+
+        ## How?
+        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+
+      */}, {pid:  person.id});
+
+      return {
+        id: this.id + ':' + person.id,
+        type: this.type,
+        title: this.title,
+        description: descr,
+        person: person,
+        findarecord: undefined,
+        gensearch: undefined
+      };
+    }
+  }
+};
+},{"../util.js":38}],34:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. There is a wife OR husband
+ *  2. There is only 1 marriage fact
+ *  3. There is an original date
+ *  4. There is no formal date
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'standardizeMarriageDate',
+  type: 'cleanup',
+  title: 'Standardize a Marriage Date',
+  signature: 'marriage',
+  check: function(wife, husband, marriage) {
+
+    var person = wife,
+        spouse = husband;
+    if(!person) {
+      person = husband;
+      spouse = undefined;
+    }
+    if(!person) {
+      return;
+    }
+
+    var marriageFact = marriage.$getMarriageFact();
+
+    // If we don't have exactly one marriage fact, don't run
+    var facts = marriage.$getFacts(),
+        count = 0;
+    for(var x in facts) {
+      if(facts[x].type == 'http://gedcomx.org/Marriage') {
+        count++;
+      }
+    }
+
+    if(count != 1) {
+      return;
+    }
+
+    // If we have an original date without a formal date
+    if(marriageFact.$getDate() !== undefined && marriageFact.$getNormalizedDate() === undefined) {
+
+      var coupleDescr = '';
+      if(wife && husband) {
+        coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
+      } else {
+        coupleDescr = 'for ' + person.$getDisplayName();
+      }
+
+      var descr = utils.markdown(function(){/*
+        View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the Marriage Date {{couple}}.
+
+        ## Why?
+        Standardization ensures that everyone knows when this event took place.
+        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
+        Take `3/11/2000` for example.
+        Is this March 11, 2000 or November 3, 2000?
+        By standardizing the date we can avoid this confusion.
+
+        ## How?
+        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+
+      */}, {crid:  marriage.id, couple: coupleDescr});
+
+      return {
+        id: this.id + ':' + person.id,
+        type: this.type,
+        title: this.title,
+        description: descr,
+        person: person,
+        findarecord: undefined,
+        gensearch: undefined
+      };
+    }
+  }
+};
+},{"../util.js":38}],35:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. There is a wife OR husband
+ *  2. There is only 1 marriage fact
+ *  3. There is an original place
+ *  4. There is no normalized place
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'standardizeMarriagePlace',
+  type: 'cleanup',
+  title: 'Standardize a Marriage Place',
+  signature: 'marriage',
+  check: function(wife, husband, marriage) {
+
+    var person = wife,
+        spouse = husband;
+    if(!person) {
+      person = husband;
+      spouse = undefined;
+    }
+    if(!person) {
+      return;
+    }
+
+    var marriageFact = marriage.$getMarriageFact();
+
+    // If we don't have exactly one marriage fact, don't run
+    var facts = marriage.$getFacts(),
+        count = 0;
+    for(var x in facts) {
+      if(facts[x].type == 'http://gedcomx.org/Marriage') {
+        count++;
+      }
+    }
+
+    if(count != 1) {
+      return;
+    }
+
+    // If we have an original place without a normalized place
+    if(marriageFact.$getPlace() !== undefined && marriageFact.$getNormalizedPlace() === undefined) {
+
+      var coupleDescr = '';
+      if(wife && husband) {
+        coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
+      } else {
+        coupleDescr = 'for ' + person.$getDisplayName();
+      }
+
+      var descr = utils.markdown(function(){/*
+        The marriage place of `{{place}}` has not been standardized for the marriage {{couple}}. View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the marriage place.
+
+        ## Why?
+        Standardization ensures that everyone knows where this event took place.
+        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
+        Take `London` for example.
+        Is this London England, London Kentucky, or London Ontario?
+        By standardizing the place we can avoid this confusion.
+
+        ## How?
+        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+
+      */}, {
+        crid: marriage.id, 
+        couple: coupleDescr,
+        place: marriageFact.$getPlace()
+      });
+
+      return {
+        id: this.id + ':' + person.id,
+        type: this.type,
+        title: this.title,
+        description: descr,
+        person: person,
+        findarecord: undefined,
+        gensearch: undefined
+      };
+    }
   }
 };
 },{"../util.js":38}],36:[function(_dereq_,module,exports){
@@ -2391,22 +2411,16 @@ var checks = [
   _dereq_('./checks/marriageWithNoChildren.js'),
   _dereq_('./checks/missingBirth.js'),
   _dereq_('./checks/missingBirthDate.js'),
-  _dereq_('./checks/missingBirthFormalDate.js'),
-  _dereq_('./checks/missingBirthFormalPlace.js'),
   _dereq_('./checks/missingBirthPlace.js'),
   _dereq_('./checks/missingBirthSource.js'),
   _dereq_('./checks/missingDeath.js'),
   _dereq_('./checks/missingDeathDate.js'),
-  _dereq_('./checks/missingDeathFormalDate.js'),
-  _dereq_('./checks/missingDeathFormalPlace.js'),
   _dereq_('./checks/missingDeathPlace.js'),
   _dereq_('./checks/missingDeathSource.js'),
   _dereq_('./checks/missingFather.js'),
   _dereq_('./checks/missingGivenName.js'),
   _dereq_('./checks/missingMarriageDate.js'),
   _dereq_('./checks/missingMarriageFact.js'),
-  _dereq_('./checks/missingMarriageFormalDate.js'),
-  _dereq_('./checks/missingMarriageNormalizedPlace.js'),
   _dereq_('./checks/missingMarriagePlace.js'),
   _dereq_('./checks/missingMarriageSource.js'),
   _dereq_('./checks/missingMother.js'),
@@ -2418,6 +2432,12 @@ var checks = [
   _dereq_('./checks/orInName.js'),
   _dereq_('./checks/possibleDuplicates.js'),
   _dereq_('./checks/recordHints.js'),
+  _dereq_('./checks/standardizeBirthDate.js'),
+  _dereq_('./checks/standardizeBirthPlace.js'),
+  _dereq_('./checks/standardizeDeathDate.js'),
+  _dereq_('./checks/standardizeDeathPlace.js'),
+  _dereq_('./checks/standardizeMarriageDate.js'),
+  _dereq_('./checks/standardizeMarriagePlace.js'),
   _dereq_('./checks/unusualCharactersInName.js')
 ];
 
@@ -2507,7 +2527,7 @@ module.exports = {
   }
   
 };
-},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/deathBeforeBirth.js":3,"./checks/duplicateNames.js":4,"./checks/manyAlternateNames.js":5,"./checks/marriageWithNoChildren.js":6,"./checks/missingBirth.js":7,"./checks/missingBirthDate.js":8,"./checks/missingBirthFormalDate.js":9,"./checks/missingBirthFormalPlace.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathFormalDate.js":15,"./checks/missingDeathFormalPlace.js":16,"./checks/missingDeathPlace.js":17,"./checks/missingDeathSource.js":18,"./checks/missingFather.js":19,"./checks/missingGivenName.js":20,"./checks/missingMarriageDate.js":21,"./checks/missingMarriageFact.js":22,"./checks/missingMarriageFormalDate.js":23,"./checks/missingMarriageNormalizedPlace.js":24,"./checks/missingMarriagePlace.js":25,"./checks/missingMarriageSource.js":26,"./checks/missingMother.js":27,"./checks/missingName.js":28,"./checks/missingParents.js":29,"./checks/missingSurname.js":30,"./checks/multipleMarriageFacts.js":31,"./checks/multipleParents.js":32,"./checks/orInName.js":33,"./checks/possibleDuplicates.js":34,"./checks/recordHints.js":35,"./checks/unusualCharactersInName.js":36,"./util.js":38,"gedcomx-date":45}],38:[function(_dereq_,module,exports){
+},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/deathBeforeBirth.js":3,"./checks/duplicateNames.js":4,"./checks/manyAlternateNames.js":5,"./checks/marriageWithNoChildren.js":6,"./checks/missingBirth.js":7,"./checks/missingBirthDate.js":8,"./checks/missingBirthPlace.js":9,"./checks/missingBirthSource.js":10,"./checks/missingDeath.js":11,"./checks/missingDeathDate.js":12,"./checks/missingDeathPlace.js":13,"./checks/missingDeathSource.js":14,"./checks/missingFather.js":15,"./checks/missingGivenName.js":16,"./checks/missingMarriageDate.js":17,"./checks/missingMarriageFact.js":18,"./checks/missingMarriagePlace.js":19,"./checks/missingMarriageSource.js":20,"./checks/missingMother.js":21,"./checks/missingName.js":22,"./checks/missingParents.js":23,"./checks/missingSurname.js":24,"./checks/multipleMarriageFacts.js":25,"./checks/multipleParents.js":26,"./checks/orInName.js":27,"./checks/possibleDuplicates.js":28,"./checks/recordHints.js":29,"./checks/standardizeBirthDate.js":30,"./checks/standardizeBirthPlace.js":31,"./checks/standardizeDeathDate.js":32,"./checks/standardizeDeathPlace.js":33,"./checks/standardizeMarriageDate.js":34,"./checks/standardizeMarriagePlace.js":35,"./checks/unusualCharactersInName.js":36,"./util.js":38,"gedcomx-date":45}],38:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date'),
     multiline = _dereq_('multiline'),
     marked = _dereq_('marked'),
@@ -2522,15 +2542,19 @@ renderer.heading = function (text, level) {
     + '</h'
     + level
     + '>\n';
-}
+};
 
 module.exports = {
   gensearchPerson: gensearchPerson,
   getFactYear: getFactYear,
   getFactPlace: getFactPlace,
+  compareFormalDates: compareFormalDates,
   markdown: markdown
-}
+};
 
+/**
+ * Do all we can to extract a 4 digit year from a date string
+ */
 function getFactYear(fact) {
   if(fact.$getFormalDate()) {
     try {
@@ -2557,8 +2581,11 @@ function getFactYear(fact) {
      }
     }
   }
-}
+};
 
+/**
+ * Extract a place string from a fact
+ */
 function getFactPlace(fact) {
   if(fact.$getNormalizedPlace()) {
     return fact.$getNormalizedPlace();
@@ -2567,8 +2594,7 @@ function getFactPlace(fact) {
   } else {
     return;
   }
-
-}
+};
 
 function markdown(func) {
   var text,
@@ -2585,8 +2611,12 @@ function markdown(func) {
   }
 
   return marked(mustache.render(text, data), { renderer: renderer });
-}
+};
 
+/**
+ * Generate a gensearch object with as much
+ * person data as we can get
+ */
 function gensearchPerson(person){
   var gensearch = {};
   
@@ -2625,7 +2655,22 @@ function gensearchPerson(person){
   }
   
   return gensearch;
-}
+};
+
+/**
+ * Compare two formal dates
+ */
+function compareFormalDates(date1, date2){
+  if(date1 === date2){
+    return 0;
+  }
+  try {
+    GedcomXDate.getDuration(new GedcomXDate(date1), new GedcomXDate(date2));
+    return -1;
+  } catch(e) {
+    return 1;
+  }
+};
 },{"gedcomx-date":45,"marked":51,"multiline":52,"mustache":54}],39:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
