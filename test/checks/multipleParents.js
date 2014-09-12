@@ -41,18 +41,46 @@ describe('multipleParents', function(){
 
     expect(opportunity).to.equal(undefined);
   });
-
-  it('should return an opportunity when there is more than one parent relationship', function() {
+  
+  it('should not return an opportunity when there multiple parent relationships but only one biological mother and father', function() {
     var person = new FamilySearch.Person({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
     });
     person.id = 'XXX-123';
+    person.display = { name: 'Sue Adams' };
 
     var relationships = {
-      getParentRelationships: function() {return ['1','2'];}
-    }
+      getParentRelationships: function() {
+        return [
+          createParentRelationship('StepParent', 'BiologicalParent'),
+          createParentRelationship('', 'StepParent')
+        ];
+      }
+    };
+
+    var opportunity = fsCheck.check(person, relationships, {});
+    expect(opportunity).to.not.exist;
+  });
+
+  it('should return an opportunity when there is more than one biological parent relationship', function() {
+    var person = new FamilySearch.Person({
+      gender: 'http://gedcomx.org/Female',
+      names: [],
+      facts: []
+    });
+    person.id = 'XXX-123';
+    person.display = { name: 'Sue Adams' };
+
+    var relationships = {
+      getParentRelationships: function() {
+        return [
+          createParentRelationship('', 'BiologicalParent'),
+          createParentRelationship('StepParent', 'BiologicalParent')
+        ];
+      }
+    };
 
     var opportunity = fsCheck.check(person, relationships, {});
 
@@ -61,3 +89,22 @@ describe('multipleParents', function(){
   });
 
 });
+
+function createParentRelationship(fatherType, motherType){
+  return {
+    $getFatherFacts: function(){
+      return fatherType ? [
+        new FamilySearch.Fact({
+          type: 'http://gedcomx.org/' + fatherType
+        })
+      ] : [];
+    },
+    $getMotherFacts: function(){
+      return motherType ? [
+        new FamilySearch.Fact({
+          type: 'http://gedcomx.org/' + motherType
+        })
+      ] : [];
+    }
+  };
+};
