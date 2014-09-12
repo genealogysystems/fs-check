@@ -115,6 +115,7 @@ describe('missingDeathSource', function(){
         })
       ]
     });
+    person.display = { name: 'Bob Freemer' };
 
     var sourceRefs = {
       getSourceRefs: function() {
@@ -151,6 +152,7 @@ describe('missingDeathSource', function(){
         })
       ]
     });
+    person.display = { name: 'Bob Freemer' };
 
     var sourceRefs = {
       getSourceRefs: function() {

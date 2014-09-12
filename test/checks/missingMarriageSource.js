@@ -254,8 +254,8 @@ describe('missingMarriageSource', function(){
     doc('missingMarriageSource', opportunity);
     utils.validateSchema(fsCheck, opportunity, true, true);
     expect(opportunity.findarecord.tags).to.deep.equal(['marriage']);
-    expect(opportunity.findarecord.from).to.equal(1890);
-    expect(opportunity.findarecord.to).to.equal(1910);
+    expect(opportunity.findarecord.from).to.equal(1897);
+    expect(opportunity.findarecord.to).to.equal(1903);
     expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
     expect(opportunity.gensearch.givenName).to.equal('Thelma');
     expect(opportunity.gensearch.familyName).to.equal('Louise');
@@ -263,59 +263,6 @@ describe('missingMarriageSource', function(){
     expect(opportunity.gensearch.marriageDate).to.equal('1900');
     expect(opportunity.gensearch.spouseGivenName).to.equal('Bob');
     expect(opportunity.gensearch.spouseFamilyName).to.equal('Freemer');
-    expect(opportunity.gensearch.birthPlace).to.equal('Orem, Utah, United States of America');
-    expect(opportunity.gensearch.birthDate).to.equal('1880');
-    expect(opportunity.gensearch.deathPlace).to.equal('Lehi, Utah, United States of America');
-    expect(opportunity.gensearch.deathDate).to.equal('1950');
-  });
-
-  it('should default to husband when wife is missing', function() {
-    var husband = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Male',
-          names: [
-            new FamilySearch.Name({
-              givenName: 'Bob',
-              surname: 'Freemer'
-            })
-          ],
-          facts: [
-            new FamilySearch.Fact({
-              type: 'http://gedcomx.org/Birth',
-              formalDate: '+1880',
-              place: 'Orem, Utah, United States of America'
-            }),
-            new FamilySearch.Fact({
-              type: 'http://gedcomx.org/Death',
-              formalDate: '+1950',
-              place: 'Lehi, Utah, United States of America'
-            })
-          ]
-        }),
-        wife = undefined,
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
-          facts: [
-            new FamilySearch.Fact({
-              type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
-            })
-          ]
-        }),
-        sources = [];
-    
-    var opportunity = fsCheck.check(wife, husband, marriage, sources);
-    utils.validateSchema(fsCheck, opportunity, true, true);
-    expect(opportunity.findarecord.tags).to.deep.equal(['marriage']);
-    expect(opportunity.findarecord.from).to.equal(1890);
-    expect(opportunity.findarecord.to).to.equal(1910);
-    expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
-    expect(opportunity.gensearch.marriagePlace).to.equal('Provo, Utah, United States of America');
-    expect(opportunity.gensearch.marriageDate).to.equal('1900');
     expect(opportunity.gensearch.birthPlace).to.equal('Orem, Utah, United States of America');
     expect(opportunity.gensearch.birthDate).to.equal('1880');
     expect(opportunity.gensearch.deathPlace).to.equal('Lehi, Utah, United States of America');

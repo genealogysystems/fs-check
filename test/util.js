@@ -345,5 +345,46 @@ describe('util', function(){
     });
   
   });
+  
+  describe('farSearchUrl', function(){
+  
+    it('return plain url when no data is given', function(){
+      expect(util.farSearchUrl({})).to.equal('https://www.findarecord.com/search');
+    });
+    
+    it('return url with tags', function(){
+      expect(util.farSearchUrl({
+        tags: ['birth','marriage']
+      })).to.equal('https://www.findarecord.com/search#t=birth%2Cmarriage');
+    });
+    
+    it('return url with from', function(){
+      expect(util.farSearchUrl({
+        from: 1904
+      })).to.equal('https://www.findarecord.com/search#from=1904');
+    });
+    
+    it('return url with to', function(){
+      expect(util.farSearchUrl({
+        to: 1949
+      })).to.equal('https://www.findarecord.com/search#to=1949');
+    });
+    
+    it('return url with place', function(){
+      expect(util.farSearchUrl({
+        place: 'Springfield, Illinois'
+      })).to.equal('https://www.findarecord.com/search#s=Springfield%2C%20Illinois');
+    });
+    
+    it('return url with all data', function(){
+      expect(util.farSearchUrl({
+        tags: ['birth','marriage'],
+        from: 1904,
+        to: 1949,
+        place: 'Springfield, Illinois'
+      })).to.equal('https://www.findarecord.com/search#t=birth%2Cmarriage&from=1904&to=1949&s=Springfield%2C%20Illinois');
+    });
+  
+  });
 
 });
