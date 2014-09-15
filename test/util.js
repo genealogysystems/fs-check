@@ -261,6 +261,64 @@ describe('util', function(){
     });
     
   });
+  
+  describe('getSimpleDurationString()', function(){
+  
+    function getDurationString(start, end){
+      return util.getSimpleDurationString(util.GedcomXDate.getDuration(util.GedcomXDate(start), util.GedcomXDate(end)));
+    };
+    
+    it('1 year', function(){
+      var string = getDurationString('+1900-01-01', '+1901-01-01');
+      expect(string).to.equal('1 year');
+    });
+    
+    it('2 years', function(){
+      var string = getDurationString('+1900-01-01', '+1902-01-01');
+      expect(string).to.equal('2 years');
+    });
+    
+    it('1 month', function(){
+      var string = getDurationString('+1900-01-01', '+1900-02-01');
+      expect(string).to.equal('1 month');
+    });
+    
+    it('2 months', function(){
+      var string = getDurationString('+1900-01-01', '+1900-03-01');
+      expect(string).to.equal('2 months');
+    });
+    
+    it('1 day', function(){
+      var string = getDurationString('+1900-01-01', '+1900-01-02');
+      expect(string).to.equal('1 day');
+    });
+    
+    it('2 days', function(){
+      var string = getDurationString('+1900-01-01', '+1900-01-03');
+      expect(string).to.equal('2 days');
+    });
+    
+    it('1 year and 1 month', function(){
+      var string = getDurationString('+1900-01-01', '+1901-02-01');
+      expect(string).to.equal('1 year and 1 month');
+    });
+    
+    it('1 month (ignore days)', function(){
+      var string = getDurationString('+1900-01-01', '+1900-02-02');
+      expect(string).to.equal('1 month');
+    });
+    
+    it('3 years and 5 months', function(){
+      var string = getDurationString('+1900-01-01', '+1903-06-01');
+      expect(string).to.equal('3 years and 5 months');
+    });
+    
+    it('7 months (ignore days)', function(){
+      var string = getDurationString('+1900-01-01', '+1900-08-15');
+      expect(string).to.equal('7 months');
+    });
+  
+  });
 
   describe('markdown()', function(){
     
