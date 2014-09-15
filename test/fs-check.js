@@ -20,7 +20,7 @@ describe('FSCheck', function(){
     
     it('should return proper number of checks', function(){
       var checks = FSCheck.all();
-      expect(checks).to.have.length(37);
+      expect(checks).to.have.length(38);
     });
     
     it('checks should all have the correct format', function(){
@@ -57,7 +57,7 @@ describe('FSCheck', function(){
   describe('FSCheck.signatures', function(){
     
     it('should return correct number of signatures', function(){
-      expect(FSCheck.signatures()).to.have.members(['person','personSource','marriage','marriageSource','child','parents','relationships','duplicates','recordHints']);
+      expect(FSCheck.signatures()).to.have.members(['person','personSource','marriage','marriageSource','child','children','parents','relationships','duplicates','recordHints']);
     });
     
   });
@@ -87,6 +87,11 @@ describe('FSCheck', function(){
     it('should return correct number of child checks', function(){
       var checks = FSCheck.signature('child');
       expect(checks).to.have.length(2);
+    });
+    
+    it('should return correct number of children checks', function(){
+      var checks = FSCheck.signature('children');
+      expect(checks).to.have.length(1);
     });
     
     it('should return correct number of parents checks', function(){
@@ -135,7 +140,7 @@ describe('FSCheck', function(){
   
     it('should return correct number of problem checks', function(){
       var checks = FSCheck.type('problem');
-      expect(checks).to.have.length(4);
+      expect(checks).to.have.length(5);
     });
   
   });

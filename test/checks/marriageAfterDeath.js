@@ -16,6 +16,15 @@ describe('marriageAfterDeath', function(){
         }), {});
       expect(opportunity).to.not.exist;
     });
+    
+    it('cant extract formal death date', function(){
+      var opportunity = fsCheck.check(generatePerson({
+        date: '1st June 1980'
+      }), generateRelationships({
+          'SPOUSE1': {}
+        }), {});
+      expect(opportunity).to.not.exist;
+    });
 
     it('death date but no marriages', function(){
       var opportunity = fsCheck.check(generatePerson({
@@ -65,40 +74,20 @@ describe('marriageAfterDeath', function(){
         expect(opportunity).to.not.exist;
       });
       
-      describe('death non-formal', function(){
-        
-        it('different year', function(){
-          var person = generatePerson({
-            date: '1 June 1980'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              facts: [
-                {
-                  formalDate: '+1960-09-28'
-                }
-              ]
-            }
-          }), {});
-          expect(opportunity).to.not.exist;
-        });
-        
-        it('same year', function(){
-          var person = generatePerson({
-            date: '1 June 1960'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              facts: [
-                {
-                  formalDate: '+1960-09-28'
-                }
-              ]
-            }
-          }), {});
-          expect(opportunity).to.not.exist;
-        });
-        
+      it('death non-formal', function(){
+        var person = generatePerson({
+          date: '1 June 1980'
+        }),
+        opportunity = fsCheck.check(person, generateRelationships({
+          'SPOUSE1': {
+            facts: [
+              {
+                formalDate: '+1960-09-28'
+              }
+            ]
+          }
+        }), {});
+        expect(opportunity).to.not.exist;
       });
       
       describe('marriage non-formal', function(){
@@ -119,22 +108,6 @@ describe('marriageAfterDeath', function(){
           expect(opportunity).to.not.exist;
         });
         
-        it('same year', function(){
-          var person = generatePerson({
-            formalDate: '+1980-01-28'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              facts: [
-                {
-                  date: '28 Sep 1980'
-                }
-              ]
-            }
-          }), {});
-          expect(opportunity).to.not.exist;
-        });
-        
       });
       
       describe('both non-formal', function(){
@@ -148,22 +121,6 @@ describe('marriageAfterDeath', function(){
               facts: [
                 {
                   date: '28 Sep 1960'
-                }
-              ]
-            }
-          }), {});
-          expect(opportunity).to.not.exist;
-        });
-        
-        it('same year', function(){
-          var person = generatePerson({
-            date: '1 June 1980'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              facts: [
-                {
-                  date: '28 Sep 1980'
                 }
               ]
             }
@@ -224,136 +181,64 @@ describe('marriageAfterDeath', function(){
         utils.validateSchema(fsCheck, opportunity);
       });
         
-      describe('death non-formal', function(){
-        
-        it('different year', function(){
-          var person = generatePerson({
-            date: '1 June 1950',
-            id: 'PPP-PPP',
-            name: 'Elmer Gate'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              name: 'Molly Sue',
-              coupleId: 'COUPLE1',
-              facts: [
-                {
-                  formalDate: '+1951-09-28'
-                }
-              ]
-            }
-          }), {});
-          utils.validateSchema(fsCheck, opportunity);
-        });
-        
-        it('same year', function(){
-          var person = generatePerson({
-            date: '1 June 1950',
-            id: 'PPP-PPP',
-            name: 'Elmer Gate'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              name: 'Molly Sue',
-              coupleId: 'COUPLE1',
-              facts: [
-                {
-                  formalDate: '+1950-09-28'
-                }
-              ]
-            }
-          }), {});
-          expect(opportunity).to.not.exist;
-        });
-        
+      it('death non-formal', function(){
+        var person = generatePerson({
+          date: '1 June 1950',
+          id: 'PPP-PPP',
+          name: 'Elmer Gate'
+        }),
+        opportunity = fsCheck.check(person, generateRelationships({
+          'SPOUSE1': {
+            name: 'Molly Sue',
+            coupleId: 'COUPLE1',
+            facts: [
+              {
+                formalDate: '+1951-09-28'
+              }
+            ]
+          }
+        }), {});
+        utils.validateSchema(fsCheck, opportunity);
       });
       
-      describe('marriage non-formal', function(){
-        
-        it('different year', function(){
-          var person = generatePerson({
-            formalDate: '+1950-06-01',
-            id: 'PPP-PPP',
-            name: 'Elmer Gate'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              name: 'Molly Sue',
-              coupleId: 'COUPLE1',
-              facts: [
-                {
-                  date: '28 September 1955'
-                }
-              ]
-            }
-          }), {});
-          utils.validateSchema(fsCheck, opportunity);
-        });
-        
-        it('same year', function(){
-          var person = generatePerson({
-            formalDate: '+1950-06-01',
-            id: 'PPP-PPP',
-            name: 'Elmer Gate'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              name: 'Molly Sue',
-              coupleId: 'COUPLE1',
-              facts: [
-                {
-                  date: '28 September 1950'
-                }
-              ]
-            }
-          }), {});
-          expect(opportunity).to.not.exist;
-        });
-        
+      it('marriage non-formal', function(){
+        var person = generatePerson({
+          formalDate: '+1950-06-01',
+          id: 'PPP-PPP',
+          name: 'Elmer Gate'
+        }),
+        opportunity = fsCheck.check(person, generateRelationships({
+          'SPOUSE1': {
+            name: 'Molly Sue',
+            coupleId: 'COUPLE1',
+            facts: [
+              {
+                date: '28 September 1955'
+              }
+            ]
+          }
+        }), {});
+        utils.validateSchema(fsCheck, opportunity);
       });
       
-      describe('both non-formal', function(){
-        
-        it('different year', function(){
-          var person = generatePerson({
-            date: '1 June 1950',
-            id: 'PPP-PPP',
-            name: 'Elmer Gate'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              name: 'Molly Sue',
-              coupleId: 'COUPLE1',
-              facts: [
-                {
-                  date: '28 September 1955'
-                }
-              ]
-            }
-          }), {});
-          utils.validateSchema(fsCheck, opportunity);
-        });
-        
-        it('same year', function(){
-          var person = generatePerson({
-            date: '1 June 1950',
-            id: 'PPP-PPP',
-            name: 'Elmer Gate'
-          }),
-          opportunity = fsCheck.check(person, generateRelationships({
-            'SPOUSE1': {
-              name: 'Molly Sue',
-              coupleId: 'COUPLE1',
-              facts: [
-                {
-                  date: '28 September 1950'
-                }
-              ]
-            }
-          }), {});
-          expect(opportunity).to.not.exist;
-        });
-        
+      it('both non-formal', function(){       
+        var person = generatePerson({
+          date: '1 June 1950',
+          id: 'PPP-PPP',
+          name: 'Elmer Gate'
+        }),
+        opportunity = fsCheck.check(person, generateRelationships({
+          'SPOUSE1': {
+            name: 'Molly Sue',
+            coupleId: 'COUPLE1',
+            facts: [
+              {
+                date: '28 September 1955'
+              }
+            ]
+          }
+        }), {});
+        utils.validateSchema(fsCheck, opportunity);
       });
       
     });
@@ -434,18 +319,16 @@ describe('marriageAfterDeath', function(){
     if(!data){
       data = {};
     }
-    var person = new FamilySearch.Person({
-      facts: [
-        new FamilySearch.Fact({
+    if(data.date || data.formalDate){
+      data.facts = [
+        {
           type: 'http://gedcomx.org/Death',
           date: data.date,
           formalDate: data.formalDate
-        })
-      ]
-    });
-    person.id = data.id;
-    person.display = { name: data.name };
-    return person;
+        }
+      ];
+    }
+    return utils.generatePerson(data);
   };
 
   /**

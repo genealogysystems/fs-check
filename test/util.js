@@ -224,22 +224,31 @@ describe('util', function(){
       expect(date).to.equal('+1570-04-10');
     });
     
-    it('should return simple date created by extracting 4 digit year form arbitrary date string', function(){
+    it('should return simple date created by parsing into js date', function(){
       var fact = new FamilySearch.Fact({
         type: 'http://gedcomx.org/Birth',
         date: '4 Mar 1845'
       });
       var date = util.getFormalDate(fact);
-      expect(date).to.equal('+1845-01-01');
+      expect(date).to.equal('+1845-03-04');
     });
     
-    it('should return simple date representing the end of the year', function(){
+    it('should return simple date with just the year', function(){
       var fact = new FamilySearch.Fact({
         type: 'http://gedcomx.org/Birth',
-        date: '4 Mar 1845'
+        date: '1845'
       });
-      var date = util.getFormalDate(fact, true);
-      expect(date).to.equal('+1845-12-31');
+      var date = util.getFormalDate(fact);
+      expect(date).to.equal('+1845');
+    });
+    
+    it('should return undefined with unparsable format', function(){
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Birth',
+        date: 'octber 7th 1845'
+      });
+      var date = util.getFormalDate(fact);
+      expect(date).to.not.exist;
     });
     
   });

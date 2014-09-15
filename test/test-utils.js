@@ -3,6 +3,9 @@ var expect = require('chai').expect,
 
 module.exports = {
 
+  /**
+   * Mka
+   */
   validateSchema: function(check, opportunity, findarecord, gensearch){
     expect(opportunity).to.exist;
     
@@ -24,6 +27,19 @@ module.exports = {
     } else {
       expect(opportunity.gensearch).to.not.exist;
     }
+  },
+  
+  /**
+   * Generate person with an id, name, and death fact
+   */
+  generatePerson: function(data){
+    if(!data){
+      data = {};
+    }
+    var person = new FamilySearch.Person(data);
+    person.id = data.id;
+    person.display = { name: data.name };
+    return person;
   }
 
 };
