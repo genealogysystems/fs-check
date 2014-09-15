@@ -194,10 +194,7 @@ describe('util', function(){
         formalDate: '+1569-04-27'
       });
       var date = util.getFormalDate(fact);
-      expect(date).to.exist;
-      expect(date.getYear()).to.equal(1569);
-      expect(date.getMonth()).to.equal(4);
-      expect(date.getDay()).to.equal(27);
+      expect(date).to.equal('+1569-04-27');
     });
     
     it('should return start date of open-ended future range', function(){
@@ -206,10 +203,7 @@ describe('util', function(){
         formalDate: '+1569-04-27/'
       });
       var date = util.getFormalDate(fact);
-      expect(date).to.exist;
-      expect(date.getYear()).to.equal(1569);
-      expect(date.getMonth()).to.equal(4);
-      expect(date.getDay()).to.equal(27);
+      expect(date).to.equal('+1569-04-27');
     });
     
     it('should return end date of open-ended past range', function(){
@@ -218,10 +212,7 @@ describe('util', function(){
         formalDate: '/+1569-04-27'
       });
       var date = util.getFormalDate(fact);
-      expect(date).to.exist;
-      expect(date.getYear()).to.equal(1569);
-      expect(date.getMonth()).to.equal(4);
-      expect(date.getDay()).to.equal(27);
+      expect(date).to.equal('+1569-04-27');
     });
     
     it('should return middle of closed range', function(){
@@ -230,10 +221,7 @@ describe('util', function(){
         formalDate: '+1569-04-10/+1571-04-10'
       });
       var date = util.getFormalDate(fact);
-      expect(date).to.exist;
-      expect(date.getYear()).to.equal(1570);
-      expect(date.getMonth()).to.equal(4);
-      expect(date.getDay()).to.equal(10);
+      expect(date).to.equal('+1570-04-10');
     });
     
     it('should return simple date created by extracting 4 digit year form arbitrary date string', function(){
@@ -242,10 +230,7 @@ describe('util', function(){
         date: '4 Mar 1845'
       });
       var date = util.getFormalDate(fact);
-      expect(date).to.exist;
-      expect(date.getYear()).to.equal(1845);
-      expect(date.getMonth()).to.equal(1);
-      expect(date.getDay()).to.equal(1);
+      expect(date).to.equal('+1845-01-01');
     });
     
     it('should return simple date representing the end of the year', function(){
@@ -254,10 +239,7 @@ describe('util', function(){
         date: '4 Mar 1845'
       });
       var date = util.getFormalDate(fact, true);
-      expect(date).to.exist;
-      expect(date.getYear()).to.equal(1845);
-      expect(date.getMonth()).to.equal(12);
-      expect(date.getDay()).to.equal(31);
+      expect(date).to.equal('+1845-12-31');
     });
     
   });
@@ -517,6 +499,33 @@ describe('util', function(){
         to: 1949,
         place: 'Springfield, Illinois'
       })).to.equal('https://www.findarecord.com/search#t=birth%2Cmarriage&from=1904&to=1949&s=Springfield%2C%20Illinois');
+    });
+  
+  });
+  
+  describe('compareFormalDates()', function(){
+  
+    it('same dates return 0', function(){
+      var result = util.compareFormalDates('+1980-01-01', '+1980-01-01');
+      expect(result).to.equal(0);
+    });
+    
+    it('first date is earlier', function(){
+      var result = util.compareFormalDates('+1970-01-01', '+1980-01-01');
+      expect(result).to.equal(-1);
+    });
+    
+    it('first date is later', function(){
+      var result = util.compareFormalDates('+1990-01-01', '+1980-01-01');
+      expect(result).to.equal(1);
+    });
+  
+  });
+  
+  describe('getNormalizedDateString()', function(){
+  
+    it('1 September 1840', function(){
+      expect(util.getNormalizedDateString('+1840-09-01')).to.equal('1 September 1840');
     });
   
   });

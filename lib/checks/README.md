@@ -12,6 +12,7 @@ Checks are organized in two ways: by function signature and by type. The functio
 ### Relationships
 
 * [Child Born Before Marriage](childBeforeMarriage.js)
+* [Marriage After Death](marriageAfterDeath.js)
 * [Marriage with no Children](marriageWithNoChildren.js)
 * [Multiple Parent Relationships](multipleParents.js)
 
@@ -74,6 +75,7 @@ Checks are organized in two ways: by function signature and by type. The functio
 * [Person Born Before their Parent(s)](birthBeforeParentsBirth.js)
 * [Child Born Before Marriage](childBeforeMarriage.js)
 * [Person Died Before They Were Born](deathBeforeBirth.js)
+* [Marriage After Death](marriageAfterDeath.js)
 
 ### Cleanup
 
