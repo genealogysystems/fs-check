@@ -529,5 +529,22 @@ describe('util', function(){
     });
   
   });
+  
+  it('monthNumberToString()', function(){
+    expect(util.monthNumberToString(0)).to.equal('');
+    expect(util.monthNumberToString(1)).to.equal('January');
+    expect(util.monthNumberToString(2)).to.equal('February');
+    expect(util.monthNumberToString(3)).to.equal('March');
+    expect(util.monthNumberToString(4)).to.equal('April');
+    expect(util.monthNumberToString(5)).to.equal('May');
+    expect(util.monthNumberToString(6)).to.equal('June');
+    expect(util.monthNumberToString(7)).to.equal('July');
+    expect(util.monthNumberToString(8)).to.equal('August');
+    expect(util.monthNumberToString(9)).to.equal('September');
+    expect(util.monthNumberToString(10)).to.equal('October');
+    expect(util.monthNumberToString(11)).to.equal('November');
+    expect(util.monthNumberToString(12)).to.equal('December');
+    expect(util.monthNumberToString(13)).to.equal('');
+  });
 
 });

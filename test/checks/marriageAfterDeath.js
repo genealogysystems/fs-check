@@ -11,7 +11,9 @@ describe('marriageAfterDeath', function(){
   describe('should return nothing', function(){
 
     it('no death date', function(){
-      var opportunity = fsCheck.check(generatePerson(), generateRelationships(), {});
+      var opportunity = fsCheck.check(generatePerson(), generateRelationships({
+          'SPOUSE1': {}
+        }), {});
       expect(opportunity).to.not.exist;
     });
 
@@ -28,6 +30,18 @@ describe('marriageAfterDeath', function(){
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {}
+        }), {});
+      expect(opportunity).to.not.exist;
+    });
+    
+    it('marriage fact with no date', function(){
+      var person = generatePerson({
+          date: '1 June 1980'
+        }),
+        opportunity = fsCheck.check(person, generateRelationships({
+          'SPOUSE1': {
+            facts: [ {} ]
+          }
         }), {});
       expect(opportunity).to.not.exist;
     });

@@ -181,7 +181,64 @@ describe('birthBeforeParentsBirth', function(){
           new FamilySearch.Fact({
             type: 'http://gedcomx.org/Birth',
             date: 'January 1, 1895',
-            formalDate: '+1895-01-01',
+            place: 'Provo, Utah, United States of America'
+          })
+        ]
+      })
+    ];
+    parents[0].id = 'XXX-456';
+    parents[0].display = {name: 'Thelma Louise', birthDate: 'January 1, 1900'}
+    parents[1].id = 'XXX-789';
+    parents[1].display = {name: 'Bob Freemer', birthDate: 'January 1, 1895'}
+    
+    var opportunity = fsCheck.check(person, parents);
+    doc('birthBeforeParentsBirth', opportunity);
+    utils.validateSchema(fsCheck, opportunity);
+  });
+  
+  it('should return an opportunity when there are parents birth dates after person; non-formal dates', function() {
+    var person = new FamilySearch.Person({
+      gender: 'http://gedcomx.org/Female',
+      names: [],
+      facts: [
+        new FamilySearch.Fact({
+          type: 'http://gedcomx.org/Birth',
+          date: 'January 1, 1820',
+          place: 'Provo, Utah, United States of America'
+        })
+      ]
+    });
+    person.id = 'XXX-123';
+    person.display = {name: 'Thing One',birthDate: 'January 1, 1820'}
+    var parents = [
+      new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Female',
+        names: [
+          new FamilySearch.Name({
+            givenName: 'Thelma',
+            surname: 'Louise'
+          })
+        ],
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            date: 'January 1, 1900',
+            place: 'Provo, Utah, United States of America'
+          })
+        ]
+      }),
+      new FamilySearch.Person({
+        gender: 'http://gedcomx.org/Male',
+        names: [
+          new FamilySearch.Name({
+            givenName: 'Bob',
+            surname: 'Freemer'
+          })
+        ],
+        facts: [
+          new FamilySearch.Fact({
+            type: 'http://gedcomx.org/Birth',
+            date: 'January 1, 1895',
             place: 'Provo, Utah, United States of America'
           })
         ]

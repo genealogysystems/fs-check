@@ -16,8 +16,7 @@ describe('deathBeforeBirth', function(){
     });
 
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there is no birth date', function() {
@@ -26,17 +25,13 @@ describe('deathBeforeBirth', function(){
       names: [],
       facts: [
         new FamilySearch.Fact({
-          type: 'http://gedcomx.org/Birth',
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          type: 'http://gedcomx.org/Birth'
         })
       ]
     });
 
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there is no death fact', function() {
@@ -46,20 +41,13 @@ describe('deathBeforeBirth', function(){
       facts: [
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
-          date: {
-            original: 'January 1, 1900',
-            formal: '+1900-01-01',
-          },
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          formalDate: '+1900-01-01'
         })
       ]
     });
 
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there is no death date', function() {
@@ -69,26 +57,16 @@ describe('deathBeforeBirth', function(){
       facts: [
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
-          date: {
-            original: 'January 1, 1900',
-            formal: '+1900-01-01',
-          },
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          formalDate: '+1900-01-01'
         }),
         new FamilySearch.Fact({
-          type: 'http://gedcomx.org/Death',
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          type: 'http://gedcomx.org/Death'
         })
       ]
     });
 
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
   
   it('should return nothing when birth is same date as death', function() {
@@ -98,30 +76,17 @@ describe('deathBeforeBirth', function(){
       facts: [
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
-          date: {
-            original: 'January 1, 1900',
-            formal: '+1900-01-01',
-          },
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          formalDate: '+1900-01-01'
         }),
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Death',
-          date: {
-            original: 'January 1, 1900',
-            formal: '+1900-01-01',
-          },
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          formalDate: '+1900-01-01'
         })
       ]
     });
 
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when birth is before death', function() {
@@ -131,30 +96,17 @@ describe('deathBeforeBirth', function(){
       facts: [
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
-          date: {
-            original: 'January 1, 1900',
-            formal: '+1900-01-01',
-          },
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          formalDate: '+1900-01-01'
         }),
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Death',
-          date: {
-            original: 'January 2, 1900',
-            formal: '+1900-01-02',
-          },
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          date: 'January 2, 1900'
         })
       ]
     });
 
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
   
   it('should return nothing when death date is an invalid format', function() {
@@ -164,22 +116,17 @@ describe('deathBeforeBirth', function(){
       facts: [
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
-          date: {
-            formal: "+1639",
-          }
+          formalDate: "+1639",
         }),
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Death',
-          date: {
-            original: 'Deceased',
-          }
+          date: 'Deceased',
         })
       ]
     });
     
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
   
   it('should return nothing when birth date is an invalid format', function() {
@@ -189,22 +136,17 @@ describe('deathBeforeBirth', function(){
       facts: [
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
-          date: {
-            original: "12 Jan 1564 or 1592",
-          }
+          date: "12 Jan 1564 or 1592"
         }),
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Death',
-          date: {
-            formal: '+1678-08-27',
-          }
+          formalDate: '+1678-08-27'
         })
       ]
     });
     
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return an opportunity when death is before birth', function() {
@@ -214,23 +156,11 @@ describe('deathBeforeBirth', function(){
       facts: [
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Birth',
-          date: {
-            original: 'January 2, 1900',
-            formal: '+1900-01-02',
-          },
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          formalDate: '+1900-01-02'
         }),
         new FamilySearch.Fact({
           type: 'http://gedcomx.org/Death',
-          date: {
-            original: 'January 1, 1900',
-            formal: '+1900-01-01',
-          },
-          place: {
-            original: 'Provo, Utah, United States of America'
-          }
+          formalDate: '+1900-01-01'
         })
       ]
     });

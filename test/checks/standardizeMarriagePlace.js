@@ -8,6 +8,20 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
 
 describe('standardizeMarriagePlace', function(){
 
+it('should return nothing when the wife or husband is missing', function(){
+    var husband,
+        wife = new FamilySearch.Person({}),
+        marriage = new FamilySearch.Couple({
+          husband: husband,
+          wife: wife,
+          facts: []
+        });
+
+    var opportunity = fsCheck.check(wife, husband, marriage);
+
+    expect(opportunity).to.not.exist;
+  });
+
   it('should return nothing when there is no marriage facts', function() {
     var husband = new FamilySearch.Person({}),
         wife = new FamilySearch.Person({}),

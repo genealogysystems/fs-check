@@ -8,6 +8,20 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
 
 describe('standardizeMarriageDate', function(){
 
+  it('should return nothing when the wife or husband is missing', function(){
+    var husband,
+        wife = new FamilySearch.Person({}),
+        marriage = new FamilySearch.Couple({
+          husband: husband,
+          wife: wife,
+          facts: []
+        });
+
+    var opportunity = fsCheck.check(wife, husband, marriage);
+
+    expect(opportunity).to.not.exist;
+  });
+
   it('should return nothing when there is no marriage facts', function() {
     var husband = new FamilySearch.Person({}),
         wife = new FamilySearch.Person({}),
@@ -19,7 +33,7 @@ describe('standardizeMarriageDate', function(){
 
     var opportunity = fsCheck.check(wife, husband, marriage);
 
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there is multiple marriage facts', function() {
@@ -46,7 +60,7 @@ describe('standardizeMarriageDate', function(){
 
     var opportunity = fsCheck.check(wife, husband, marriage);
 
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there is no original date', function() {
@@ -65,7 +79,7 @@ describe('standardizeMarriageDate', function(){
 
     var opportunity = fsCheck.check(wife, husband, marriage);
 
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there is a formal date', function() {
@@ -86,10 +100,10 @@ describe('standardizeMarriageDate', function(){
 
     var opportunity = fsCheck.check(wife, husband, marriage);
 
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
-  it('should return an opportunity when there is a original but no formal date', function() {
+  it('should return an opportunity when there is an original but no formal date', function() {
     var husband = new FamilySearch.Person({}),
         wife = new FamilySearch.Person({}),
         marriage = new FamilySearch.Couple({
