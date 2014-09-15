@@ -20,7 +20,7 @@ describe('FSCheck', function(){
     
     it('should return proper number of checks', function(){
       var checks = FSCheck.all();
-      expect(checks).to.have.length(36);
+      expect(checks).to.have.length(37);
     });
     
     it('checks should all have the correct format', function(){
@@ -96,7 +96,7 @@ describe('FSCheck', function(){
     
     it('should return correct number of relationships checks', function(){
       var checks = FSCheck.signature('relationships');
-      expect(checks).to.have.length(3);
+      expect(checks).to.have.length(4);
     });
     
     it('should return correct number of duplicates checks', function(){
@@ -135,7 +135,7 @@ describe('FSCheck', function(){
   
     it('should return correct number of problem checks', function(){
       var checks = FSCheck.type('problem');
-      expect(checks).to.have.length(3);
+      expect(checks).to.have.length(4);
     });
   
   });

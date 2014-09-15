@@ -248,6 +248,18 @@ describe('util', function(){
       expect(date.getDay()).to.equal(1);
     });
     
+    it('should return simple date representing the end of the year', function(){
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Birth',
+        date: '4 Mar 1845'
+      });
+      var date = util.getFormalDate(fact, true);
+      expect(date).to.exist;
+      expect(date.getYear()).to.equal(1845);
+      expect(date.getMonth()).to.equal(12);
+      expect(date.getDay()).to.equal(31);
+    });
+    
   });
 
   describe('markdown()', function(){
