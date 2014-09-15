@@ -14,7 +14,7 @@ describe('util', function(){
     expect(FSCheck.utils).to.have.property('gensearchPerson');
   });
 
-  describe('#getFactPlace()', function(){
+  describe('getFactPlace()', function(){
 
     it('should return undefined when no place is set', function() {
       var fact = new FamilySearch.Fact({
@@ -66,7 +66,7 @@ describe('util', function(){
 
   });
 
-  describe('#getFactYear()', function(){
+  describe('getFactYear()', function(){
 
     it('should return undefined when no date is set', function() {
       var fact = new FamilySearch.Fact({
@@ -166,7 +166,7 @@ describe('util', function(){
     
     it('should return the original year', function(){
       var fact = new FamilySearch.Fact({
-        type: 'http://gedcoms.org/Death',
+        type: 'http://gedcomx.org/Death',
         date: '1901'
       });
       var year = util.getFactYear(fact);
@@ -185,8 +185,72 @@ describe('util', function(){
     });
 
   });
+  
+  describe('getFormalDate()', function(){
+    
+    it('should return simple as-is', function(){
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Birth',
+        formalDate: '+1569-04-27'
+      });
+      var date = util.getFormalDate(fact);
+      expect(date).to.exist;
+      expect(date.getYear()).to.equal(1569);
+      expect(date.getMonth()).to.equal(4);
+      expect(date.getDay()).to.equal(27);
+    });
+    
+    it('should return start date of open-ended future range', function(){
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Birth',
+        formalDate: '+1569-04-27/'
+      });
+      var date = util.getFormalDate(fact);
+      expect(date).to.exist;
+      expect(date.getYear()).to.equal(1569);
+      expect(date.getMonth()).to.equal(4);
+      expect(date.getDay()).to.equal(27);
+    });
+    
+    it('should return end date of open-ended past range', function(){
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Birth',
+        formalDate: '/+1569-04-27'
+      });
+      var date = util.getFormalDate(fact);
+      expect(date).to.exist;
+      expect(date.getYear()).to.equal(1569);
+      expect(date.getMonth()).to.equal(4);
+      expect(date.getDay()).to.equal(27);
+    });
+    
+    it('should return middle of closed range', function(){
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Birth',
+        formalDate: '+1569-04-10/+1571-04-10'
+      });
+      var date = util.getFormalDate(fact);
+      expect(date).to.exist;
+      expect(date.getYear()).to.equal(1570);
+      expect(date.getMonth()).to.equal(4);
+      expect(date.getDay()).to.equal(10);
+    });
+    
+    it('should return simple date created by extracting 4 digit year form arbitrary date string', function(){
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Birth',
+        date: '4 Mar 1845'
+      });
+      var date = util.getFormalDate(fact);
+      expect(date).to.exist;
+      expect(date.getYear()).to.equal(1845);
+      expect(date.getMonth()).to.equal(1);
+      expect(date.getDay()).to.equal(1);
+    });
+    
+  });
 
-  describe('#markdown()', function(){
+  describe('markdown()', function(){
     
     it('should return html', function() {
       var html = util.markdown(function(){/*
@@ -211,7 +275,7 @@ describe('util', function(){
 
   });
   
-  describe('#gensearchPerson()', function(){
+  describe('gensearchPerson()', function(){
   
     it('should return an object with just givenName', function(){
       var person = new FamilySearch.Person({
