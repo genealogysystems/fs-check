@@ -100,7 +100,7 @@ module.exports = {
     }
   }
 }
-},{"../util.js":38}],2:[function(_dereq_,module,exports){
+},{"../util.js":40}],2:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  - The person has a marriage with children where at least one of the children
@@ -235,7 +235,100 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38,"gedcomx-date":45}],3:[function(_dereq_,module,exports){
+},{"../util.js":40,"gedcomx-date":47}],3:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if two children are born less than 9 months apart
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'childrenTooClose',
+  type: 'problem',
+  title: 'Children Too Close',
+  signature: 'children',
+  check: function(person, children) {
+
+    // Only look at women
+    if(person.gender.type !== 'http://gedcomx.org/Female'){
+      return;
+    }
+    
+    if(children.length === 0){
+      return;
+    }
+    
+    // Make sure all children with birth dates have
+    // a formal date set
+    var compareChildrenList = [];
+    for(var i = 0; i < children.length; i++){
+      var child = children[i],
+          birth = child.$getBirth();
+      if(!birth || !birth.date){
+        continue;
+      }
+      var newFormalDate = utils.getFormalDate(birth);
+      if(newFormalDate){
+        birth.$setFormalDate(newFormalDate);
+        compareChildrenList.push(child);
+      }
+    }
+
+    // Sort children based on birth date
+    compareChildrenList.sort(function(a, b){
+      return utils.compareFormalDates(a.$getBirth().$getFormalDate(), b.$getBirth().$getFormalDate());
+    });
+    
+    // Compare birth dates
+    var problemPairs = [];
+    for(var i = 1; i < compareChildrenList.length; i++){
+      var previousChild = compareChildrenList[i-1],
+          currentChild = compareChildrenList[i],
+          previousChildBirthDate = previousChild.$getBirth().$getFormalDate(),
+          currentChildBirthDate = currentChild.$getBirth().$getFormalDate();
+      if(previousChildBirthDate && currentChildBirthDate && previousChildBirthDate !== currentChildBirthDate){
+        var birthDuration = utils.GedcomXDate.getDuration(new utils.GedcomXDate(previousChildBirthDate), new utils.GedcomXDate(currentChildBirthDate));
+        if(!birthDuration.getYears() && birthDuration.getMonths() < 9){
+          problemPairs.push({
+            firstName: previousChild.$getDisplayName(),
+            id1: previousChild.id,
+            secondName: currentChild.$getDisplayName(),
+            id2: currentChild.id,
+            duration: utils.getSimpleDurationString(birthDuration)
+          });
+        }
+      }
+    }
+    
+    if(problemPairs.length === 0){
+      return;
+    }
+
+    var descr = utils.markdown(function(){/*
+        [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) has children born less than 9 months apart. This can only happen with
+        the birth of twins or a premature birth. Examine the birth dates of these children
+        closely to verify that they are correct. Find sources to support the birth dates if you can.
+        
+        {{#pairs}}
+        * [{{secondName}}](https://familysearch.org/tree/#view=ancestor&person={{id2}}) was born {{duration}} after [{{firstName}}](https://familysearch.org/tree/#view=ancestor&person={{id1}})
+        {{/pairs}}
+      */}, {
+        pid: person.id,
+        name: person.$getDisplayName(),
+        pairs: problemPairs
+      });
+
+    return {
+      id: this.id + ':' + person.id,
+      type: this.type,
+      title: this.title,
+      description: descr,
+      person: person,
+      findarecord: undefined,
+      gensearch: undefined
+    };
+  }
+};
+},{"../util.js":40}],4:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -268,14 +361,20 @@ module.exports = {
     // If either the birth or death date doesn't
     // have a formal value then we just compare years
     if(!birth.$getFormalDate() || !death.$getFormalDate()){
-      if(utils.getFactYear(death) >= utils.getFactYear(birth)) {
+      var birthYear = utils.getFactYear(birth),
+          deathYear = utils.getFactYear(death);
+      if(!birthYear || !deathYear || birthYear <= deathYear) {
         return;
       }
     }
     
     // If they both have formal values then do an exact comparison
-    else if(utils.compareFormalDates(birth.$getFormalDate(), death.$getFormalDate()) !== 1) {
-      return;
+    else {
+      var birthFormal = utils.getFormalDate(birth),
+          deathFormal = utils.getFormalDate(death);
+      if(utils.compareFormalDates(birthFormal, deathFormal) !== 1) {
+        return;
+      }
     }
 
     var descr = utils.markdown(function(){/*
@@ -291,7 +390,7 @@ module.exports = {
         * [Explaining approximate birth dates](https://familysearch.org/ask/productSupport#/Do-not-know-exact-birth-date-or-death-date)
       */}, {
         pid: person.id,
-        name: person.display.name
+        name: person.$getDisplayName()
       });
 
     return {
@@ -305,7 +404,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],4:[function(_dereq_,module,exports){
+},{"../util.js":40}],5:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are duplicates names (ignoring capitalization and punctuation)
@@ -352,10 +451,12 @@ module.exports = {
         View [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) in the Family Tree and delete
         some of the unnecessary names.
 
-        {{#duplicates}}       
+        {{#duplicates}} 
+        
         {{#.}}
         * {{.}}
-        {{/.}}       
+        {{/.}} 
+        
         {{/duplicates}}
         
         ## Help
@@ -365,7 +466,7 @@ module.exports = {
         * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)
       */}, {
         pid: person.id,
-        name: person.display.name,
+        name: person.$getDisplayName(),
         duplicates: duplicates
       });
 
@@ -381,7 +482,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],5:[function(_dereq_,module,exports){
+},{"../util.js":40}],6:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are 5 or more alternate names
@@ -434,36 +535,85 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],6:[function(_dereq_,module,exports){
+},{"../util.js":40}],7:[function(_dereq_,module,exports){
 /**
- * Returns an opportunity if:
- *  1. Person has one or more marriages
- *  2. Person has no children
+ * Returns an opportunity if a marriage date is after the person's death date
  */
 var utils = _dereq_('../util.js');
 
 module.exports = {
-  id: 'marriageWithNoChildren',
+  id: 'marriageAfterDeath',
   type: 'problem',
-  title: 'Marriage with no Children',
+  title: 'Marriage After Death',
   signature: 'relationships',
   check: function(person, relationships, people) {
 
-    if(relationships.getSpouseIds().length == 0) {
+    var death = person.$getDeath(),
+        spouseIds = relationships.getSpouseIds(),
+        problemMarriages = [];
+  
+    // Can't run if there is no death or no spouses
+    if(!death || spouseIds.length == 0) {
       return;
     }
+    
+    var formalDeathDate = utils.getFormalDate(death, true);
+    
+    // Can't run if there is no date to work with
+    if(!formalDeathDate){
+      return;
+    }
+    
+    // For each couple relationship, compare death date with all marriage events
+    for(var i = 0; i < spouseIds.length; i++){
+      var coupleRelationship = relationships.getSpouseRelationship(spouseIds[i]),
+          coupleFacts = coupleRelationship.$getFacts(),
+          problemMarriage = false;
+      for(var j = 0; !problemMarriage && j < coupleFacts.length; j++){
+        var fact = coupleFacts[j];
+        if(!fact.date){
+          continue;
+        }
+        var formalMarriageDate = utils.getFormalDate(fact);
+        if(formalMarriageDate && utils.compareFormalDates(formalMarriageDate, formalDeathDate) === 1){
+          problemMarriage = true;
+          problemMarriages.push({
+            spouseId: spouseIds[i],
+            coupleId: coupleRelationship.id,
+            fact: fact,
+            formalDate: formalMarriageDate
+          });
+        }
+      }
+    }
 
-    if(relationships.getChildIds().length == 0) {
-
+    if(problemMarriages.length > 0) {
+    
+      var spouses = [];
+      for(var i = 0; i < problemMarriages.length; i++){
+        var spouseId = problemMarriages[i].spouseId,
+            duration = utils.GedcomXDate.getDuration(new utils.GedcomXDate(formalDeathDate), new utils.GedcomXDate(problemMarriages[i].formalDate));
+        spouses.push({
+          spouseName: people[spouseId].$getDisplayName(),
+          coupleId: problemMarriages[i].coupleId,
+          durationString: utils.getSimpleDurationString(duration)
+        });
+      }
+    
       var descr = utils.markdown(function(){/*
-          Usually a person who is married has at least one child.
-          Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to correct this.
+          {{name}} died {{deathDate}} but has marriage events which occurred after that date. This is impossible.
+          Either the death date is wrong or the marriage dates are wrong. 
+          View the couple relationships in FamilySearch to fix the problem.
+          
+          {{#spouses}}
+          * [{{spouseName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{coupleId}}) - A marriage event occured {{durationString}} after {{name}}'s death.
+          {{/spouses}}
 
-          ## Help
-      
-          * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
         */}, {
-          pid:  person.id
+          pid: person.id,
+          name: person.$getDisplayName(),
+          deathDate: utils.getNormalizedDateString(formalDeathDate),
+          spouses: spouses 
         });
 
       var opportunity = {
@@ -481,7 +631,83 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],7:[function(_dereq_,module,exports){
+},{"../util.js":40}],8:[function(_dereq_,module,exports){
+/**
+ * Returns an opportunity if:
+ *  1. Person has one or more marriages
+ *  2. Person has no children
+ */
+var utils = _dereq_('../util.js');
+
+module.exports = {
+  id: 'marriageWithNoChildren',
+  type: 'family',
+  title: 'Marriage with no Children',
+  signature: 'relationships',
+  check: function(person, relationships, people) {
+
+    var allSpouseIds = relationships.getSpouseIds(),
+        spouseIdsWithoutChildren = [];
+  
+    if(allSpouseIds.length == 0) {
+      return;
+    }
+    
+    for(var i = 0; i < allSpouseIds.length; i++){
+      if(relationships.getChildRelationshipsOf(allSpouseIds[i]).length === 0){
+        spouseIdsWithoutChildren.push(allSpouseIds[i]);
+      }
+    }
+
+    if(spouseIdsWithoutChildren.length > 0) {
+
+      var spouses = [];
+      for(var i = 0; i < spouseIdsWithoutChildren.length; i++){
+        spouses.push({
+          id: relationships.getSpouseRelationship(spouseIdsWithoutChildren[i]).id,
+          name: people[spouseIdsWithoutChildren[i]].$getDisplayName()
+        });
+      }
+    
+      var descr = utils.markdown(function(){/*
+          {{^multipleSpouses}}
+          The marriage between [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}})
+          and [{{spouse.name}}](https://familysearch.org/tree/#view=ancestor&person={{spouse.id}}) has no children. Though this is possible it still represents
+          an opportunity for research until you are confident that the couple had no children.
+          {{/multipleSpouses}}
+          {{#multipleSpouses}}
+          [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) has multiple marriages
+          with no children. Though this is possible it still represents an opportunity for research 
+          until you are confident that the couples had no children.
+          
+          {{#spouses}}
+          * [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{id}})
+          {{/spouses}}
+          {{/multipleSpouses}}
+        */}, {
+          pid:  person.id,
+          name: person.$getDisplayName(),
+          multipleSpouses: spouses.length > 1,
+          spouse: spouses[0],
+          spouses: spouses
+        });
+
+      var opportunity = {
+        id: this.id + ':' + person.id,
+        type: this.type,
+        title: this.title,
+        description: descr,
+        person: person,
+        findarecord: undefined,
+        gensearch: undefined
+      };
+
+      return opportunity;
+
+    }
+  }
+};
+},{"../util.js":40}],9:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no birth fact OR place and date are both undefined
@@ -528,7 +754,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],8:[function(_dereq_,module,exports){
+},{"../util.js":40}],10:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -586,7 +812,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],9:[function(_dereq_,module,exports){
+},{"../util.js":40}],11:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -643,7 +869,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],10:[function(_dereq_,module,exports){
+},{"../util.js":40}],12:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -679,16 +905,27 @@ module.exports = {
 
     if(!tagged) {
 
-      var descr = utils.markdown(function(){/*
-        Start by searching collections containing Birth records for the place and time you are looking for.
-        If you haven't found a record in any of those collections, try expanding your search to some of the popular online repositories.
-        If you still haven't found it, try using Find-A-Record to look for collections that are not available online (like microfilm).
-        Once you have found a record of the birth, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it as a source.
-
-        ## Help
+      var findarecord = {
+        tags: ['birth'],
+        from: (year)? year-3:undefined,
+        to: (year)? year+3:undefined,
+        place: place
+      };
     
-        * [Adding a source to the Family Tree](https://familysearch.org/ask/productSupport#/Attaching-Sources-to-People-and-Relationships)
-      */}, {pid:  person.id});
+      var descr = utils.markdown(function(){/*
+        Follow these steps to find a birth record for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do a broad searches on popular genealogy websites using the links below or the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Use the record search feature of [Find-A-Record]({{farUrl}}).
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [genlighten](http://www.genlighten.com/) community.
+      */}, {
+        pid:  person.id,
+        name: person.$getDisplayName(),
+        farUrl: utils.farSearchUrl(findarecord)
+      });
 
       return {
         id: this.id + ':' + person.id,
@@ -696,19 +933,14 @@ module.exports = {
         title: this.title,
         description: descr,
         person: person,
-        findarecord: {
-          tags: ['birth'],
-          from: (year)? year-3:undefined,
-          to: (year)? year+3:undefined,
-          place: place
-        },
+        findarecord: findarecord,
         gensearch: utils.gensearchPerson(person)
       };
     }
     
   }
 };
-},{"../util.js":38}],11:[function(_dereq_,module,exports){
+},{"../util.js":40}],13:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no death fact OR place and date are both undefined
@@ -755,7 +987,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],12:[function(_dereq_,module,exports){
+},{"../util.js":40}],14:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -811,7 +1043,7 @@ module.exports = {
 
   }
 }
-},{"../util.js":38}],13:[function(_dereq_,module,exports){
+},{"../util.js":40}],15:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -866,7 +1098,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],14:[function(_dereq_,module,exports){
+},{"../util.js":40}],16:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -902,16 +1134,27 @@ module.exports = {
 
     if(!tagged) {
 
-      var descr = utils.markdown(function(){/*
-        Start by searching collections containing Death records for the place and time you are looking for.
-        If you haven't found a record in any of those collections, try expanding your search to some of the popular online repositories.
-        If you still haven't found it, try using Find-A-Record to look for collections that are not available online (like microfilm).
-        Once you have found a record of the death, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it as a source.
-
-        ## Help
+      var findarecord = {
+        tags: ['death'],
+        from: (year)? year-3:undefined,
+        to: (year)? year+3:undefined,
+        place: place
+      };
     
-        * [Adding a source to the Family Tree](https://familysearch.org/ask/productSupport#/Attaching-Sources-to-People-and-Relationships)
-      */}, {pid:  person.id});
+      var descr = utils.markdown(function(){/*
+        Follow these steps to find a death record for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do a broad searches on popular genealogy websites using the links below or the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Use the record search feature of [Find-A-Record]({{farUrl}}).
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [genlighten](http://www.genlighten.com/) community.
+      */}, {
+        pid:  person.id,
+        name: person.$getDisplayName(),
+        farUrl: utils.farSearchUrl(findarecord)
+      });
 
       return {
         id: this.id + ':' + person.id,
@@ -919,24 +1162,14 @@ module.exports = {
         title: this.title,
         description: descr,
         person: person,
-        findarecord: {
-          tags: ['death'],
-          from: (year)? year-3:undefined,
-          to: (year)? year+3:undefined,
-          place: place
-        },
-        gensearch: {
-          givenName: person.$getGivenName(),
-          familyName: person.$getSurname(),
-          deathPlace: place,
-          deathDate: year+'',
-        }
+        findarecord: findarecord,
+        gensearch: utils.gensearchPerson(person)
       };
     }
     
   }
 };
-},{"../util.js":38}],15:[function(_dereq_,module,exports){
+},{"../util.js":40}],17:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -997,7 +1230,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":38}],16:[function(_dereq_,module,exports){
+},{"../util.js":40}],18:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a given name but has a surname
@@ -1040,7 +1273,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],17:[function(_dereq_,module,exports){
+},{"../util.js":40}],19:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1135,7 +1368,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],18:[function(_dereq_,module,exports){
+},{"../util.js":40}],20:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if there is a marriage but no marriage fact,
  * or there is 1 marriage fact with no date and place
@@ -1204,7 +1437,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],19:[function(_dereq_,module,exports){
+},{"../util.js":40}],21:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1298,7 +1531,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],20:[function(_dereq_,module,exports){
+},{"../util.js":40}],22:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Marriage fact exists
@@ -1325,10 +1558,7 @@ module.exports = {
 
     var person = wife,
         spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
+
     if(!person) {
       return;
     }
@@ -1357,25 +1587,32 @@ module.exports = {
     if(sourceRefs.length > 0) {
       return;
     }
-
-    var coupleDescr = '';
-    if(wife && husband) {
-      coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
-    } else {
-      coupleDescr = 'for ' + person.$getDisplayName();
-    }
+    
+    var findarecord = {
+      tags: ['marriage'],
+      from: marriageYear ? marriageYear - 3 : undefined,
+      to: marriageYear ? marriageYear + 3 : undefined,
+      place: marriagePlace
+    };
 
     var descr = utils.markdown(function(){/*
-        You are looking for a marriage {{couple}}.
-        Start by searching collections containing Marriage records for the place and time you are looking for.
-        If you haven't found a record in any of those collections, try expanding your search to some of the popular online repositories.
-        If you still haven't found it, try using Find-A-Record to look for collections that are not available online (like microfilm).
-        Once you have found a record of the marriage, go to [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{mid}}) and enter it as a source.
+        Follow these steps to find a marriage record for [{{couple}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{cid}}):
 
-        ## Help
-    
-        * [Adding a source to the Family Tree](https://familysearch.org/ask/productSupport#/Attaching-Sources-to-People-and-Relationships)
-      */}, {mid:  marriage.id, couple: coupleDescr});
+        1. Review the record hints for [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) in FamilySearch.
+        1. Do a broad searches on popular genealogy websites using the links below or the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Use the record search feature of [Find-A-Record]({{farUrl}}).
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [genlighten](http://www.genlighten.com/) community.
+      */}, {
+      cid: marriage.id, 
+      couple: wife.$getDisplayName() + ' and ' + husband.$getDisplayName(),
+      wifeName: wife.$getDisplayName(),
+      husbandName: husband.$getDisplayName(),
+      wid: wife.id,
+      hid: husband.id,
+      farUrl: utils.farSearchUrl(findarecord)
+    });
 
     var opportunity = {
       id: this.id + ':' + person.id,
@@ -1383,12 +1620,7 @@ module.exports = {
       title: this.title,
       description: descr,
       person: person,
-      findarecord: {
-          tags: ['marriage'],
-          from: (marriageYear)? marriageYear-10:undefined,
-          to: (marriageYear)? marriageYear+10:undefined,
-          place: marriagePlace
-        },
+      findarecord: findarecord,
       gensearch: utils.gensearchPerson(person)
     };
     
@@ -1400,13 +1632,11 @@ module.exports = {
       opportunity.gensearch.spouseFamilyName = spouse.$getSurname();
     }
 
-    // TODO enhance the genSearch Object
-
     return opportunity;
 
   }
 };
-},{"../util.js":38}],21:[function(_dereq_,module,exports){
+},{"../util.js":40}],23:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1467,7 +1697,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":38}],22:[function(_dereq_,module,exports){
+},{"../util.js":40}],24:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no name
@@ -1508,7 +1738,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],23:[function(_dereq_,module,exports){
+},{"../util.js":40}],25:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1558,7 +1788,7 @@ module.exports = {
     
   }
 };
-},{"../util.js":38}],24:[function(_dereq_,module,exports){
+},{"../util.js":40}],26:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a surname but does have a given name
@@ -1601,7 +1831,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],25:[function(_dereq_,module,exports){
+},{"../util.js":40}],27:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is more than one marriage fact
@@ -1617,10 +1847,7 @@ module.exports = {
 
     var person = wife,
         spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
+
     if(!person) {
       return;
     }
@@ -1629,7 +1856,7 @@ module.exports = {
     var facts = marriage.$getFacts(),
         count = 0;
     for(var x in facts) {
-      if(facts[x].type == 'http://gedcomx.org/Marriage') {
+      if(facts[x].type === 'http://gedcomx.org/Marriage') {
         count++;
       }
     }
@@ -1637,20 +1864,15 @@ module.exports = {
     if(count < 2) {
       return;
     }
-
-
-    var coupleDescr = '';
-    if(wife && husband) {
-      coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
-    } else {
-      coupleDescr = 'for ' + person.$getDisplayName();
-    }
+    
+    var coupleDescr = wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
 
     var descr = utils.markdown(function(){/*
-      The marriage {{couple}} has multiple marriage facts associated with it.
-      This is unusual, and should be investigated.
-      Try to merge like information and reduce them down to one marriage fact.
-      View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to correct this problem.
+      The marriage between [{{couple}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
+      has multiple marriage events. This is only possible in the unlikely situation where the couple 
+      remarried after divorcing. Try to merge similar information and reduce the events down to just one.
+      View their [relationship](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
+      in the Family Tree to correct this problem.
 
       ## Help
 
@@ -1669,7 +1891,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],26:[function(_dereq_,module,exports){
+},{"../util.js":40}],28:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has more than one parent relationship
@@ -1678,24 +1900,62 @@ var utils = _dereq_('../util.js');
 
 module.exports = {
   id: 'multipleParents',
-  type: 'cleanup',
+  type: 'family',
   title: 'Multiple Parent Relationships',
   signature: 'relationships',
   check: function(person, relationships, people) {
 
-    if(relationships.getParentRelationships().length < 2) {
+    var parentRelationships = relationships.getParentRelationships();
+  
+    if(parentRelationships.length < 2) {
+      return;
+    }
+    
+    var biologicalFathers = 0,
+        biologicalMothers = 0;
+    
+    // For each parent, begin by assuming they are biological.
+    // We do this because a large percentage of parent relationships
+    // do not have type specified.   
+    for(var i = 0; i < parentRelationships.length; i++){
+      var relationship = parentRelationships[i],
+          fatherFacts = relationship.$getFatherFacts(),
+          motherFacts = relationship.$getMotherFacts(),
+          biologicalFather = true,
+          biologicalMother = true;
+      for(var j = 0; biologicalFather && j < fatherFacts.length; j++){
+        if(fatherFacts[j].type !== 'http://gedcomx.org/BiologicalParent'){
+          biologicalFather = false;
+        }
+      }
+      for(var j = 0; biologicalMother && j < motherFacts.length; j++){
+        if(motherFacts[j].type !== 'http://gedcomx.org/BiologicalParent'){
+          biologicalMother = false;
+        }
+      }
+      if(biologicalFather){
+        biologicalFathers++;
+      }
+      if(biologicalMother){
+        biologicalMothers++;
+      }
+    }
+    
+    if(biologicalFathers < 2 && biologicalMothers < 2){
       return;
     }
 
     var descr = utils.markdown(function(){/*
-        A person usually only has one set of parents.
-        If needed, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to correct this.
+        {{name}} is listed as having multiple biological parents, which is highly improbable.
+        Fix this problem by visiting [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}})
+        in the Family Tree and examining the parent relationships.
 
         ## Help
-    
+        
         * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
       */}, {
-        pid:  person.id
+        pid:  person.id,
+        name: person.$getDisplayName()
       });
 
     return {
@@ -1709,7 +1969,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],27:[function(_dereq_,module,exports){
+},{"../util.js":40}],29:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The person's preferred name has an "or" in it (Joe or Joey Adams)
@@ -1805,7 +2065,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],28:[function(_dereq_,module,exports){
+},{"../util.js":40}],30:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has possible matches
@@ -1840,15 +2100,16 @@ module.exports = {
     }
   
     var descr = utils.markdown(function(){/*
-        FamilySearch has identified {{count}} {{people}} {{person.display.name}}.
-        Review the [list of duplicates](https://familysearch.org/tree/#view=possibleDuplicates&person={{person.id}}) in FamilySearch.
+        FamilySearch has identified {{count}} {{people}} {{name}}.
+        Review the [list of duplicates](https://familysearch.org/tree/#view=possibleDuplicates&person={{pid}}) in FamilySearch.
         Merge duplicate persons and mark incorrect matches as "Not a Match".
 
         ## Help
     
         * [Merging duplicate records in Family Tree](https://familysearch.org/ask/productSupport#/Merging-Duplicate-Records-in-Family-Tree-1381814853391)
       */}, {
-        person: person,
+        pid: person.id,
+        name: person.$getDisplayName(),
         count: goodMatches,
         people: goodMatches === 1 ? 'person as a potential duplicate' : 'people as potential duplicates'
       });
@@ -1864,7 +2125,7 @@ module.exports = {
     };
   }
 };
-},{"../util.js":38}],29:[function(_dereq_,module,exports){
+},{"../util.js":40}],31:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
@@ -1900,7 +2161,7 @@ module.exports = {
         * [Record Hints](https://familysearch.org/ask/productSupport#/Record-Hints)
       */}, {
         titles: titles,
-        name: person.display.name,
+        name: person.$getDisplayName(),
         pid: person.id
       });
 
@@ -1916,7 +2177,7 @@ module.exports = {
 
   }
 };
-},{"../util.js":38}],30:[function(_dereq_,module,exports){
+},{"../util.js":40}],32:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -1943,18 +2204,19 @@ module.exports = {
     if(birth.$getDate() !== undefined && birth.$getNormalizedDate() === undefined) {
 
       var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Birth Date.
+        [{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) birth date of `{{date}}` has not been standardized.
 
         ## Why?
         Standardization ensures that everyone knows when this event took place.
         Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example.
-        Is this March 11, 2000 or November 3, 2000?
+        Take `3/11/2000` for example. Is this March 11, 2000 or November 3, 2000?
         By standardizing the date we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-      */}, {pid:  person.id});
+        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+      */}, {
+        pid: person.id,
+        name: person.$getDisplayName(),
+        date: birth.$getDate()
+      });
 
       return {
         id: this.id + ':' + person.id,
@@ -1968,7 +2230,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],31:[function(_dereq_,module,exports){
+},{"../util.js":40}],33:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -1995,19 +2257,19 @@ module.exports = {
     if(birth.$getPlace() !== undefined && birth.$getNormalizedPlace() === undefined) {
 
       var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Birth Place.
+        [{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) birth place of `{{place}}` has not been standardized.
 
         ## Why?
         Standardization ensures that everyone knows where this event took place.
         Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example.
-        Is this London England, London Kentucky, or London Ontario?
+        Take `London` for example. Is this the London in England, Kentucky, or Ontario?
         By standardizing the place we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {pid:  person.id});
+        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+      */}, {
+        pid: person.id,
+        name: person.$getDisplayName(),
+        place: birth.$getPlace()
+      });
 
       return {
         id: this.id + ':' + person.id,
@@ -2021,7 +2283,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],32:[function(_dereq_,module,exports){
+},{"../util.js":40}],34:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -2048,19 +2310,19 @@ module.exports = {
     if(death.$getDate() !== undefined && death.$getNormalizedDate() === undefined) {
 
       var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Death Date.
+        [{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) death date of `{{date}}` has not been standardized.
 
         ## Why?
         Standardization ensures that everyone knows when this event took place.
         Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example.
-        Is this March 11, 2000 or November 3, 2000?
+        Take `3/11/2000` for example. Is this March 11, 2000 or November 3, 2000?
         By standardizing the date we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {pid:  person.id});
+        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+      */}, {
+        pid: person.id,
+        name: person.$getDisplayName(),
+        date: death.$getDate()
+      });
 
       return {
         id: this.id + ':' + person.id,
@@ -2074,7 +2336,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],33:[function(_dereq_,module,exports){
+},{"../util.js":40}],35:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -2101,19 +2363,19 @@ module.exports = {
     if(death.$getPlace() !== undefined && death.$getNormalizedPlace() === undefined) {
 
       var descr = utils.markdown(function(){/*
-        Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and standardize the Death Place.
+        [{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) death place of `{{place}}` has not been standardized.
 
         ## Why?
         Standardization ensures that everyone knows where this event took place.
         Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example.
-        Is this London England, London Kentucky, or London Ontario?
+        Take `London` for example. Is this the London in England, Kentucky, or Ontario?
         By standardizing the place we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {pid:  person.id});
+        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+      */}, {
+        pid: person.id,
+        name: person.$getDisplayName(),
+        place: death.$getPlace()
+      });
 
       return {
         id: this.id + ':' + person.id,
@@ -2127,7 +2389,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],34:[function(_dereq_,module,exports){
+},{"../util.js":40}],36:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -2144,13 +2406,7 @@ module.exports = {
   signature: 'marriage',
   check: function(wife, husband, marriage) {
 
-    var person = wife,
-        spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
-    if(!person) {
+    if(!wife || !husband){
       return;
     }
 
@@ -2172,41 +2428,36 @@ module.exports = {
     // If we have an original date without a formal date
     if(marriageFact.$getDate() !== undefined && marriageFact.$getNormalizedDate() === undefined) {
 
-      var coupleDescr = '';
-      if(wife && husband) {
-        coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
-      } else {
-        coupleDescr = 'for ' + person.$getDisplayName();
-      }
-
       var descr = utils.markdown(function(){/*
-        View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the Marriage Date {{couple}}.
+        The marriage date of `{{date}}` has not been standardized for the marriage between
+        [{{wifeName}} and {{husbandName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}).
 
         ## Why?
         Standardization ensures that everyone knows when this event took place.
         Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example.
-        Is this March 11, 2000 or November 3, 2000?
+        Take `3/11/2000` for example. Is this March 11, 2000 or November 3, 2000?
         By standardizing the date we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {crid:  marriage.id, couple: coupleDescr});
+        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+      */}, {
+        crid: marriage.id, 
+        wifeName: wife.$getDisplayName(),
+        husbandName: husband.$getDisplayName(),
+        date: facts[0].$getDate()
+      });
 
       return {
-        id: this.id + ':' + person.id,
+        id: this.id + ':' + wife.id,
         type: this.type,
         title: this.title,
         description: descr,
-        person: person,
+        person: wife,
         findarecord: undefined,
         gensearch: undefined
       };
     }
   }
 };
-},{"../util.js":38}],35:[function(_dereq_,module,exports){
+},{"../util.js":40}],37:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -2223,13 +2474,7 @@ module.exports = {
   signature: 'marriage',
   check: function(wife, husband, marriage) {
 
-    var person = wife,
-        spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
-    if(!person) {
+    if(!wife || !husband){
       return;
     }
 
@@ -2251,45 +2496,37 @@ module.exports = {
     // If we have an original place without a normalized place
     if(marriageFact.$getPlace() !== undefined && marriageFact.$getNormalizedPlace() === undefined) {
 
-      var coupleDescr = '';
-      if(wife && husband) {
-        coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
-      } else {
-        coupleDescr = 'for ' + person.$getDisplayName();
-      }
-
       var descr = utils.markdown(function(){/*
-        The marriage place of `{{place}}` has not been standardized for the marriage {{couple}}. View the relationship in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) to standardize the marriage place.
+        The marriage place of `{{place}}` has not been standardized for the marriage between
+        [{{wifeName}} and {{husbandName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}). 
 
         ## Why?
         Standardization ensures that everyone knows where this event took place.
         Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example.
-        Is this London England, London Kentucky, or London Ontario?
+        Take `London` for example. Is this the London in England, Kentucky, or Ontario?
         By standardizing the place we can avoid this confusion.
-
-        ## How?
-        View the [FamilySearch Guide](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
+        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
 
       */}, {
-        crid: marriage.id, 
-        couple: coupleDescr,
+        crid: marriage.id,
+        wifeName: wife.$getDisplayName(),
+        husbandName: husband.$getDisplayName(),
         place: marriageFact.$getPlace()
       });
 
       return {
-        id: this.id + ':' + person.id,
+        id: this.id + ':' + wife.id,
         type: this.type,
         title: this.title,
         description: descr,
-        person: person,
+        person: wife,
         findarecord: undefined,
         gensearch: undefined
       };
     }
   }
 };
-},{"../util.js":38}],36:[function(_dereq_,module,exports){
+},{"../util.js":40}],38:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are unusual characters in the preferred name
@@ -2399,15 +2636,17 @@ module.exports = {
     }
   }
 };
-},{"../util.js":38}],37:[function(_dereq_,module,exports){
+},{"../util.js":40}],39:[function(_dereq_,module,exports){
 var utils = _dereq_('./util.js');
 
 var checks = [
   _dereq_('./checks/birthBeforeParentsBirth.js'),
   _dereq_('./checks/childBeforeMarriage.js'),
+  _dereq_('./checks/childrenTooClose.js'),
   _dereq_('./checks/deathBeforeBirth.js'),
   _dereq_('./checks/duplicateNames.js'),
   _dereq_('./checks/manyAlternateNames.js'),
+  _dereq_('./checks/marriageAfterDeath.js'),
   _dereq_('./checks/marriageWithNoChildren.js'),
   _dereq_('./checks/missingBirth.js'),
   _dereq_('./checks/missingBirthDate.js'),
@@ -2527,12 +2766,26 @@ module.exports = {
   }
   
 };
-},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/deathBeforeBirth.js":3,"./checks/duplicateNames.js":4,"./checks/manyAlternateNames.js":5,"./checks/marriageWithNoChildren.js":6,"./checks/missingBirth.js":7,"./checks/missingBirthDate.js":8,"./checks/missingBirthPlace.js":9,"./checks/missingBirthSource.js":10,"./checks/missingDeath.js":11,"./checks/missingDeathDate.js":12,"./checks/missingDeathPlace.js":13,"./checks/missingDeathSource.js":14,"./checks/missingFather.js":15,"./checks/missingGivenName.js":16,"./checks/missingMarriageDate.js":17,"./checks/missingMarriageFact.js":18,"./checks/missingMarriagePlace.js":19,"./checks/missingMarriageSource.js":20,"./checks/missingMother.js":21,"./checks/missingName.js":22,"./checks/missingParents.js":23,"./checks/missingSurname.js":24,"./checks/multipleMarriageFacts.js":25,"./checks/multipleParents.js":26,"./checks/orInName.js":27,"./checks/possibleDuplicates.js":28,"./checks/recordHints.js":29,"./checks/standardizeBirthDate.js":30,"./checks/standardizeBirthPlace.js":31,"./checks/standardizeDeathDate.js":32,"./checks/standardizeDeathPlace.js":33,"./checks/standardizeMarriageDate.js":34,"./checks/standardizeMarriagePlace.js":35,"./checks/unusualCharactersInName.js":36,"./util.js":38,"gedcomx-date":45}],38:[function(_dereq_,module,exports){
+},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/childrenTooClose.js":3,"./checks/deathBeforeBirth.js":4,"./checks/duplicateNames.js":5,"./checks/manyAlternateNames.js":6,"./checks/marriageAfterDeath.js":7,"./checks/marriageWithNoChildren.js":8,"./checks/missingBirth.js":9,"./checks/missingBirthDate.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathPlace.js":15,"./checks/missingDeathSource.js":16,"./checks/missingFather.js":17,"./checks/missingGivenName.js":18,"./checks/missingMarriageDate.js":19,"./checks/missingMarriageFact.js":20,"./checks/missingMarriagePlace.js":21,"./checks/missingMarriageSource.js":22,"./checks/missingMother.js":23,"./checks/missingName.js":24,"./checks/missingParents.js":25,"./checks/missingSurname.js":26,"./checks/multipleMarriageFacts.js":27,"./checks/multipleParents.js":28,"./checks/orInName.js":29,"./checks/possibleDuplicates.js":30,"./checks/recordHints.js":31,"./checks/standardizeBirthDate.js":32,"./checks/standardizeBirthPlace.js":33,"./checks/standardizeDeathDate.js":34,"./checks/standardizeDeathPlace.js":35,"./checks/standardizeMarriageDate.js":36,"./checks/standardizeMarriagePlace.js":37,"./checks/unusualCharactersInName.js":38,"./util.js":40,"gedcomx-date":47}],40:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date'),
     multiline = _dereq_('multiline'),
     marked = _dereq_('marked'),
     renderer = new marked.Renderer(),
     mustache = _dereq_('mustache');
+
+module.exports = {
+  gensearchPerson: gensearchPerson,
+  getFactYear: getFactYear,
+  getFactPlace: getFactPlace,
+  getFormalDate: getFormalDate,
+  getNormalizedDateString: getNormalizedDateString,
+  getSimpleDurationString: getSimpleDurationString,
+  compareFormalDates: compareFormalDates,
+  farSearchUrl: farSearchUrl,
+  markdown: markdown,
+  monthNumberToString: monthNumberToString,
+  GedcomXDate: GedcomXDate
+};
 
 renderer.heading = function (text, level) {
   return '<h'
@@ -2544,56 +2797,179 @@ renderer.heading = function (text, level) {
     + '>\n';
 };
 
-module.exports = {
-  gensearchPerson: gensearchPerson,
-  getFactYear: getFactYear,
-  getFactPlace: getFactPlace,
-  compareFormalDates: compareFormalDates,
-  markdown: markdown
-};
-
 /**
- * Do all we can to extract a 4 digit year from a date string
+ * Do all we can to extract a 4 digit year from a Fact.
+ * Returns undefined if we fail.
  */
 function getFactYear(fact) {
   if(fact.$getFormalDate()) {
-    try {
-      var date = new GedcomXDate(fact.$getFormalDate());
-      if(date.getType() != 'single') {
-        if(date.getStart() && !date.getEnd()) {
-          date = date.getStart();
-        } else if(!date.getStart() && date.getEnd()) {
-          date = date.getEnd();
-        } else {
-          date = GedcomXDate.addDuration(date.getStart(), GedcomXDate.multiplyDuration(date.getDuration(), .5));
-        }
-      }
-      return date.getYear();
-    } catch(error) {}
-  } else if(fact.$getDate()) {
-    var date = fact.$getDate();
-    if(/^\d{4}$/.test(date)){
-      return date;
-    } else {
-     var year = new Date(date).getFullYear();
-     if(parseInt(year) == year){
-      return year;
-     }
+    var simple = getSimpleFormalDate(fact.$getFormalDate());
+    if(simple){
+      return simple.getYear();
     }
+  } else if(fact.$getDate()) {
+    return extractYearFromDateString(fact.$getDate());
   }
 };
 
 /**
- * Extract a place string from a fact
+ * Extract a place string from a fact.
+ * Returns undefined if there is no place.
  */
 function getFactPlace(fact) {
   if(fact.$getNormalizedPlace()) {
     return fact.$getNormalizedPlace();
   } else if(fact.$getPlace()) {
     return fact.$getPlace();
-  } else {
-    return;
   }
+};
+
+/**
+ * Do our best to return a simple formal gedcomx date from a fact.
+ * - If the date has a formal date 
+ *   - If the date is already a simple formal date, just return it.
+ *   - If the date is an open-ended date range, return a date representing the beginning or end
+ *   - If the date is a closed date range, return a date representing the middle
+ * - If the date does not have a formal value
+ *   - Try to parse with JS date object and generate a simple formal date with it
+ *   - Return undefined if this fails
+ */
+function getFormalDate(fact){
+  if(fact.$getFormalDate()) {
+    var date = getSimpleFormalDate(fact.$getFormalDate());
+    if(date){
+      return date.toFormalString();
+    }
+  } else if(fact.$getDate()) {
+    if(/^\d{4}$/.test(fact.$getDate())){
+      return '+' + fact.$getDate();
+    } else {
+      var date = new Date(fact.$getDate());
+      // Invalid date
+      if(isNaN(date.getTime())){
+        return;
+      } 
+      // Valid date
+      else {
+        // Substring to remove time component
+        return GedcomXDate.fromJSDate(date).toFormalString().substring(0, 11);
+      }
+    }
+  }
+};
+
+/**
+ * Given a formal date, return a simple formal date.
+ * - If the date is already a simple formal date, just return it.
+ * - If the date is an open-ended date range, return a date representing the beginning or end
+ * - If the date is a closed date range, return a date representing the middle
+ */
+function getSimpleFormalDate(formalDateString){
+  try {
+    var date = new GedcomXDate(formalDateString);
+    if(date.getType() != 'single') {
+      if(date.getStart() && !date.getEnd()) {
+        date = date.getStart();
+      } else if(!date.getStart() && date.getEnd()) {
+        date = date.getEnd();
+      } else {
+        date = GedcomXDate.addDuration(date.getStart(), GedcomXDate.multiplyDuration(date.getDuration(), .5));
+      }
+    }
+    return date;
+  } catch(error) {
+    if(console.error){
+      console.error('Error parsing ' + formalDateString);
+      console.error(error);
+    }
+  }
+};
+
+/**
+ * Do all we can to extract a 4 digit year from an arbitraty date string.
+ * Returns undefined if we can't get anything
+ */
+function extractYearFromDateString(date){
+  if(/^\d{4}$/.test(date)){
+    return date;
+  } else {
+    var year = new Date(date).getFullYear();
+    if(parseInt(year) == year){
+      return year;
+    }
+  }
+};
+
+/**
+ * Return an FS normalized date string from a GedcomX formal date string
+ */
+function getNormalizedDateString(formalString){
+  var date = new GedcomXDate(formalString);
+  return date.getDay() + ' ' + monthNumberToString(date.getMonth()) + ' ' + date.getYear();
+};
+function monthNumberToString(month){
+  switch(month){
+    case 1:
+      return 'January';
+    case 2:
+      return 'February';
+    case 3:
+      return 'March';
+    case 4:
+      return 'April';
+    case 5:
+      return 'May';
+    case 6:
+      return 'June';
+    case 7:
+      return 'July';
+    case 8:
+      return 'August';
+    case 9:
+      return 'September';
+    case 10:
+      return 'October';
+    case 11:
+      return 'November';
+    case 12:
+      return 'December';
+  }
+  return '';
+};
+
+/**
+ * Return a human-readable string representing a duration
+ */
+function getSimpleDurationString(duration){
+  var string = '',
+      years = duration.getYears(),
+      months = duration.getMonths(),
+      days = duration.getDays();
+  if(years){
+    if(years === 1){
+      string = '1 year';
+    } else {
+      string += years + ' years';
+    }
+  }
+  if(months){
+    if(string){
+      string += ' and ';
+    }
+    if(months === 1){
+      string += '1 month';
+    } else {
+      string += months + ' months';
+    }
+  }
+  if(!string && days){
+    if(days === 1){
+      string += '1 day';
+    } else {
+      string += days + ' days';
+    }
+  }
+  return string;
 };
 
 function markdown(func) {
@@ -2671,7 +3047,40 @@ function compareFormalDates(date1, date2){
     return 1;
   }
 };
-},{"gedcomx-date":45,"marked":51,"multiline":52,"mustache":54}],39:[function(_dereq_,module,exports){
+
+/**
+ * Generate a url for a Find-A-Record record search
+ */
+function farSearchUrl(data){
+  var url = 'https://www.findarecord.com/search';
+  if(data){
+    var urlData = {
+      t: data.tags ? data.tags.join(',') : undefined,
+      from: data.from,
+      to: data.to,
+      s: data.place
+    };
+    var hash = generateURLHash(urlData);
+    if(hash){
+      url += '#' + hash;
+    }
+  }
+  return url;
+};
+
+function generateURLHash(data){
+  var hash = '';
+  for(var x in data){
+    if(typeof data[x] !== 'undefined') {
+      if(hash){
+        hash += '&';
+      }
+      hash += x + '=' + encodeURIComponent(data[x]);
+    }
+  }
+  return hash;
+};
+},{"gedcomx-date":47,"marked":53,"multiline":54,"mustache":56}],41:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -2696,7 +3105,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],40:[function(_dereq_,module,exports){
+},{}],42:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2761,14 +3170,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],41:[function(_dereq_,module,exports){
+},{}],43:[function(_dereq_,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],42:[function(_dereq_,module,exports){
+},{}],44:[function(_dereq_,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3358,7 +3767,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,_dereq_("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":41,"FWaASH":40,"inherits":39}],43:[function(_dereq_,module,exports){
+},{"./support/isBuffer":43,"FWaASH":42,"inherits":41}],45:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     Simple = _dereq_('./simple.js');
 
@@ -3400,7 +3809,7 @@ Approximate.prototype.toFormalString = function() {
 }
 
 module.exports = Approximate;
-},{"./simple.js":48,"util":42}],44:[function(_dereq_,module,exports){
+},{"./simple.js":50,"util":44}],46:[function(_dereq_,module,exports){
 /**
  * A gedcomX Duration
  */
@@ -3657,7 +4066,7 @@ Duration.prototype.toFormalString = function() {
 }
 
 module.exports = Duration;
-},{}],45:[function(_dereq_,module,exports){
+},{}],47:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -3723,7 +4132,7 @@ GedcomXDate.now = GedUtil.now;
 GedcomXDate.fromJSDate = GedUtil.fromJSDate;
 
 module.exports = GedcomXDate;
-},{"./approximate.js":43,"./duration.js":44,"./range.js":46,"./recurring.js":47,"./simple.js":48,"./util.js":50}],46:[function(_dereq_,module,exports){
+},{"./approximate.js":45,"./duration.js":46,"./range.js":48,"./recurring.js":49,"./simple.js":50,"./util.js":52}],48:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -3848,7 +4257,7 @@ Range.prototype.toFormalString = function() {
 }
 
 module.exports = Range;
-},{"./approximate.js":43,"./duration.js":44,"./simple.js":48,"./util.js":50}],47:[function(_dereq_,module,exports){
+},{"./approximate.js":45,"./duration.js":46,"./simple.js":50,"./util.js":52}],49:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     GedUtil = _dereq_('./util.js'),
     Range = _dereq_('./range.js');
@@ -3934,7 +4343,7 @@ Recurring.prototype.toFormalString = function() {
 }
 
 module.exports = Recurring;
-},{"./range.js":46,"./util.js":50,"util":42}],48:[function(_dereq_,module,exports){
+},{"./range.js":48,"./util.js":52,"util":44}],50:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js');
 /**
  * The simplest representation of a date.
@@ -4346,7 +4755,7 @@ Simple.prototype.toFormalString = function() {
 }
 
 module.exports = Simple;
-},{"./util-global.js":49}],49:[function(_dereq_,module,exports){
+},{"./util-global.js":51}],51:[function(_dereq_,module,exports){
 module.exports = {
   daysInMonth: daysInMonth
 }
@@ -4390,7 +4799,7 @@ function daysInMonth(month, year) {
       throw new Error('Unknown Month');
   }
 }
-},{}],50:[function(_dereq_,module,exports){
+},{}],52:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js'),
     Duration = _dereq_('./duration.js'),
     Simple = _dereq_('./simple.js'),
@@ -4825,7 +5234,7 @@ function fromJSDate(date){
   // Remove the millisecond time component
   return new Simple('+' + date.toISOString().replace(/\.\d{3}/,''));
 };
-},{"./approximate.js":43,"./duration.js":44,"./simple.js":48,"./util-global.js":49}],51:[function(_dereq_,module,exports){
+},{"./approximate.js":45,"./duration.js":46,"./simple.js":50,"./util-global.js":51}],53:[function(_dereq_,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -6095,7 +6504,7 @@ if (typeof exports === 'object') {
 }());
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],52:[function(_dereq_,module,exports){
+},{}],54:[function(_dereq_,module,exports){
 'use strict';
 var stripIndent = _dereq_('strip-indent');
 
@@ -6121,7 +6530,7 @@ multiline.stripIndent = function (fn) {
 	return stripIndent(multiline(fn));
 };
 
-},{"strip-indent":53}],53:[function(_dereq_,module,exports){
+},{"strip-indent":55}],55:[function(_dereq_,module,exports){
 'use strict';
 module.exports = function (str) {
 	var match = str.match(/^[ \t]*(?=[^\s])/gm);
@@ -6136,7 +6545,7 @@ module.exports = function (str) {
 	return indent > 0 ? str.replace(re, '') : str;
 };
 
-},{}],54:[function(_dereq_,module,exports){
+},{}],56:[function(_dereq_,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -6708,6 +7117,6 @@ module.exports = function (str) {
 
 }));
 
-},{}]},{},[37])
-(37)
+},{}]},{},[39])
+(39)
 });

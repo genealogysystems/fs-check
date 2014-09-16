@@ -148,6 +148,26 @@ describe('deathBeforeBirth', function(){
     var opportunity = fsCheck.check(person);
     expect(opportunity).to.not.exist;
   });
+  
+  it('should return nothing when birth and death are non-formal', function() {
+    var person = new FamilySearch.Person({
+      gender: 'http://gedcomx.org/Female',
+      names: [],
+      facts: [
+        new FamilySearch.Fact({
+          type: 'http://gedcomx.org/Birth',
+          date: "12 Jan 1564"
+        }),
+        new FamilySearch.Fact({
+          type: 'http://gedcomx.org/Death',
+          date: '27 August 1648'
+        })
+      ]
+    });
+    
+    var opportunity = fsCheck.check(person);
+    expect(opportunity).to.not.exist;
+  });
 
   it('should return an opportunity when death is before birth', function() {
     var person = new FamilySearch.Person({

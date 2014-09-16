@@ -38,12 +38,13 @@ describe('marriageWithNoChildren', function(){
     var relationships = generateRelationships({
       spouse1: {
         children: ['2','3'],
-        coupleId: 'CCC-CC1',
-        name: 'Joe Adams'
+        coupleId: 'CCC-CC1'
       }
     });
 
-    var opportunity = fsCheck.check(person, relationships, {});
+    var opportunity = fsCheck.check(person, relationships, {
+      spouse1: utils.generatePerson({ name: 'Joe Adams' })
+    });
 
     expect(opportunity).to.equal(undefined);
   });
@@ -60,12 +61,13 @@ describe('marriageWithNoChildren', function(){
     var relationships = generateRelationships({
       spouse1: {
         children: [],
-        coupleId: 'CCC-CC1',
-        name: 'Joe Adams'
+        coupleId: 'CCC-CC1'
       }
     });
 
-    var opportunity = fsCheck.check(person, relationships, {});
+    var opportunity = fsCheck.check(person, relationships, {
+      spouse1: utils.generatePerson({ name: 'Joe Adams' })
+    });
     utils.validateSchema(fsCheck, opportunity);
   });
   
@@ -81,17 +83,18 @@ describe('marriageWithNoChildren', function(){
     var relationships = generateRelationships({
       spouse1: {
         children: [],
-        coupleId: 'CCC-CC1',
-        name: 'Joe Adams'
+        coupleId: 'CCC-CC1'
       },
       spouse2: {
         children: ['2','3'],
-        coupleId: 'CCC-CC1',
-        name: 'Henry Hancock'
+        coupleId: 'CCC-CC1'
       }
     });
 
-    var opportunity = fsCheck.check(person, relationships, {});
+    var opportunity = fsCheck.check(person, relationships, {
+      spouse1: utils.generatePerson({ name: 'Joe Adams' }),
+      spouse2: utils.generatePerson({ name: 'Henry Hancock' })
+    });
     utils.validateSchema(fsCheck, opportunity);
   });
   
@@ -107,17 +110,18 @@ describe('marriageWithNoChildren', function(){
     var relationships = generateRelationships({
       spouse1: {
         children: [],
-        coupleId: 'CCC-CC1',
-        name: 'Joe Adams'
+        coupleId: 'CCC-CC1'
       },
       spouse2: {
         children: [],
-        coupleId: 'CCC-CC1',
-        name: 'Henry Hancock'
+        coupleId: 'CCC-CC1'
       }
     });
 
-    var opportunity = fsCheck.check(person, relationships, {});
+    var opportunity = fsCheck.check(person, relationships, {
+      spouse1: utils.generatePerson({ name: 'Joe Adams' }),
+      spouse2: utils.generatePerson({ name: 'Henry Hancock' })
+    });
     utils.validateSchema(fsCheck, opportunity);
     doc('marriageWithNoChildren', opportunity);
   });
@@ -134,17 +138,18 @@ describe('marriageWithNoChildren', function(){
     var relationships = generateRelationships({
       spouse1: {
         children: ['2','3'],
-        coupleId: 'CCC-CC1',
-        name: 'Joe Adams'
+        coupleId: 'CCC-CC1'
       },
       spouse2: {
         children: ['2','3'],
-        coupleId: 'CCC-CC1',
-        name: 'Henry Hancock'
+        coupleId: 'CCC-CC1'
       }
     });
 
-    var opportunity = fsCheck.check(person, relationships, {});
+    var opportunity = fsCheck.check(person, relationships, {
+      spouse1: utils.generatePerson({ name: 'Joe Adams' }),
+      spouse2: utils.generatePerson({ name: 'Henry Hancock' })
+    });
     expect(opportunity).to.not.exist;
   });
 
@@ -167,14 +172,6 @@ describe('marriageWithNoChildren', function(){
         return {
           id: spouses[spouseId].coupleId
         };
-      },
-      getPerson: function(spouseId){
-        return {
-          id: spouseId,
-          $getDisplayName: function(){
-            return spouses[spouseId].name;
-          }
-        }
       }
     };
   };

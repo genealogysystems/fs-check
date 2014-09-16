@@ -169,7 +169,6 @@ describe('marriageAfterDeath', function(){
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
-            name: 'Molly Sue',
             coupleId: 'COUPLE1',
             facts: [
               {
@@ -177,7 +176,9 @@ describe('marriageAfterDeath', function(){
               }
             ]
           }
-        }), {});
+        }), {
+          'SPOUSE1': utils.generatePerson({ name: 'Molly Sue' })
+        });
         utils.validateSchema(fsCheck, opportunity);
       });
         
@@ -189,7 +190,6 @@ describe('marriageAfterDeath', function(){
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
-            name: 'Molly Sue',
             coupleId: 'COUPLE1',
             facts: [
               {
@@ -197,7 +197,9 @@ describe('marriageAfterDeath', function(){
               }
             ]
           }
-        }), {});
+        }), {
+          'SPOUSE1': utils.generatePerson({ name: 'Molly Sue' })
+        });
         utils.validateSchema(fsCheck, opportunity);
       });
       
@@ -209,7 +211,6 @@ describe('marriageAfterDeath', function(){
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
-            name: 'Molly Sue',
             coupleId: 'COUPLE1',
             facts: [
               {
@@ -217,7 +218,9 @@ describe('marriageAfterDeath', function(){
               }
             ]
           }
-        }), {});
+        }), {
+          'SPOUSE1': utils.generatePerson({ name: 'Molly Sue' })
+        });
         utils.validateSchema(fsCheck, opportunity);
       });
       
@@ -229,7 +232,6 @@ describe('marriageAfterDeath', function(){
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
-            name: 'Molly Sue',
             coupleId: 'COUPLE1',
             facts: [
               {
@@ -237,7 +239,9 @@ describe('marriageAfterDeath', function(){
               }
             ]
           }
-        }), {});
+        }), {
+          'SPOUSE1': utils.generatePerson({ name: 'Molly Sue' })
+        });
         utils.validateSchema(fsCheck, opportunity);
       });
       
@@ -253,7 +257,6 @@ describe('marriageAfterDeath', function(){
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
-            name: 'Molly Sue',
             coupleId: 'COUPLE1',
             facts: [
               {
@@ -262,7 +265,6 @@ describe('marriageAfterDeath', function(){
             ]
           },
           'SPOUSE2': {
-            name: 'Sarah Jane',
             coupleId: 'COUPLE2',
             facts: [
               {
@@ -270,7 +272,10 @@ describe('marriageAfterDeath', function(){
               }
             ]
           }
-        }), {});
+        }), {
+          'SPOUSE1': utils.generatePerson({ name: 'Molly Sue' }),
+          'SPOUSE2': utils.generatePerson({ name: 'Sarah Jane' })
+        });
         utils.validateSchema(fsCheck, opportunity);
         expect(opportunity.description).to.contain('Molly Sue');
         expect(opportunity.description).to.not.contain('Sarah Jane');
@@ -284,7 +289,6 @@ describe('marriageAfterDeath', function(){
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
-            name: 'Molly Sue',
             coupleId: 'COUPLE1',
             facts: [
               {
@@ -293,7 +297,6 @@ describe('marriageAfterDeath', function(){
             ]
           },
           'SPOUSE2': {
-            name: 'Sarah Jane',
             coupleId: 'COUPLE2',
             facts: [
               {
@@ -301,7 +304,10 @@ describe('marriageAfterDeath', function(){
               }
             ]
           }
-        }), {});
+        }), {
+          'SPOUSE1': utils.generatePerson({ name: 'Molly Sue' }),
+          'SPOUSE2': utils.generatePerson({ name: 'Sarah Jane' })
+        });
         utils.validateSchema(fsCheck, opportunity);
         expect(opportunity.description).to.contain('Molly Sue');
         expect(opportunity.description).to.contain('Sarah Jane');
@@ -370,14 +376,6 @@ describe('marriageAfterDeath', function(){
             return newFacts;
           }
         };
-      },
-      getPerson: function(spouseId){
-        return {
-          id: spouseId,
-          $getDisplayName: function(){
-            return spouses[spouseId].name;
-          }
-        }
       }
     };
   };
