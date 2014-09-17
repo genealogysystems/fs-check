@@ -117,7 +117,7 @@ module.exports = {
   check: function(person, relationships, persons) {
 
     var marriages = relationships.getSpouseRelationships(),
-        badMarriages = [];
+        childrenBeforeMarriage = [];
     
     // Short-circuit if there are no marriages
     if(marriages.length === 0){
@@ -130,14 +130,13 @@ module.exports = {
       
       var marriage = marriages[i],
           marriageFacts = marriage.$getFacts(),
-          marriageDates = [],
-          badMarriage = false;
+          marriageDates = [];
       
       // Collect all available formal marriage dates
       for(var j = 0; j < marriageFacts.length; j++){
         var fact = marriageFacts[j];
         if(fact.type === 'http://gedcomx.org/Marriage'){
-          var date = fact.$getFormalDate();
+          var date = utils.getFormalDate(fact);
           if(date){
             marriageDates.push(date);
           }
@@ -163,7 +162,7 @@ module.exports = {
       
       // For each child in this marriage, check to see if they
       // have a birth date and if it's before the marriage date
-      for(var j = 0; j < children.length && !badMarriage; j++){
+      for(var j = 0; j < children.length; j++){
       
         var rel = children[j],
             childId = rel.$getChildId(),
@@ -181,7 +180,7 @@ module.exports = {
           continue;
         }
         
-        var birthDate = birth.$getFormalDate();
+        var birthDate = utils.getFormalDate(birth);
         
         // Short-circuit if the birth fact doesn't have a formal date
         if(!birthDate){
@@ -189,21 +188,32 @@ module.exports = {
         }
         
         if(utils.compareFormalDates(marriageDate, birthDate) === 1){
-          badMarriage = true;
-          badMarriages.push(marriage);
+          childrenBeforeMarriage.push({
+            marriage: marriage,
+            child: child,
+            birthDate: birthDate
+          });
         }
       }
     }
 
-    if(badMarriages.length > 0) {
+    if(childrenBeforeMarriage.length > 0) {
     
-      var spouses = [];
-      for(var i = 0; i < badMarriages.length; i++){
-        var spouseId = badMarriages[i].$getSpouseId(person.id),
-            spouse = persons[spouseId];
-        if(spouse){
-          spouses.push(spouse.display.name);
-        }
+      var children = [];
+      for(var i = 0; i < childrenBeforeMarriage.length; i++){
+        var data = childrenBeforeMarriage[i],
+            spouseId = data.marriage.$getSpouseId(person.id),
+            spouse = persons[spouseId],
+            child = data.child,
+            duration = utils.GedcomXDate.getDuration(new utils.GedcomXDate(data.birthDate), new utils.GedcomXDate(marriageDate)),
+            durationString = utils.getSimpleDurationString(duration);
+        children.push({
+          spouseName: spouse.$getDisplayName(),
+          spouseId: spouseId,
+          childName: child.$getDisplayName(),
+          childId: child.id,
+          durationString: durationString
+        });
       }
 
       var descr = utils.markdown(function(){/*
@@ -211,16 +221,17 @@ module.exports = {
           following people to verify that the marriage date and children's birth dates and fix any incorrect 
           information in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
           
-          {{#spouses}}
-          * {{.}}
-          {{/spouses}}
+          {{#children}}
+          * [{{childName}}](https://familysearch.org/tree/#view=ancestor&person={{childId}}) was born {{durationString}} before {{name}} married [{{spouseName}}](https://familysearch.org/tree/#view=ancestor&person={{spouseId}}).
+          {{/children}}
 
           ## Help
       
           * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
         */}, {
-          pid:  person.id,
-          spouses: spouses
+          pid: person.id,
+          name: person.$getDisplayName(),
+          children: children
         });
 
       return opportunity = {
