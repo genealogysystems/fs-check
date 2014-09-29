@@ -740,18 +740,20 @@ module.exports = {
       }
     }
 
-    // TODO if they have a christening record, change the description
+    // TODO if they have a christening event, change the description
 
     var descr = utils.markdown(function(){/*
-        Start with a general search in some of the popular online repositories.
-        Finding a census can give you an approximate date, which would allow you to narrow your search further.
-        Once you have found a record of the birth, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
-
-        ## Help
-    
-        * [Adding a birth to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-        * [Explaining approximate birth dates](https://familysearch.org/ask/productSupport#/Do-not-know-exact-birth-date-or-death-date)
-      */}, {pid:  person.id});
+        Try these steps to find the birth information for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+        
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+      */}, {
+        name: person.$getDisplayName(),
+        pid:  person.id
+      });
 
     return {
       id: this.id + ':' + person.id,
@@ -802,15 +804,17 @@ module.exports = {
     // TODO if they have a christening record, change the description
 
     var descr = utils.markdown(function(){/*
-        Start with a general search in some of the popular online repositories.
-        Finding a census can give you an approximate date, which would allow you to narrow your search further.
-        Once you have found a record with a birth date, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
-
-        ## Help
-    
-        * [Adding a birth date to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-        * [Explaining approximate birth dates](https://familysearch.org/ask/productSupport#/Do-not-know-exact-birth-date-or-death-date)
-      */}, {pid:  person.id});
+        Try these steps to find the birth date for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+        
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+      */}, {
+        name: person.$getDisplayName(),
+        pid:  person.id
+      });
 
     return {
       id: this.id + ':' + person.id,
@@ -860,14 +864,17 @@ module.exports = {
     // TODO if they have a christening record, change the description
 
     var descr = utils.markdown(function(){/*
-        Start with a general search in some of the popular online repositories.
-        Finding a census can give you an approximate place, which would allow you to narrow your search further.
-        Once you have found a record with a birth place, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
-
-        ## Help
-    
-        * [Adding a birth place to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-      */}, {pid:  person.id});
+        Try these steps to find the birth place for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+        
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+      */}, {
+        name: person.$getDisplayName(),
+        pid:  person.id
+      });
 
     return {
       id: this.id + ':' + person.id,
@@ -924,18 +931,16 @@ module.exports = {
       };
     
       var descr = utils.markdown(function(){/*
-        Follow these steps to find a birth record for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+        Try these steps to find a birth record for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
 
         1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do a broad searches on popular genealogy websites using the links below or the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Use the record search feature of [Find-A-Record]({{farUrl}}).
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
         1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
         1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [genlighten](http://www.genlighten.com/) community.
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
       */}, {
         pid:  person.id,
-        name: person.$getDisplayName(),
-        farUrl: utils.farSearchUrl(findarecord)
+        name: person.$getDisplayName()
       });
 
       return {
@@ -976,16 +981,17 @@ module.exports = {
     // TODO if they have a christening record, change the description
 
     var descr = utils.markdown(function(){/*
-        Start with a general search in some of the popular online repositories.
-        If they lived in the United States within the last 100 years, the SociaL Security Death Index is a good place to start.
-        Once you have found a record of the death, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
-
-        ## Help
-    
-        * [Adding a death to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-        * [Explaining approximate death dates](https://familysearch.org/ask/productSupport#/Do-not-know-exact-birth-date-or-death-date)
-      */}, {pid:  person.id});
-
+        Try these steps to find the death information for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+        
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+      */}, {
+        name: person.$getDisplayName(),
+        pid:  person.id
+      });
 
     return {
       id: this.id + ':' + person.id,
@@ -1033,14 +1039,17 @@ module.exports = {
     }
 
     var descr = utils.markdown(function(){/*
-        Start with a general search in some of the popular online repositories.
-        Once you have found a record with a death date, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
-
-        ## Help
-    
-        * [Adding a death date to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-        * [Explaining approximate death dates](https://familysearch.org/ask/productSupport#/Do-not-know-exact-birth-date-or-death-date)
-      */}, {pid:  person.id});
+        Try these steps to find the death date for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+        
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+      */}, {
+        name: person.$getDisplayName(),
+        pid:  person.id
+      });
 
     return {
       id: this.id + ':' + person.id,
@@ -1089,13 +1098,17 @@ module.exports = {
     }
 
     var descr = utils.markdown(function(){/*
-        Start with a general search in some of the popular online repositories.
-        Once you have found a record with a death place, go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and enter it.
-
-        ## Help
-    
-        * [Adding a death place to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-      */}, {pid:  person.id});
+        Try these steps to find the death place for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+        
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+      */}, {
+        name: person.$getDisplayName(),
+        pid:  person.id
+      });
 
     return {
       id: this.id + ':' + person.id,
@@ -1153,18 +1166,16 @@ module.exports = {
       };
     
       var descr = utils.markdown(function(){/*
-        Follow these steps to find a death record for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+        Try these steps to find a death record for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
 
         1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do a broad searches on popular genealogy websites using the links below or the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Use the record search feature of [Find-A-Record]({{farUrl}}).
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
         1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
         1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [genlighten](http://www.genlighten.com/) community.
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
       */}, {
         pid:  person.id,
-        name: person.$getDisplayName(),
-        farUrl: utils.farSearchUrl(findarecord)
+        name: person.$getDisplayName()
       });
 
       return {
@@ -1201,19 +1212,18 @@ module.exports = {
       }
       
       var descr = utils.markdown(function(){/*
-        {{mothername}} is listed as a mother but there is no father.
-        To find the father, start by searching collections containing birth records.
-        If you haven't found a record in any of those collections, try expanding your search to some of the popular online repositories.
-        If you still haven't found it, try using Find-A-Record to look for collections that are not available online (like microfilm).
-        When you find the father, add him to the tree and then add him as the father in [the child and parents relationship](https://familysearch.org/tree/#view=parentChildRelationship&relationshipId={{crid}}).
+        [{{mothername}}](https://familysearch.org/tree/#view=ancestor&person={{mid}}) is listed as a mother of [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) but there is no father. Try these steps to find the father:
         
-        ## Help
-        
-        * [Add a New Person to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-a-New-Person-to-Your-Existing-Tree)
-        * [Updating Relationships Between Parents and Children](https://familysearch.org/ask/productSupport#/Adding-Changing-and-Deleting-Relationship-Types-between-Parents-and-Children)
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
       */}, {
         mothername: mother.$getDisplayName(),
-        crid: childRelationship.id
+        mid: mother.id,
+        name: child.$getDisplayName(),
+        pid: child.id
       });
 
       return {
@@ -1300,19 +1310,7 @@ module.exports = {
   signature: 'marriage',
   check: function(wife, husband, marriage) {
 
-    var marriageFact = marriage.$getMarriageFact();
-
-    if(!marriageFact) {
-      return;
-    }
-
-    var person = wife,
-        spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
-    if(!person) {
+    if(!wife || !husband){
       return;
     }
 
@@ -1328,6 +1326,8 @@ module.exports = {
     if(count != 1) {
       return;
     }
+    
+    var marriageFact = marriage.$getMarriageFact();
 
     // If we already have a marriage date
     if(utils.getFactYear(marriageFact) !== undefined) {
@@ -1340,40 +1340,38 @@ module.exports = {
     if(place === undefined) {
       return;
     }
-
-    var coupleDescr = '';
-    if(wife && husband) {
-      coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
-    } else {
-      coupleDescr = 'for ' + person.$getDisplayName();
-    }
-
+    
     var descr = utils.markdown(function(){/*
-      Start with a general search in some of the popular online repositories.
-      Finding a census can give you an approximate date by looking at the age of the oldest child, which would allow you to narrow your search further.
-      Once you have found a record with a marriage date, add it in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}).
-
-      ## Help
-
-      * [Adding a marriage date to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-    */}, {crid:  marriage.id});
+      The [marriage](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
+      between [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) has no marriage date. 
+      Try these steps to find the marriage date:
+        
+        1. Review the record hints in FamilySearch for both [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}).
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+    */}, {
+      crid: marriage.id,
+      wid: wife.id,
+      hid: husband.id,
+      wifeName: wife.$getDisplayName(),
+      husbandName: husband.$getDisplayName()
+    });
 
     var opportunity = {
-      id: this.id + ':' + person.id,
+      id: this.id + ':' + wife.id,
       type: this.type,
       title: this.title,
       description: descr,
-      person: person,
+      person: wife,
       findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+      gensearch: utils.gensearchPerson(wife)
     };
     
     opportunity.gensearch.marriagePlace = place;
-
-    if(spouse !== undefined) {
-      opportunity.gensearch.spouseGivenName = spouse.$getGivenName();
-      opportunity.gensearch.spouseFamilyName = spouse.$getSurname();
-    }
+    opportunity.gensearch.spouseGivenName = husband.$getGivenName();
+    opportunity.gensearch.spouseFamilyName = husband.$getSurname();
 
     return opportunity;
 
@@ -1393,8 +1391,9 @@ module.exports = {
   signature: 'marriage',
   check: function(wife, husband, marriage) {
 
-    var person = wife,
-        spouse = husband;
+    if(!wife || !husband){
+      return;
+    }
 
     // If we have more than one marriage fact, don't run
     var facts = marriage.$getFacts(),
@@ -1416,33 +1415,35 @@ module.exports = {
     }
 
     var descr = utils.markdown(function(){/*
-      The marriage between {{wife.display.name}} and {{husband.display.name}} has no marriage date or place. To find marriage information, start with a general search in some of the popular online repositories.
-      Finding a census can give you an approximate date by looking at the age of the oldest child, which would allow you to narrow your search further.
-      Once you have found information about the marriage, update the [couple's relationship](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}) in the Family Tree.
-
-      ## Help
-
-      * [Adding a marriage date to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
+      The [marriage](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
+      between [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) has no marriage date or place. 
+      Try these steps to find their marriage information:
+        
+        1. Review the record hints in FamilySearch for both [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}).
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
     */}, {
       crid: marriage.id,
-      wife: wife,
-      husband: husband
+      wid: wife.id,
+      hid: husband.id,
+      wifeName: wife.$getDisplayName(),
+      husbandName: husband.$getDisplayName()
     });
 
     var opportunity = {
-      id: this.id + ':' + person.id,
+      id: this.id + ':' + wife.id,
       type: this.type,
       title: this.title,
       description: descr,
-      person: person,
+      person: wife,
       findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+      gensearch: utils.gensearchPerson(wife)
     };
 
-    if(spouse !== undefined) {
-      opportunity.gensearch.spouseGivenName = spouse.$getGivenName();
-      opportunity.gensearch.spouseFamilyName = spouse.$getSurname();
-    }
+    opportunity.gensearch.spouseGivenName = husband.$getGivenName();
+    opportunity.gensearch.spouseFamilyName = husband.$getSurname();
 
     return opportunity;
 
@@ -1464,19 +1465,7 @@ module.exports = {
   signature: 'marriage',
   check: function(wife, husband, marriage) {
 
-    var marriageFact = marriage.$getMarriageFact();
-
-    if(!marriageFact) {
-      return;
-    }
-
-    var person = wife,
-        spouse = husband;
-    if(!person) {
-      person = husband;
-      spouse = undefined;
-    }
-    if(!person) {
+    if(!wife || !husband){
       return;
     }
 
@@ -1492,6 +1481,8 @@ module.exports = {
     if(count != 1) {
       return;
     }
+    
+    var marriageFact = marriage.$getMarriageFact();
 
     // If we already have a marriage place
     if(utils.getFactPlace(marriageFact) !== undefined) {
@@ -1505,38 +1496,37 @@ module.exports = {
       return;
     }
 
-    var coupleDescr = '';
-    if(wife && husband) {
-      coupleDescr = 'between ' + wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
-    } else {
-      coupleDescr = 'for ' + person.$getDisplayName();
-    }
-
     var descr = utils.markdown(function(){/*
-      Start with a general search in some of the popular online repositories.
-      Once you have found a record with a marriage date, add it in [FamilySearch](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}).
-
-      ## Help
-
-      * [Adding a marriage place to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-    */}, {crid:  marriage.id});
+      The [marriage](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
+      between [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) has no marriage place. 
+      Try these steps to find the marriage place:
+        
+        1. Review the record hints in FamilySearch for both [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}).
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+    */}, {
+      crid: marriage.id,
+      wid: wife.id,
+      hid: husband.id,
+      wifeName: wife.$getDisplayName(),
+      husbandName: husband.$getDisplayName()
+    });
 
     var opportunity = {
-      id: this.id + ':' + person.id,
+      id: this.id + ':' + husband.id,
       type: this.type,
       title: this.title,
       description: descr,
-      person: person,
+      person: wife,
       findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+      gensearch: utils.gensearchPerson(wife)
     };
     
     opportunity.gensearch.marriageDate = date+'';
-
-    if(spouse !== undefined) {
-      opportunity.gensearch.spouseGivenName = spouse.$getGivenName();
-      opportunity.gensearch.spouseFamilyName = spouse.$getSurname();
-    }
+    opportunity.gensearch.spouseGivenName = husband.$getGivenName();
+    opportunity.gensearch.spouseFamilyName = husband.$getSurname();
 
     return opportunity;
 
@@ -1607,22 +1597,20 @@ module.exports = {
     };
 
     var descr = utils.markdown(function(){/*
-        Follow these steps to find a marriage record for [{{couple}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{cid}}):
+        Try these steps to find a marriage record for [{{couple}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{cid}}):
 
         1. Review the record hints for [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) in FamilySearch.
-        1. Do a broad searches on popular genealogy websites using the links below or the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Use the record search feature of [Find-A-Record]({{farUrl}}).
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
         1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
         1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [genlighten](http://www.genlighten.com/) community.
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
       */}, {
       cid: marriage.id, 
       couple: wife.$getDisplayName() + ' and ' + husband.$getDisplayName(),
       wifeName: wife.$getDisplayName(),
       husbandName: husband.$getDisplayName(),
       wid: wife.id,
-      hid: husband.id,
-      farUrl: utils.farSearchUrl(findarecord)
+      hid: husband.id
     });
 
     var opportunity = {
@@ -1668,19 +1656,18 @@ module.exports = {
       }
       
       var descr = utils.markdown(function(){/*
-        {{fathername}} is listed as a father but there is no mother.
-        To find the mother, start by searching collections containing birth records.
-        If you haven't found a record in any of those collections, try expanding your search to some of the popular online repositories.
-        If you still haven't found it, try using Find-A-Record to look for collections that are not available online (like microfilm).
-        When you find the mother, add her to the tree and then add her as the mother in [the child and parents relationship](https://familysearch.org/tree/#view=parentChildRelationship&relationshipId={{crid}}).
+        [{{fathername}}](https://familysearch.org/tree/#view=ancestor&person={{fid}}) is listed as a mother of [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) but there is no father. Try these steps to find the father:
         
-        ## Help
-        
-        * [Add a New Person to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-a-New-Person-to-Your-Existing-Tree)
-        * [Updating Relationships Between Parents and Children](https://familysearch.org/ask/productSupport#/Adding-Changing-and-Deleting-Relationship-Types-between-Parents-and-Children)
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
       */}, {
         fathername: father.$getDisplayName(),
-        crid: childRelationship.id
+        fid: father.id,
+        name: child.$getDisplayName(),
+        pid: child.id
       });
 
       return {
@@ -1727,7 +1714,7 @@ module.exports = {
       var descr = utils.markdown(function(){/*
         This person's name is not known. There are few reasons for a person to exist in the tree without a name.
         In fact, FamilySearch no longer allows people to be created without a name.
-        If there is no information for this person other than the gender then you can safely delete the person.
+        If there is no other information nor relationships for this person then you can safely delete the person.
 
         ## Help
     
@@ -1770,16 +1757,17 @@ module.exports = {
       }
       
       var descr = utils.markdown(function(){/*
-        To find parents, start by searching collections containing birth records.
-        If you haven't found a record in any of those collections, try expanding your search to some of the popular online repositories.
-        If you still haven't found it, try using Find-A-Record to look for collections that are not available online (like microfilm).
-        When you find the parents, add them to the tree in [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
+        Try these steps to find the parents of [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
         
-        ## Help
-        
-        * [Add a New Person to the Family Tree](https://familysearch.org/ask/productSupport#/Adding-a-New-Person-to-Your-Existing-Tree)
-        * [Updating Relationships Between Parents and Children](https://familysearch.org/ask/productSupport#/Adding-Changing-and-Deleting-Relationship-Types-between-Parents-and-Children)
-      */}, { pid: child.id });
+        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
+        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
+        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
+        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
+        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
+      */}, { 
+        pid: child.id,
+        name: child.$getDisplayName()
+      });
 
       return {
         id: this.id + ':' + child.id,
@@ -2792,7 +2780,6 @@ module.exports = {
   getNormalizedDateString: getNormalizedDateString,
   getSimpleDurationString: getSimpleDurationString,
   compareFormalDates: compareFormalDates,
-  farSearchUrl: farSearchUrl,
   markdown: markdown,
   monthNumberToString: monthNumberToString,
   GedcomXDate: GedcomXDate
@@ -3057,39 +3044,6 @@ function compareFormalDates(date1, date2){
   } catch(e) {
     return 1;
   }
-};
-
-/**
- * Generate a url for a Find-A-Record record search
- */
-function farSearchUrl(data){
-  var url = 'https://www.findarecord.com/search';
-  if(data){
-    var urlData = {
-      t: data.tags ? data.tags.join(',') : undefined,
-      from: data.from,
-      to: data.to,
-      s: data.place
-    };
-    var hash = generateURLHash(urlData);
-    if(hash){
-      url += '#' + hash;
-    }
-  }
-  return url;
-};
-
-function generateURLHash(data){
-  var hash = '';
-  for(var x in data){
-    if(typeof data[x] !== 'undefined') {
-      if(hash){
-        hash += '&';
-      }
-      hash += x + '=' + encodeURIComponent(data[x]);
-    }
-  }
-  return hash;
 };
 },{"gedcomx-date":47,"marked":53,"multiline":54,"mustache":56}],41:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {

@@ -8,6 +8,11 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
 
 describe('missingMarriageFact', function(){
 
+  it('should return nothing when the persons are undefined', function(){
+    var opportunity = fsCheck.check(undefined, undefined, undefined);
+    expect(opportunity).to.not.exist;
+  });
+
   it('should return nothing when there is more than one marriage fact', function() {
     var husband = new FamilySearch.Person({}),
         wife = new FamilySearch.Person({}),
