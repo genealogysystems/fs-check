@@ -50,6 +50,8 @@ describe('missingFather', function(){
     
     mother.display = { name: 'Thelma Louise' };
     relationship.id = 'RRRR-RRR';
+    child.id = 'PPPP-PPP';
+    child.display = { name: 'Bob Freemer' };
     
     var opportunity = fsCheck.check(child, mother, father, relationship);
     
@@ -59,12 +61,6 @@ describe('missingFather', function(){
     expect(opportunity.findarecord.from).to.equal(1897);
     expect(opportunity.findarecord.to).to.equal(1903);
     expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
-    expect(opportunity.gensearch.birthPlace).to.equal('Provo, Utah, United States of America');
-    expect(opportunity.gensearch.birthDate).to.equal('1900');
-    expect(opportunity.gensearch.motherGivenName).to.equal('Thelma');
-    expect(opportunity.gensearch.motherFamilyName).to.equal('Louise');
   });
   
 });
