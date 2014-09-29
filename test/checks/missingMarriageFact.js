@@ -62,7 +62,9 @@ describe('missingMarriageFact', function(){
   });
 
   it('should return an opportunity when there is no marriage', function() {
-    var husband = new FamilySearch.Person({
+    var husband = utils.generatePerson({
+          id: 'HUSBAND',
+          name: 'Bob Freemer',
           gender: 'http://gedcomx.org/Male',
           names: [
             new FamilySearch.Name({
@@ -71,7 +73,9 @@ describe('missingMarriageFact', function(){
             })
           ]
         }),
-        wife = new FamilySearch.Person({
+        wife = utils.generatePerson({
+          id: 'WIFE',
+          name: 'Thelma Louise',
           gender: 'http://gedcomx.org/Female',
           names: [
             new FamilySearch.Name({
@@ -101,22 +105,14 @@ describe('missingMarriageFact', function(){
         });
 
     marriage.id = 'RRRR-RRR';
-    husband.display = { name: 'Bob Freemer' };
-    wife.display = { name: 'Thelma Louise' };
         
     var opportunity = fsCheck.check(wife, husband, marriage);
     
     doc('missingMarriageFact', opportunity);
     utils.validateSchema(fsCheck, opportunity, false, true);
     expect(opportunity.person).to.equal(wife);
-    expect(opportunity.gensearch.givenName).to.equal('Thelma');
-    expect(opportunity.gensearch.familyName).to.equal('Louise');
     expect(opportunity.gensearch.spouseGivenName).to.equal('Bob');
     expect(opportunity.gensearch.spouseFamilyName).to.equal('Freemer');
-    expect(opportunity.gensearch.birthPlace).to.equal('Orem, Utah, United States of America');
-    expect(opportunity.gensearch.birthDate).to.equal('1900');
-    expect(opportunity.gensearch.deathPlace).to.equal('Lehi, Utah, United States of America');
-    expect(opportunity.gensearch.deathDate).to.equal('1950');
   });
   
   it('should return an opportunity when there is a marriage, no date, and no place', function() {
@@ -151,8 +147,6 @@ describe('missingMarriageFact', function(){
     var opportunity = fsCheck.check(wife, husband, marriage);
     utils.validateSchema(fsCheck, opportunity, false, true);
     expect(opportunity.person).to.equal(wife);
-    expect(opportunity.gensearch.givenName).to.equal('Thelma');
-    expect(opportunity.gensearch.familyName).to.equal('Louise');
     expect(opportunity.gensearch.spouseGivenName).to.equal('Bob');
     expect(opportunity.gensearch.spouseFamilyName).to.equal('Freemer');
   });

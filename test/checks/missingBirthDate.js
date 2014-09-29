@@ -77,7 +77,9 @@ describe('missingBirthDate', function(){
   });
 
   it('should include death information in gensearch', function() {
-    var person = new FamilySearch.Person({
+    var person = utils.generatePerson({
+      id: 'PPPP-PPP',
+      name: 'Bob Freemer',
       gender: 'http://gedcomx.org/Male',
       names: [
         new FamilySearch.Name({
@@ -98,8 +100,6 @@ describe('missingBirthDate', function(){
         })
       ]
     });
-    
-    person.id = 'PPPP-PPP';
 
     var opportunity = fsCheck.check(person);
 

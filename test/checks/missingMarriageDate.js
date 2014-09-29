@@ -120,14 +120,12 @@ describe('missingMarriageDate', function(){
 
     var opportunity = fsCheck.check(wife, husband, marriage);
     utils.validateSchema(fsCheck, opportunity, false, true);
-    expect(opportunity.gensearch.givenName).to.equal('Thelma');
-    expect(opportunity.gensearch.familyName).to.equal('Louise');
     expect(opportunity.gensearch.marriagePlace).to.equal('Provo, Utah, United States of America');
     expect(opportunity.gensearch.spouseGivenName).to.equal('Bob');
     expect(opportunity.gensearch.spouseFamilyName).to.equal('Freemer');
   });
 
-  it('should set person to husband and spouse to undefined when wife is missing', function() {
+  it('should return nothing when spouse id undefined', function() {
     var husband = new FamilySearch.Person({
           gender: 'http://gedcomx.org/Male',
           names: [
@@ -150,13 +148,7 @@ describe('missingMarriageDate', function(){
         });
 
     var opportunity = fsCheck.check(wife, husband, marriage);
-    utils.validateSchema(fsCheck, opportunity, false, true);
-    expect(opportunity.person).to.equal(husband);
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
-    expect(opportunity.gensearch.marriagePlace).to.equal('Provo, Utah, United States of America');
-    expect(opportunity.gensearch.spouseGivenName).to.equal(undefined);
-    expect(opportunity.gensearch.spouseFamilyName).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should return nothing if husband and wife are missing', function() {
@@ -174,12 +166,13 @@ describe('missingMarriageDate', function(){
         });
 
     var opportunity = fsCheck.check(wife, husband, marriage);
-
-    expect(opportunity).to.equal(undefined);
+    expect(opportunity).to.not.exist;
   });
 
   it('should include birth and death information in gensearch', function() {
-    var husband = new FamilySearch.Person({
+    var husband = utils.generatePerson({
+          id: 'HUSBAND',
+          name: 'Bob Freemer',
           gender: 'http://gedcomx.org/Male',
           names: [
             new FamilySearch.Name({
@@ -188,7 +181,9 @@ describe('missingMarriageDate', function(){
             })
           ]
         }),
-        wife = new FamilySearch.Person({
+        wife = utils.generatePerson({
+          id: 'WIFE',
+          name: 'Thelma Louise',
           gender: 'http://gedcomx.org/Female',
           names: [
             new FamilySearch.Name({

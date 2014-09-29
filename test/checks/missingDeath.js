@@ -40,20 +40,13 @@ describe('missingDeath', function(){
     });
 
     var opportunity = fsCheck.check(person);
-
-    expect(opportunity.type).to.equal('person');
-    expect(opportunity).to.have.property('title');
-    expect(opportunity).to.have.property('description');
-    expect(opportunity).to.have.property('person');
-    expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-    expect(opportunity.findarecord).to.equal(undefined);
-    expect(opportunity).to.have.property('gensearch');
-    expect(opportunity.gensearch.givenName).to.equal('Bob');
-    expect(opportunity.gensearch.familyName).to.equal('Freemer');
+    utils.validateSchema(fsCheck, opportunity, false, true);
   });
 
   it('should return an opportunity when there is a death but no date AND place', function() {
-    var person = new FamilySearch.Person({
+    var person = utils.generatePerson({
+      id: 'PPPP-PPP',
+      name: 'Bob Freemer',
       gender: 'http://gedcomx.org/Male',
       names: [
         new FamilySearch.Name({
@@ -70,8 +63,6 @@ describe('missingDeath', function(){
         })
       ]
     });
-    
-    person.id = 'PPPP-PPP';
 
     var opportunity = fsCheck.check(person);
 
