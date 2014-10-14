@@ -3044,6 +3044,13 @@ function gensearchPerson(person){
  * Compare two formal dates
  */
 function compareFormalDates(date1, date2){
+  // Ignore leading A which denote approximate date
+  if(date1.charAt(0) === 'A'){
+    date1 = date1.substr(1);
+  }
+  if(date2.charAt(0) === 'A'){
+    date2 = date2.substr(1);
+  }
   if(date1 === date2){
     return 0;
   }
