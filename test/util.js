@@ -515,6 +515,13 @@ describe('util', function(){
       var result = util.compareFormalDates('+1990-01-01', '+1980-01-01');
       expect(result).to.equal(1);
     });
+    
+    it('ignore approximate when comparing', function(){
+      var result = util.compareFormalDates('A+1662', '+1662');
+      expect(result).to.equal(0);
+      result = util.compareFormalDates('+1662', 'A+1662');
+      expect(result).to.equal(0);
+    });
   
   });
   
