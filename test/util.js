@@ -73,9 +73,7 @@ describe('util', function(){
         type: 'http://gedcomx.org/Birth',
         place: 'Provo, Utah, United States of America'
       });
-
       var year = util.getFactYear(fact);
-
       expect(year).to.equal(undefined);
     });
 
@@ -85,9 +83,7 @@ describe('util', function(){
         formalDate: '+1900-01-01',
         place: 'Provo, Utah, United States of America'
       });
-
       var year = util.getFactYear(fact);
-
       expect(year).to.equal(1900);
     });
 
@@ -97,9 +93,7 @@ describe('util', function(){
         date: 'January 1, 1900',
         place: 'Provo, Utah, United States of America'
       });
-
       var year = util.getFactYear(fact);
-
       expect(year).to.equal(1900);
     });
 
@@ -110,9 +104,7 @@ describe('util', function(){
         formalDate: 'A+1900-01-01',
         place: 'Provo, Utah, United States of America'
       });
-
       var year = util.getFactYear(fact);
-
       expect(year).to.equal(1900);
     });
 
@@ -122,9 +114,7 @@ describe('util', function(){
         formalDate: '+1900-01-01/',
         place: 'Provo, Utah, United States of America'
       });
-
       var year = util.getFactYear(fact);
-
       expect(year).to.equal(1900);
     });
 
@@ -134,9 +124,7 @@ describe('util', function(){
         formalDate: '/+1900-01-01',
         place: 'Provo, Utah, United States of America'
       });
-
       var year = util.getFactYear(fact);
-
       expect(year).to.equal(1900);
     });
 
@@ -146,10 +134,18 @@ describe('util', function(){
         formalDate: '+1900-01-01/+1910-01-01',
         place: 'Provo, Utah, United States of America'
       });
-
       var year = util.getFactYear(fact);
-
       expect(year).to.equal(1905);
+    });
+    
+    it('should return the middle formal year in a start/end range', function() {
+      var fact = new FamilySearch.Fact({
+        type: 'http://gedcomx.org/Birth',
+        formalDate: '+1707-02-22/+1707-03-09',
+        place: 'Provo, Utah, United States of America'
+      });
+      var year = util.getFactYear(fact);
+      expect(year).to.equal(1707);
     });
     
     it('should catch the exception thrown by parsing an invalid GEDCOMX date', function() {
@@ -251,6 +247,38 @@ describe('util', function(){
       expect(date).to.not.exist;
     });
     
+  });
+  
+  describe('getSimpleFormalDate()', function(){
+  
+    it('simple date', function(){
+      var originalFormal = '+1707-03-09',
+          date = util.getSimpleFormalDate(originalFormal),
+          newFormal = date.toFormalString();
+      expect(newFormal).to.equal(originalFormal);
+    });
+    
+    it('date range open start', function(){
+      var originalFormal = '/+1707-03-09',
+          date = util.getSimpleFormalDate(originalFormal),
+          newFormal = date.toFormalString();
+      expect(newFormal).to.equal('+1707-03-09');
+    });
+    
+    it('date range open end', function(){
+      var originalFormal = '+1707-02-22/',
+          date = util.getSimpleFormalDate(originalFormal),
+          newFormal = date.toFormalString();
+      expect(newFormal).to.equal('+1707-02-22');
+    });
+    
+    it('date range closed', function(){
+      var originalFormal = '+1707-02-22/+1707-03-09',
+          date = util.getSimpleFormalDate(originalFormal),
+          newFormal = date.toFormalString();
+      expect(newFormal).to.equal('+1707-03-02');
+    });
+  
   });
   
   describe('getSimpleDurationString()', function(){

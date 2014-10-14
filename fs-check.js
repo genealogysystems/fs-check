@@ -2785,6 +2785,7 @@ module.exports = {
   getFactYear: getFactYear,
   getFactPlace: getFactPlace,
   getFormalDate: getFormalDate,
+  getSimpleFormalDate: getSimpleFormalDate,
   getNormalizedDateString: getNormalizedDateString,
   getSimpleDurationString: getSimpleDurationString,
   compareFormalDates: compareFormalDates,
@@ -4072,7 +4073,7 @@ function GedcomXDate(str) {
 /**
  * The version of this library.
  */
-GedcomXDate.version = '0.2.2';
+GedcomXDate.version = '0.3.2';
 
 /**
  * Expose addDuration.
@@ -4923,12 +4924,12 @@ function addDuration(startDate, duration) {
     end.day += duration.getDays();
   }
   while(end.day && end.day > GlobalUtil.daysInMonth(end.month, end.year)) {
+    end.day -= GlobalUtil.daysInMonth(end.month, end.year);
     end.month += 1;
     if(end.month > 12) {
       end.month -= 12;
       end.year += 1;
     }
-    end.day -= GlobalUtil.daysInMonth(end.month, end.year);
   }
   if(end.day != undefined) {
     endString = '-'+('00'+end.day).substr(-2,2)+endString;
@@ -5029,12 +5030,12 @@ function getDuration(startDate, endDate) {
 
   if(end.day != undefined) {
     while(end.day-start.day < 0) {
-      end.day += GlobalUtil.daysInMonth(end.month,end.year);
       end.month -= 1;
       if(end.month < 1) {
         end.year -= 1;
         end.month += 12;
       }
+      end.day += GlobalUtil.daysInMonth(end.month,end.year);
     }
     if(end.day-start.day > 0) {
       duration = ('00'+(end.day-start.day)).substr(-2,2)+'D'+duration;
