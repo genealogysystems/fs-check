@@ -143,6 +143,9 @@ The FamilySearch person that this opportunity is for. `person` will be a `Family
 
 ### findarecord
 
+___Find-A-Record has retired their record search and its API. Therefore the `findarecord` attribute
+of opportunities is deprecated and will be removed in version 2 of fs-check.___
+
 An object containing parameters to use for a Find-A-Record Search. Must be a valid object or `undefined`.
 ````javascript
 {
