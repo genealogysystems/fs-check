@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/genealogysystems/fs-check.svg)](https://travis-ci.org/genealogysystems/fs-check)
+[![Coverage Status](https://coveralls.io/repos/genealogysystems/fs-check/badge.svg?branch=dev)](https://coveralls.io/r/genealogysystems/fs-check?branch=dev)
+[![Dependency Status](https://david-dm.org/genealogysystems/fs-check.svg)](https://david-dm.org/genealogysystems/fs-check)
 
 # fs-check
 
