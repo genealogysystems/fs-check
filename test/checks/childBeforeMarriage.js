@@ -1,10 +1,8 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('childBeforeMarriage'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('childBeforeMarriage'),
     doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
+    FS = utils.FS,
     GedcomXDate = require('gedcomx-date');
 
 describe('childBeforeMarriage', function(){
@@ -13,7 +11,7 @@ describe('childBeforeMarriage', function(){
     var relationships = {
       getSpouseRelationships: function(){ return [] }
     };
-    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, {});
+    var opportunity = fsCheck.check(FS.createPerson(), relationships, {});
     expect(opportunity).to.not.exist;
   });
   
@@ -21,11 +19,11 @@ describe('childBeforeMarriage', function(){
     var relationships = {
       getSpouseRelationships: function(){ 
         return [
-          new FamilySearch.Couple()
+          FS.createCouple()
         ]
       }
     };
-    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, {});
+    var opportunity = fsCheck.check(FS.createPerson(), relationships, {});
     expect(opportunity).to.not.exist;
   });
   
@@ -33,9 +31,9 @@ describe('childBeforeMarriage', function(){
     var relationships = {
       getSpouseRelationships: function(){ 
         return [
-          new FamilySearch.Couple({
+          FS.createCouple({
             facts: [
-              new FamilySearch.Fact({
+              FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
                 formalDate: '+1900'
               })
@@ -45,21 +43,21 @@ describe('childBeforeMarriage', function(){
       },
       getChildRelationshipsOf: function(){ return []; }
     };
-    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, {});
+    var opportunity = fsCheck.check(FS.createPerson(), relationships, {});
     expect(opportunity).to.not.exist;
   });
   
   it('should return nothing when no children have a birth fact', function(){
     var persons = {
-      'CHILD': new FamilySearch.Person()
+      'CHILD': FS.createPerson()
     };
     persons.CHILD.id = 'CHILD';
     var relationships = {
       getSpouseRelationships: function(){ 
         return [
-          new FamilySearch.Couple({
+          FS.createCouple({
             facts: [
-              new FamilySearch.Fact({
+              FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
                 formalDate: '+1900'
               })
@@ -69,21 +67,21 @@ describe('childBeforeMarriage', function(){
       },
       getChildRelationshipsOf: function(){ 
         return [
-          new FamilySearch.ChildAndParents({
+          FS.createChildAndParents({
             child: 'CHILD'
           })
         ]; 
       }
     };
-    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
+    var opportunity = fsCheck.check(FS.createPerson(), relationships, persons);
     expect(opportunity).to.not.exist;
   });
   
   it('should return nothing when no children have a formal birth date', function(){
     var persons = {
-      'CHILD': new FamilySearch.Person({
+      'CHILD': FS.createPerson({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
             date: 'original date'
           })
@@ -94,9 +92,9 @@ describe('childBeforeMarriage', function(){
     var relationships = {
       getSpouseRelationships: function(){ 
         return [
-          new FamilySearch.Couple({
+          FS.createCouple({
             facts: [
-              new FamilySearch.Fact({
+              FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
                 formalDate: '+1900'
               })
@@ -106,21 +104,21 @@ describe('childBeforeMarriage', function(){
       },
       getChildRelationshipsOf: function(){ 
         return [
-          new FamilySearch.ChildAndParents({
+          FS.createChildAndParents({
             child: 'CHILD'
           })
         ]; 
       }
     };
-    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
+    var opportunity = fsCheck.check(FS.createPerson(), relationships, persons);
     expect(opportunity).to.not.exist;
   });
   
   it('should return nothing when no children were born before a marriage', function(){
     var persons = {
-      'CHILD': new FamilySearch.Person({
+      'CHILD': FS.createPerson({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
             formalDate: '+1901-01-01'
           })
@@ -131,9 +129,9 @@ describe('childBeforeMarriage', function(){
     var relationships = {
       getSpouseRelationships: function(){ 
         return [
-          new FamilySearch.Couple({
+          FS.createCouple({
             facts: [
-              new FamilySearch.Fact({
+              FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
                 formalDate: '+1900-01-01'
               })
@@ -143,13 +141,13 @@ describe('childBeforeMarriage', function(){
       },
       getChildRelationshipsOf: function(){ 
         return [
-          new FamilySearch.ChildAndParents({
+          FS.createChildAndParents({
             child: 'CHILD'
           })
         ]; 
       }
     };
-    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, persons);
+    var opportunity = fsCheck.check(FS.createPerson(), relationships, persons);
     expect(opportunity).to.not.exist;
   });
   
@@ -157,9 +155,9 @@ describe('childBeforeMarriage', function(){
     var relationships = {
       getSpouseRelationships: function(){ 
         return [
-          new FamilySearch.Couple({
+          FS.createCouple({
             facts: [
-              new FamilySearch.Fact({
+              FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
                 formalDate: '+1900-01-01'
               })
@@ -169,38 +167,38 @@ describe('childBeforeMarriage', function(){
       },
       getChildRelationshipsOf: function(){ 
         return [
-          new FamilySearch.ChildAndParents({
+          FS.createChildAndParents({
             child: 'CHILD'
           })
         ]; 
       }
     };
-    var opportunity = fsCheck.check(new FamilySearch.Person(), relationships, {});
+    var opportunity = fsCheck.check(FS.createPerson(), relationships, {});
     expect(opportunity).to.not.exist;
   });
 
   it('should return an opportunity when a child was born before the marriage', function(){
     var persons = {
-      'CHILD': new FamilySearch.Person({
+      'CHILD': FS.createPerson({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            formalDate: '+1899-05-10'
+            $formalDate: '+1899-05-10'
           })
         ]
       }),
-      'SPOUSE': new FamilySearch.Person()
+      'SPOUSE': FS.createPerson()
     };
     persons.CHILD.id = 'CHILD';
     persons.SPOUSE.id = 'SPOUSE';
     persons.SPOUSE.display = { name: 'Mary Adams' };
     
     var marriages = [
-      new FamilySearch.Couple({
+      FS.createCouple({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Marriage',
-            formalDate: '+1900-07-03'
+            $formalDate: '+1900-07-03'
           })
         ]
       })
@@ -213,14 +211,14 @@ describe('childBeforeMarriage', function(){
       },
       getChildRelationshipsOf: function(){ 
         return [
-          new FamilySearch.ChildAndParents({
-            child: 'CHILD'
+          FS.createChildAndParents({
+            $child: 'CHILD'
           })
         ]; 
       }
     };
     
-    var person = new FamilySearch.Person();
+    var person = FS.createPerson();
     person.id = 'PPPP-PPP';
     
     var opportunity = fsCheck.check(person, relationships, persons);
@@ -242,9 +240,9 @@ describe('childBeforeMarriage', function(){
         id: 'CHILD1',
         name: 'Elmer Fudd',
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            formalDate: '+1899-05-10'
+            $formalDate: '+1899-05-10'
           })
         ]
       }),
@@ -252,9 +250,9 @@ describe('childBeforeMarriage', function(){
         id: 'CHILD2',
         name: 'Mary Sue',
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            formalDate: '+1899-05-10'
+            $formalDate: '+1899-05-10'
           })
         ]
       }),
@@ -269,19 +267,19 @@ describe('childBeforeMarriage', function(){
     };
     
     var marriages = [
-      new FamilySearch.Couple({
+      FS.createCouple({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Marriage',
-            formalDate: '+1900-07-03'
+            $formalDate: '+1900-07-03'
           })
         ]
       }),
-      new FamilySearch.Couple({
+      FS.createCouple({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Marriage',
-            formalDate: '+1900-10-03'
+            $formalDate: '+1900-10-03'
           })
         ]
       })
@@ -296,14 +294,14 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(spouseId){ 
         if(spouseId === 'SPOUSE1'){
           return [
-            new FamilySearch.ChildAndParents({
-              child: 'CHILD1'
+            FS.createChildAndParents({
+              $child: 'CHILD1'
             })
           ];
         } else {
           return [
-            new FamilySearch.ChildAndParents({
-              child: 'CHILD2'
+            FS.createChildAndParents({
+              $child: 'CHILD2'
             })
           ];
         }
@@ -338,24 +336,24 @@ describe('childBeforeMarriage', function(){
   
   it('should properly handle multiple marriages where some have problems and others dont', function(){
     var persons = {
-      'CHILD1': new FamilySearch.Person({
+      'CHILD1': FS.createPerson({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            formalDate: '+1899-05-10'
+            $formalDate: '+1899-05-10'
           })
         ]
       }),
-      'CHILD2': new FamilySearch.Person({
+      'CHILD2': FS.createPerson({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            formalDate: '+1901-05-10'
+            $formalDate: '+1901-05-10'
           })
         ]
       }),
-      'SPOUSE1': new FamilySearch.Person(),
-      'SPOUSE2': new FamilySearch.Person()
+      'SPOUSE1': FS.createPerson(),
+      'SPOUSE2': FS.createPerson()
     };
     persons.CHILD1.id = 'CHILD1';
     persons.CHILD2.id = 'CHILD2';
@@ -365,19 +363,19 @@ describe('childBeforeMarriage', function(){
     persons.SPOUSE2.display = { name: 'Sarah Jane' };
     
     var marriages = [
-      new FamilySearch.Couple({
+      FS.createCouple({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Marriage',
-            formalDate: '+1900-07-03'
+            $formalDate: '+1900-07-03'
           })
         ]
       }),
-      new FamilySearch.Couple({
+      FS.createCouple({
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Marriage',
-            formalDate: '+1900-10-03'
+            $formalDate: '+1900-10-03'
           })
         ]
       })
@@ -392,21 +390,21 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(spouseId){ 
         if(spouseId === 'SPOUSE1'){
           return [
-            new FamilySearch.ChildAndParents({
-              child: 'CHILD1'
+            FS.createChildAndParents({
+              $child: 'CHILD1'
             })
           ];
         } else {
           return [
-            new FamilySearch.ChildAndParents({
-              child: 'CHILD2'
+            FS.createChildAndParents({
+              $child: 'CHILD2'
             })
           ];
         }
       }
     };
     
-    var person = new FamilySearch.Person();
+    var person = FS.createPerson();
     person.id = 'PPPP-PPP';
     
     var opportunity = fsCheck.check(person, relationships, persons);

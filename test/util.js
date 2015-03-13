@@ -1,9 +1,7 @@
-var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../vendor/familysearch-javascript-sdk.js'),
-    FSCheck = require(path.join(libPath, 'index.js')),
-    util = require(path.join(libPath, 'util.js'));
+var expect = require('chai').expect,
+    FSCheck = require('../lib/index.js'),
+    util = require('../lib/util'),
+    FS = require('./test-utils').FS;
 
 describe('util', function(){
 
@@ -17,9 +15,9 @@ describe('util', function(){
   describe('getFactPlace()', function(){
 
     it('should return undefined when no place is set', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: 'January 1, 1900'
+        $date: 'January 1, 1900'
       });
 
       var place = util.getFactPlace(fact);
@@ -28,10 +26,10 @@ describe('util', function(){
     });
 
     it('should return the normalized place when only normalized is set', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: 'January 1, 1900',
-        normalizedPlace: 'Provo, Utah, United States of America'
+        $date: 'January 1, 1900',
+        $normalizedPlace: 'Provo, Utah, United States of America'
       });
 
       var place = util.getFactPlace(fact);
@@ -40,10 +38,10 @@ describe('util', function(){
     });
 
     it('should return the original place when only original is set', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: 'January 1, 1900',
-        place: 'Provo, Utah, United States of America'
+        $date: 'January 1, 1900',
+        $place: 'Provo, Utah, United States of America'
       });
 
       var place = util.getFactPlace(fact);
@@ -52,11 +50,11 @@ describe('util', function(){
     });
 
     it('should return the normalized place when original and normalized are set', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: 'January 1, 1900',
-        place: 'Orem, Utah, United States of America',
-        normalizedPlace: 'Provo, Utah, United States of America'
+        $date: 'January 1, 1900',
+        $place: 'Orem, Utah, United States of America',
+        $normalizedPlace: 'Provo, Utah, United States of America'
       });
 
       var place = util.getFactPlace(fact);
@@ -69,90 +67,90 @@ describe('util', function(){
   describe('getFactYear()', function(){
 
     it('should return undefined when no date is set', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        place: 'Provo, Utah, United States of America'
+        $place: 'Provo, Utah, United States of America'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal(undefined);
     });
 
     it('should return the formal year when only formal date is set', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '+1900-01-01',
-        place: 'Provo, Utah, United States of America'
+        $formalDate: '+1900-01-01',
+        $place: 'Provo, Utah, United States of America'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal(1900);
     });
 
     it('should return the original year when only original date is set', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: 'January 1, 1900',
-        place: 'Provo, Utah, United States of America'
+        $date: 'January 1, 1900',
+        $place: 'Provo, Utah, United States of America'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal(1900);
     });
 
     it('should return the formal year when original and formal date is set', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: 'January 1, 1901',
-        formalDate: 'A+1900-01-01',
-        place: 'Provo, Utah, United States of America'
+        $date: 'January 1, 1901',
+        $formalDate: 'A+1900-01-01',
+        $place: 'Provo, Utah, United States of America'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal(1900);
     });
 
     it('should return the start formal year in a range/', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '+1900-01-01/',
-        place: 'Provo, Utah, United States of America'
+        $formalDate: '+1900-01-01/',
+        $place: 'Provo, Utah, United States of America'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal(1900);
     });
 
     it('should return the start formal year in a /range', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '/+1900-01-01',
-        place: 'Provo, Utah, United States of America'
+        $formalDate: '/+1900-01-01',
+        $place: 'Provo, Utah, United States of America'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal(1900);
     });
 
     it('should return the middle formal year in a start/end range', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '+1900-01-01/+1910-01-01',
-        place: 'Provo, Utah, United States of America'
+        $formalDate: '+1900-01-01/+1910-01-01',
+        $place: 'Provo, Utah, United States of America'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal(1905);
     });
     
     it('should return the middle formal year in a start/end range', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '+1707-02-22/+1707-03-09',
-        place: 'Provo, Utah, United States of America'
+        $formalDate: '+1707-02-22/+1707-03-09',
+        $place: 'Provo, Utah, United States of America'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal(1707);
     });
     
     it('should catch the exception thrown by parsing an invalid GEDCOMX date', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            formalDate: '+1900-02-31',
-            place: 'Provo, Utah, United States of America'
+            $formalDate: '+1900-02-31',
+            $place: 'Provo, Utah, United States of America'
           }),
           fn = function(){
             util.getFactYear(fact);
@@ -161,18 +159,18 @@ describe('util', function(){
     });
     
     it('should return the original year', function(){
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Death',
-        date: '1901'
+        $date: '1901'
       });
       var year = util.getFactYear(fact);
       expect(year).to.equal('1901');
     });
     
     it('should return undefined for "Deceased"', function() {
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Death',
-        date: 'Deceased'
+        $date: 'Deceased'
       });
 
       var year = util.getFactYear(fact);
@@ -185,63 +183,63 @@ describe('util', function(){
   describe('getFormalDate()', function(){
     
     it('should return simple as-is', function(){
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '+1569-04-27'
+        $formalDate: '+1569-04-27'
       });
       var date = util.getFormalDate(fact);
       expect(date).to.equal('+1569-04-27');
     });
     
     it('should return start date of open-ended future range', function(){
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '+1569-04-27/'
+        $formalDate: '+1569-04-27/'
       });
       var date = util.getFormalDate(fact);
       expect(date).to.equal('+1569-04-27');
     });
     
     it('should return end date of open-ended past range', function(){
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '/+1569-04-27'
+        $formalDate: '/+1569-04-27'
       });
       var date = util.getFormalDate(fact);
       expect(date).to.equal('+1569-04-27');
     });
     
     it('should return middle of closed range', function(){
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        formalDate: '+1569-04-10/+1571-04-10'
+        $formalDate: '+1569-04-10/+1571-04-10'
       });
       var date = util.getFormalDate(fact);
       expect(date).to.equal('+1570-04-10');
     });
     
     it('should return simple date created by parsing into js date', function(){
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: '4 Mar 1845'
+        $date: '4 Mar 1845'
       });
       var date = util.getFormalDate(fact);
       expect(date).to.equal('+1845-03-04');
     });
     
     it('should return simple date with just the year', function(){
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: '1845'
+        $date: '1845'
       });
       var date = util.getFormalDate(fact);
       expect(date).to.equal('+1845');
     });
     
     it('should return undefined with unparsable format', function(){
-      var fact = new FamilySearch.Fact({
+      var fact = FS.createFact({
         type: 'http://gedcomx.org/Birth',
-        date: 'octber 7th 1845'
+        $date: 'octber 7th 1845'
       });
       var date = util.getFormalDate(fact);
       expect(date).to.not.exist;
@@ -367,11 +365,11 @@ describe('util', function(){
   describe('gensearchPerson()', function(){
   
     it('should return an object with just givenName', function(){
-      var person = new FamilySearch.Person({
+      var person = FS.createPerson({
         gender: 'http://gedcomx.org/Female',
         names: [
-          new FamilySearch.Name({
-            givenName: 'Mary'
+          FS.createName({
+            $givenName: 'Mary'
           })
         ]
       });
@@ -382,11 +380,11 @@ describe('util', function(){
     });
     
     it('should return an object with familyName', function(){
-      var person = new FamilySearch.Person({
+      var person = FS.createPerson({
         gender: 'http://gedcomx.org/Female',
         names: [
-          new FamilySearch.Name({
-            surname: 'Adams'
+          FS.createName({
+            $surname: 'Adams'
           })
         ]
       });
@@ -397,13 +395,13 @@ describe('util', function(){
     });
     
     it('should return an object with birthDate', function(){
-      var person = new FamilySearch.Person({
+      var person = FS.createPerson({
         gender: 'http://gedcomx.org/Female',
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            date: 'January 1, 1900',
-            formalDate: '+1900-01-01',
+            $date: 'January 1, 1900',
+            $formalDate: '+1900-01-01',
           })
         ]
       });
@@ -414,12 +412,12 @@ describe('util', function(){
     });
     
     it('should return an object with birthPlace', function(){
-      var person = new FamilySearch.Person({
+      var person = FS.createPerson({
         gender: 'http://gedcomx.org/Female',
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            place: 'Provo, Utah, Utah, United States'
+            $place: 'Provo, Utah, Utah, United States'
           })
         ]
       });
@@ -430,13 +428,13 @@ describe('util', function(){
     });
     
     it('should return an object with deathDate', function(){
-      var person = new FamilySearch.Person({
+      var person = FS.createPerson({
         gender: 'http://gedcomx.org/Female',
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Death',
-            date: 'January 1, 1900',
-            formalDate: '+1900-01-01',
+            $date: 'January 1, 1900',
+            $formalDate: '+1900-01-01',
           })
         ]
       });
@@ -447,12 +445,12 @@ describe('util', function(){
     });
     
     it('should return an object with deathPlace', function(){
-      var person = new FamilySearch.Person({
+      var person = FS.createPerson({
         gender: 'http://gedcomx.org/Female',
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Death',
-            place: 'Provo, Utah, Utah, United States'
+            $place: 'Provo, Utah, Utah, United States'
           })
         ]
       });
@@ -463,26 +461,26 @@ describe('util', function(){
     });
     
     it('should return a gensearch object with name, birth, and death info', function(){
-      var person = new FamilySearch.Person({
+      var person = FS.createPerson({
         gender: 'http://gedcomx.org/Female',
         names: [
-          new FamilySearch.Name({
-            givenName: 'Mary',
-            surname: 'Adams'
+          FS.createName({
+            $givenName: 'Mary',
+            $surname: 'Adams'
           })
         ],
         facts: [
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            date: 'January 1, 1900',
-            formalDate: '+1900-01-01',
-            place: 'Provo, Utah, United States'
+            $date: 'January 1, 1900',
+            $formalDate: '+1900-01-01',
+            $place: 'Provo, Utah, United States'
           }),
-          new FamilySearch.Fact({
+          FS.createFact({
             type: 'http://gedcomx.org/Death',
-            date: 'January 1, 2000',
-            formalDate: '+2000-01-01',
-            place: 'Orem, Utah, United States'
+            $date: 'January 1, 2000',
+            $formalDate: '+2000-01-01',
+            $place: 'Orem, Utah, United States'
           })
         ]
       });

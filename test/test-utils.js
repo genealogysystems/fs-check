@@ -1,7 +1,20 @@
 var expect = require('chai').expect,
-    FamilySearch = require('../vendor/familysearch-javascript-sdk.js');
+    FamilySearch = require('../vendor/familysearch-javascript-sdk.js'),
+    q = require('q');
 
 module.exports = {
+
+  /**
+   * All tests share the same SDK client
+   */
+  FS: new FamilySearch({
+    client_id: 'ID',
+    environment: 'sandbox',
+    access_token: 'SOME_ACCESS_TOKEN',
+    redirect_uri: '/', // https://github.com/rootsdev/familysearch-javascript-sdk/issues/87
+    http_function: function(){},
+    deferred_function: q.defer
+  }),
 
   /**
    * Mka
@@ -35,7 +48,7 @@ module.exports = {
     if(!data){
       data = {};
     }
-    var person = new FamilySearch.Person(data);
+    var person = this.FS.createPerson(data);
     person.id = data.id;
     person.display = { name: data.name };
     return person;
