@@ -6,7 +6,7 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
-describe('marriageAfterDeath', function(){
+describe.skip('marriageAfterDeath', function(){
 
   describe('should return nothing', function(){
 

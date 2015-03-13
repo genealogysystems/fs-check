@@ -16,7 +16,7 @@ describe('FSCheck', function(){
     expect(FSCheck).to.have.property('utils');
   });
 
-  describe('FSCheck.all', function(){
+  describe.skip('FSCheck.all', function(){
     
     it('should return proper number of checks', function(){
       var checks = FSCheck.all();
@@ -47,7 +47,6 @@ describe('FSCheck', function(){
     it('should return the correct check', function(){
       var check = FSCheck.id('birthBeforeParentsBirth');
       expect(check.id).to.equal('birthBeforeParentsBirth');
-      expect(check.title).to.equal('Person Born Before their Parent(s)');
       expect(check.type).to.equal('problem');
       expect(check.signature).to.equal('parents');
     });
@@ -164,7 +163,7 @@ function validateChecks(checks){
 function validateCheck(check){
   try {
     expect(check).to.exist;
-    expect(check).to.have.keys(['id','title','type','signature','check']);
+    expect(check).to.have.keys(['id','type','signature','help','check']);
     
     // Validate type
     expect(['source','person','family','problem','cleanup']).to.include.members([check.type]);

@@ -6,7 +6,7 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
-describe('multipleParents', function(){
+describe.skip('multipleParents', function(){
 
   it('should return nothing when there are no parent relationships', function() {
     var person = new FamilySearch.Person({

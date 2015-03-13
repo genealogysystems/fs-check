@@ -6,7 +6,7 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
-describe('standardizeMarriagePlace', function(){
+describe.skip('standardizeMarriagePlace', function(){
 
 it('should return nothing when the wife or husband is missing', function(){
     var husband,

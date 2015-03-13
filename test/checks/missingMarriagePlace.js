@@ -6,7 +6,7 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
-describe('missingMarriagePlace', function(){
+describe.skip('missingMarriagePlace', function(){
 
   it('should return nothing when there is no marriage fact', function() {
     var husband = new FamilySearch.Person({}),

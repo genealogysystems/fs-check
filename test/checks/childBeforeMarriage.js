@@ -225,7 +225,15 @@ describe('childBeforeMarriage', function(){
     
     var opportunity = fsCheck.check(person, relationships, persons);
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('Mary Adams');
+    expect(opportunity.template.children).to.deep.equal([ 
+      { 
+        spouseName: 'Mary Adams',
+        spouseId: 'SPOUSE',
+        childName: undefined,
+        childId: 'CHILD',
+        durationString: '1 year and 1 month'
+      }
+    ]);
   });
   
   it('should properly handle multiple marriages with problems', function(){
@@ -310,8 +318,22 @@ describe('childBeforeMarriage', function(){
     var opportunity = fsCheck.check(person, relationships, persons);
     utils.validateSchema(fsCheck, opportunity);
     doc('childBeforeMarriage', opportunity);
-    expect(opportunity.description).to.contain('Mary Adams');
-    expect(opportunity.description).to.contain('Sarah Jane');
+    expect(opportunity.template.children).to.deep.equal([ 
+      { 
+        spouseName: 'Mary Adams',
+        spouseId: 'SPOUSE1',
+        childName: 'Elmer Fudd',
+        childId: 'CHILD1',
+        durationString: '1 year and 4 months'
+      },
+      { 
+        spouseName: 'Sarah Jane',
+        spouseId: 'SPOUSE2',
+        childName: 'Mary Sue',
+        childId: 'CHILD2',
+        durationString: '1 year and 4 months'
+      }
+    ]);
   });
   
   it('should properly handle multiple marriages where some have problems and others dont', function(){
@@ -389,8 +411,13 @@ describe('childBeforeMarriage', function(){
     
     var opportunity = fsCheck.check(person, relationships, persons);
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('Mary Adams');
-    expect(opportunity.description).to.not.contain('Sarah Jane');
+    expect(opportunity.template.children).to.deep.equal([{ 
+      spouseName: 'Mary Adams',
+      spouseId: 'SPOUSE1',
+      childName: undefined,
+      childId: 'CHILD1',
+      durationString: '1 year and 4 months'
+    }]);
   });
   
 });

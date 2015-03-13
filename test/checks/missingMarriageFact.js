@@ -6,7 +6,7 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
-describe('missingMarriageFact', function(){
+describe.skip('missingMarriageFact', function(){
 
   it('should return nothing when the persons are undefined', function(){
     var opportunity = fsCheck.check(undefined, undefined, undefined);

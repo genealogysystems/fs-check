@@ -6,7 +6,7 @@ var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
     utils = require('../test-utils.js'),
     doc = require('../../docs/util.js');
 
-describe('missingDeathDate', function(){
+describe.skip('missingDeathDate', function(){
 
   it('should return nothing when there is no death', function() {
     var person = new FamilySearch.Person({
