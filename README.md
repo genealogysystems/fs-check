@@ -1,7 +1,8 @@
-# fs-check
-Generate research opportunities for the [FamilySearch Family Tree](https://familysearch.org/tree/).
-
 [![Build Status](https://travis-ci.org/genealogysystems/fs-check.svg)](https://travis-ci.org/genealogysystems/fs-check)
+
+# fs-check
+
+Generate research opportunities for the [FamilySearch Family Tree](https://familysearch.org/tree/).
 
 fs-check depends on the [FamilySearch-javascript-sdk](https://github.com/rootsdev/familysearch-javascript-sdk) and was designed to be paired with [fs-traversal](https://github.com/genealogysystems/fs-traversal).
 
