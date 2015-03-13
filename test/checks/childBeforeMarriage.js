@@ -35,7 +35,7 @@ describe('childBeforeMarriage', function(){
             facts: [
               FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
-                formalDate: '+1900'
+                $formalDate: '+1900'
               })
             ]
           })
@@ -59,7 +59,7 @@ describe('childBeforeMarriage', function(){
             facts: [
               FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
-                formalDate: '+1900'
+                $formalDate: '+1900'
               })
             ]
           })
@@ -68,7 +68,7 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            child: 'CHILD'
+            $child: 'CHILD'
           })
         ]; 
       }
@@ -83,7 +83,7 @@ describe('childBeforeMarriage', function(){
         facts: [
           FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            date: 'original date'
+            $date: 'original date'
           })
         ]
       })
@@ -96,7 +96,7 @@ describe('childBeforeMarriage', function(){
             facts: [
               FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
-                formalDate: '+1900'
+                $formalDate: '+1900'
               })
             ]
           })
@@ -105,7 +105,7 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            child: 'CHILD'
+            $child: 'CHILD'
           })
         ]; 
       }
@@ -120,7 +120,7 @@ describe('childBeforeMarriage', function(){
         facts: [
           FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            formalDate: '+1901-01-01'
+            $formalDate: '+1901-01-01'
           })
         ]
       })
@@ -133,7 +133,7 @@ describe('childBeforeMarriage', function(){
             facts: [
               FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
-                formalDate: '+1900-01-01'
+                $formalDate: '+1900-01-01'
               })
             ]
           })
@@ -142,7 +142,7 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            child: 'CHILD'
+            $child: 'CHILD'
           })
         ]; 
       }
@@ -159,7 +159,7 @@ describe('childBeforeMarriage', function(){
             facts: [
               FS.createFact({
                 type: 'http://gedcomx.org/Marriage',
-                formalDate: '+1900-01-01'
+                $formalDate: '+1900-01-01'
               })
             ]
           })
@@ -168,7 +168,7 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            child: 'CHILD'
+            $child: 'CHILD'
           })
         ]; 
       }
