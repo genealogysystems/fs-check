@@ -1,2 +1,4 @@
 node_modules/
-coverage/coverage.html
+coverage
+.c9
+npm-debug.log

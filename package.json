@@ -1,5 +1,5 @@
 {
-  "name": "familysearch-check",
+  "name": "fs-check",
   "description": "A FamilySearch Tree checker that generates research opportunities",
   "keywords": [
     "FamilySearch",
@@ -18,7 +18,8 @@
     "test": "mocha",
     "build": "browserify lib/index.js -s FSCheck -o fs-check.js",
     "docs": "node docs/checks-list.js && ./docs/build.sh",
-    "coverage": "./coverage/generate.sh"
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
     "gedcomx-date": "git://github.com/genealogysystems/gedcomx-date-js.git#dev",
@@ -27,8 +28,11 @@
     "mustache": "^0.8.1"
   },
   "devDependencies": {
-    "browserify": "~3.46.0",
-    "chai": "~1.9.1",
-    "mocha": "^1.21.0"
+    "browserify": "3.46.0",
+    "chai": "1.9.1",
+    "coveralls": "2.11.2",
+    "istanbul": "0.3.7",
+    "mocha": "2.2.1",
+    "mocha-lcov-reporter": "0.0.2"
   }
 }
