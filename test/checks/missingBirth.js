@@ -39,7 +39,7 @@ describe('missingBirth', function(){
     });
 
     var opportunity = fsCheck.check(person);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
   it('should return an opportunity when there is a birth but no date AND place', function() {
@@ -59,7 +59,7 @@ describe('missingBirth', function(){
     });
 
     var opportunity = fsCheck.check(person);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
   it('should return an opportunity including death info', function() {
@@ -85,7 +85,7 @@ describe('missingBirth', function(){
 
     var opportunity = fsCheck.check(person);
     doc('missingBirth', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
 });

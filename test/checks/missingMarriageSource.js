@@ -252,7 +252,7 @@ describe.skip('missingMarriageSource', function(){
     var opportunity = fsCheck.check(wife, husband, marriage, sources);
 
     doc('missingMarriageSource', opportunity);
-    utils.validateSchema(fsCheck, opportunity, true, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.findarecord.tags).to.deep.equal(['marriage']);
     expect(opportunity.findarecord.from).to.equal(1897);
     expect(opportunity.findarecord.to).to.equal(1903);

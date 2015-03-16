@@ -81,7 +81,7 @@ describe('missingDeathDate', function(){
     var opportunity = fsCheck.check(person);
 
     doc('missingDeathDate', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
 });

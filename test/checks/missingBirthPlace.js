@@ -83,7 +83,7 @@ describe('missingBirthPlace', function(){
     var opportunity = fsCheck.check(person);
 
     doc('missingBirthPlace', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
 });

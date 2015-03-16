@@ -83,7 +83,7 @@ describe('missingDeathPlace', function(){
     var opportunity = fsCheck.check(person);
 
     doc('missingDeathPlace', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
 });

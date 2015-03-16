@@ -56,7 +56,7 @@ describe.skip('missingMother', function(){
     var opportunity = fsCheck.check(child, mother, father, relationship);
         
     doc('missingMother', opportunity);
-    utils.validateSchema(fsCheck, opportunity, true, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.findarecord.tags).to.deep.equal(['birth']);
     expect(opportunity.findarecord.from).to.equal(1897);
     expect(opportunity.findarecord.to).to.equal(1903);

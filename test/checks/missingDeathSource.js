@@ -123,7 +123,7 @@ describe('missingDeathSource', function(){
     };
 
     var opportunity = fsCheck.check(person, sourceRefs);
-    utils.validateSchema(fsCheck, opportunity, true, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.gensearch.givenName).to.equal('Bob');
     expect(opportunity.gensearch.familyName).to.equal('Freemer');
     expect(opportunity.gensearch.deathPlace).to.equal('Provo, Utah, United States of America');
@@ -164,7 +164,7 @@ describe('missingDeathSource', function(){
     var opportunity = fsCheck.check(person, sourceRefs);
     
     doc('missingDeathSource', opportunity);
-    utils.validateSchema(fsCheck, opportunity, true, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.gensearch.givenName).to.equal('Bob');
     expect(opportunity.gensearch.familyName).to.equal('Freemer');
     expect(opportunity.gensearch.deathPlace).to.equal('Provo, Utah, United States of America');

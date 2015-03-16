@@ -72,7 +72,7 @@ describe('missingBirthDate', function(){
     });
 
     var opportunity = fsCheck.check(person);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
   it('should include death information in gensearch', function() {
@@ -103,7 +103,7 @@ describe('missingBirthDate', function(){
     var opportunity = fsCheck.check(person);
 
     doc('missingBirthDate', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
 });

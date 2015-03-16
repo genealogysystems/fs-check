@@ -25,7 +25,7 @@ describe.skip('missingName', function(){
   it('should return an opportunity when there is no name', function(){
     var opportunity = fsCheck.check(new FamilySearch.Person());
     doc('missingName', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
   
 });

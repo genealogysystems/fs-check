@@ -36,7 +36,7 @@ describe.skip('missingSurname', function(){
       ]
     }));
     doc('missingSurname', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
   
 });

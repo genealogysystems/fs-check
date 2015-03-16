@@ -19,7 +19,7 @@ module.exports = {
   /**
    * Mka
    */
-  validateSchema: function(check, opportunity, findarecord, gensearch){
+  validateSchema: function(check, opportunity, gensearch){
     expect(opportunity).to.exist;
     
     expect(opportunity).to.contain.keys(['id','type','template','checkId', 'personId','person']);

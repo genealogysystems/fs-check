@@ -114,7 +114,7 @@ describe.skip('missingMarriageFact', function(){
     var opportunity = fsCheck.check(wife, husband, marriage);
     
     doc('missingMarriageFact', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.person).to.equal(wife);
     expect(opportunity.gensearch.spouseGivenName).to.equal('Bob');
     expect(opportunity.gensearch.spouseFamilyName).to.equal('Freemer');
@@ -150,7 +150,7 @@ describe.skip('missingMarriageFact', function(){
         });
 
     var opportunity = fsCheck.check(wife, husband, marriage);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.person).to.equal(wife);
     expect(opportunity.gensearch.spouseGivenName).to.equal('Bob');
     expect(opportunity.gensearch.spouseFamilyName).to.equal('Freemer');

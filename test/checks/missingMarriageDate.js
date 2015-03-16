@@ -119,7 +119,7 @@ describe.skip('missingMarriageDate', function(){
         });
 
     var opportunity = fsCheck.check(wife, husband, marriage);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.gensearch.marriagePlace).to.equal('Provo, Utah, United States of America');
     expect(opportunity.gensearch.spouseGivenName).to.equal('Bob');
     expect(opportunity.gensearch.spouseFamilyName).to.equal('Freemer');
@@ -222,7 +222,7 @@ describe.skip('missingMarriageDate', function(){
     var opportunity = fsCheck.check(wife, husband, marriage);
 
     doc('missingMarriageDate', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.gensearch.givenName).to.equal('Thelma');
     expect(opportunity.gensearch.familyName).to.equal('Louise');
     expect(opportunity.gensearch.marriagePlace).to.equal('Provo, Utah, United States of America');

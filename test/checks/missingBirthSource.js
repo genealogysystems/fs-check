@@ -123,7 +123,7 @@ describe('missingBirthSource', function(){
     };
 
     var opportunity = fsCheck.check(person, sourceRefs);
-    utils.validateSchema(fsCheck, opportunity, true, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
   it('should return an opportunity when there is a birth and no sources tagged birth', function(){
@@ -160,7 +160,7 @@ describe('missingBirthSource', function(){
     var opportunity = fsCheck.check(person, sourceRefs);
     
     doc('missingBirthSource', opportunity);
-    utils.validateSchema(fsCheck, opportunity, true, true);
+    utils.validateSchema(fsCheck, opportunity, true);
   });
 
 });

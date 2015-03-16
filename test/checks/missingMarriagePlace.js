@@ -120,7 +120,7 @@ describe.skip('missingMarriagePlace', function(){
         });
 
     var opportunity = fsCheck.check(wife, husband, marriage);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.person).to.equal(wife);
     expect(opportunity.gensearch.givenName).to.equal('Thelma');
     expect(opportunity.gensearch.familyName).to.equal('Louise');
@@ -229,7 +229,7 @@ describe.skip('missingMarriagePlace', function(){
     var opportunity = fsCheck.check(wife, husband, marriage);
 
     doc('missingMarriagePlace', opportunity);
-    utils.validateSchema(fsCheck, opportunity, false, true);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.person).to.equal(wife);
     expect(opportunity.gensearch.givenName).to.equal('Thelma');
     expect(opportunity.gensearch.familyName).to.equal('Louise');
