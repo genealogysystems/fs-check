@@ -1,19 +1,18 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('missingMarriageSource'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('missingMarriageSource'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('missingMarriageSource', function(){
+describe('missingMarriageSource', function(){
 
   it('should return nothing if there is no marriageFact', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: []
         }),
         sources = [];
@@ -26,15 +25,15 @@ describe.skip('missingMarriageSource', function(){
   it('should return nothing if there is no husband or wife', function() {
     var husband = undefined,
         wife = undefined,
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         }),
@@ -46,39 +45,39 @@ describe.skip('missingMarriageSource', function(){
   });
 
   it('should return nothing if there is not exactly 1 marriageFact', function() {
-    var husband = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Male',
+    var husband = FS.createPerson({
+          $gender: 'http://gedcomx.org/Male',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Bob',
-              surname: 'Freemer'
+            FS.createName({
+              $givenName: 'Bob',
+              $surname: 'Freemer'
             })
           ]
         }),
-        wife = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Female',
+        wife = FS.createPerson({
+          $gender: 'http://gedcomx.org/Female',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Thelma',
-              surname: 'Louise'
+            FS.createName({
+              $givenName: 'Thelma',
+              $surname: 'Louise'
             })
           ]
         }),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             }),
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Orem, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Orem, Utah, United States of America'
             })
           ]
         }),
@@ -90,31 +89,31 @@ describe.skip('missingMarriageSource', function(){
   });
 
   it('should return nothing if there is no marriage date', function() {
-    var husband = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Male',
+    var husband = FS.createPerson({
+          $gender: 'http://gedcomx.org/Male',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Bob',
-              surname: 'Freemer'
+            FS.createName({
+              $givenName: 'Bob',
+              $surname: 'Freemer'
             })
           ]
         }),
-        wife = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Female',
+        wife = FS.createPerson({
+          $gender: 'http://gedcomx.org/Female',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Thelma',
-              surname: 'Louise'
+            FS.createName({
+              $givenName: 'Thelma',
+              $surname: 'Louise'
             })
           ]
         }),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              place: 'Provo, Utah, United States of America'
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         }),
@@ -126,32 +125,32 @@ describe.skip('missingMarriageSource', function(){
   });
 
   it('should return nothing if there is no marriage place', function() {
-    var husband = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Male',
+    var husband = FS.createPerson({
+          $gender: 'http://gedcomx.org/Male',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Bob',
-              surname: 'Freemer'
+            FS.createName({
+              $givenName: 'Bob',
+              $surname: 'Freemer'
             })
           ]
         }),
-        wife = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Female',
+        wife = FS.createPerson({
+          $gender: 'http://gedcomx.org/Female',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Thelma',
-              surname: 'Louise'
+            FS.createName({
+              $givenName: 'Thelma',
+              $surname: 'Louise'
             })
           ]
         }),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01'
             })
           ]
         }),
@@ -163,33 +162,33 @@ describe.skip('missingMarriageSource', function(){
   });
 
   it('should return nothing if there is at least one source', function() {
-    var husband = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Male',
+    var husband = FS.createPerson({
+          $gender: 'http://gedcomx.org/Male',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Bob',
-              surname: 'Freemer'
+            FS.createName({
+              $givenName: 'Bob',
+              $surname: 'Freemer'
             })
           ]
         }),
-        wife = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Female',
+        wife = FS.createPerson({
+          $gender: 'http://gedcomx.org/Female',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Thelma',
-              surname: 'Louise'
+            FS.createName({
+              $givenName: 'Thelma',
+              $surname: 'Louise'
             })
           ]
         }),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         }),
@@ -201,45 +200,45 @@ describe.skip('missingMarriageSource', function(){
   });
 
   it('should return an opportunity if there is no source', function() {
-    var husband = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Male',
+    var husband = FS.createPerson({
+          $gender: 'http://gedcomx.org/Male',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Bob',
-              surname: 'Freemer'
+            FS.createName({
+              $givenName: 'Bob',
+              $surname: 'Freemer'
             })
           ]
         }),
-        wife = new FamilySearch.Person({
-          gender: 'http://gedcomx.org/Female',
+        wife = FS.createPerson({
+          $gender: 'http://gedcomx.org/Female',
           names: [
-            new FamilySearch.Name({
-              givenName: 'Thelma',
-              surname: 'Louise'
+            FS.createName({
+              $givenName: 'Thelma',
+              $surname: 'Louise'
             })
           ],
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Birth',
-              formalDate: '+1880',
-              place: 'Orem, Utah, United States of America'
+              $formalDate: '+1880',
+              $place: 'Orem, Utah, United States of America'
             }),
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Death',
-              formalDate: '+1950',
-              place: 'Lehi, Utah, United States of America'
+              $formalDate: '+1950',
+              $place: 'Lehi, Utah, United States of America'
             })
           ]
         }),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         }),
@@ -253,10 +252,6 @@ describe.skip('missingMarriageSource', function(){
 
     doc('missingMarriageSource', opportunity);
     utils.validateSchema(fsCheck, opportunity, true);
-    expect(opportunity.findarecord.tags).to.deep.equal(['marriage']);
-    expect(opportunity.findarecord.from).to.equal(1897);
-    expect(opportunity.findarecord.to).to.equal(1903);
-    expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
     expect(opportunity.gensearch.givenName).to.equal('Thelma');
     expect(opportunity.gensearch.familyName).to.equal('Louise');
     expect(opportunity.gensearch.marriagePlace).to.equal('Provo, Utah, United States of America');
