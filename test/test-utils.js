@@ -26,13 +26,6 @@ module.exports = {
     expect(opportunity.id).to.match(new RegExp('^' + check.id + ':'));
     expect(opportunity.type).to.equal(check.type);
     expect(opportunity.person).to.be.instanceof(FamilySearch.Person);
-
-    
-    if(findarecord){
-      expect(opportunity).to.have.property('findarecord');
-    } else {
-      expect(opportunity.findarecord).to.not.exist;
-    }
     
     if(gensearch){
       expect(opportunity).to.have.property('gensearch');

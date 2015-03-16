@@ -1,15 +1,14 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('missingBirthSource'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('missingBirthSource'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('missingBirthSource', function(){
+describe('missingBirthSource', function(){
 
   it('should return nothing when there is no birth', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
@@ -25,13 +24,13 @@ describe.skip('missingBirthSource', function(){
   });
 
   it('should return nothing when there is no birth year', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          place: 'Provo, Utah, United States of America'
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -48,13 +47,13 @@ describe.skip('missingBirthSource', function(){
   });
 
   it('should return nothing when there is no birth place',function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900'
+          $formalDate: '+1900'
         })
       ]
     });
@@ -71,14 +70,14 @@ describe.skip('missingBirthSource', function(){
   });
 
   it('should return nothing when there is a source attached and tagged', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900',
-          place: 'Provo, Utah, United States of America'
+          $formalDate: '+1900',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -86,8 +85,8 @@ describe.skip('missingBirthSource', function(){
     var sourceRefs = {
       getSourceRefs: function() {
         return [
-          new FamilySearch.SourceRef({
-            tags: ['http://gedcomx.org/Birth']
+          FS.createSourceRef({
+            $tags: ['http://gedcomx.org/Birth']
           })
         ];
       }
@@ -99,19 +98,19 @@ describe.skip('missingBirthSource', function(){
   });
 
   it('should return an opportunity when there is a birth and no sources', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [
-        new FamilySearch.Name({
-          givenName: 'Bob',
-          surname: 'Freemer'
+        FS.createName({
+          $givenName: 'Bob',
+          $surname: 'Freemer'
         })
       ],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900',
-          place: 'Provo, Utah, United States of America'
+          $formalDate: '+1900',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -125,26 +124,22 @@ describe.skip('missingBirthSource', function(){
 
     var opportunity = fsCheck.check(person, sourceRefs);
     utils.validateSchema(fsCheck, opportunity, true, true);
-    expect(opportunity.findarecord.tags).to.deep.equal(['birth']);
-    expect(opportunity.findarecord.from).to.equal(1897);
-    expect(opportunity.findarecord.to).to.equal(1903);
-    expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
   });
 
   it('should return an opportunity when there is a birth and no sources tagged birth', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [
-        new FamilySearch.Name({
-          givenName: 'Bob',
-          surname: 'Freemer'
+        FS.createName({
+          $givenName: 'Bob',
+          $surname: 'Freemer'
         })
       ],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900',
-          place: 'Provo, Utah, United States of America'
+          $formalDate: '+1900',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -153,8 +148,8 @@ describe.skip('missingBirthSource', function(){
     var sourceRefs = {
       getSourceRefs: function() {
         return [
-          new FamilySearch.SourceRef({
-            tags: ['http://gedcomx.org/Death']
+          FS.createSourceRef({
+            $tags: ['http://gedcomx.org/Death']
           })
         ];
       }
@@ -166,10 +161,6 @@ describe.skip('missingBirthSource', function(){
     
     doc('missingBirthSource', opportunity);
     utils.validateSchema(fsCheck, opportunity, true, true);
-    expect(opportunity.findarecord.tags).to.deep.equal(['birth']);
-    expect(opportunity.findarecord.from).to.equal(1897);
-    expect(opportunity.findarecord.to).to.equal(1903);
-    expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
   });
 
 });
