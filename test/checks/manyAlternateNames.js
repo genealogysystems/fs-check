@@ -1,39 +1,38 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('manyAlternateNames'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('manyAlternateNames'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('manyAlternateNames', function(){
+describe('manyAlternateNames', function(){
 
   it('should return nothing when there is no name', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person());
+    var opportunity = fsCheck.check(FS.createPerson());
     expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there are only 4 alternate names', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Preferred Name',
+        FS.createName({
+          $fullText: 'Preferred Name',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 1',
+        FS.createName({
+          $fullText: 'Alternate Name 1',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 2',
+        FS.createName({
+          $fullText: 'Alternate Name 2',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 3',
+        FS.createName({
+          $fullText: 'Alternate Name 3',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 4',
+        FS.createName({
+          $fullText: 'Alternate Name 4',
           preferred: false
         })
       ]
@@ -43,30 +42,30 @@ describe.skip('manyAlternateNames', function(){
   });
   
   it('should return an opportunity when there are more than 4 alternate names', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Preferred Name',
+        FS.createName({
+          $fullText: 'Preferred Name',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 1',
+        FS.createName({
+          $fullText: 'Alternate Name 1',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 2',
+        FS.createName({
+          $fullText: 'Alternate Name 2',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 3',
+        FS.createName({
+          $fullText: 'Alternate Name 3',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 4',
+        FS.createName({
+          $fullText: 'Alternate Name 4',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 5',
+        FS.createName({
+          $fullText: 'Alternate Name 5',
           preferred: false
         })
       ]
