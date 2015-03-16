@@ -1,15 +1,14 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('deathBeforeBirth'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('deathBeforeBirth'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('deathBeforeBirth', function(){
+describe.only('deathBeforeBirth', function(){
 
   it('should return nothing when there is no birth fact', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
@@ -20,11 +19,11 @@ describe.skip('deathBeforeBirth', function(){
   });
 
   it('should return nothing when there is no birth date', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth'
         })
       ]
@@ -35,13 +34,13 @@ describe.skip('deathBeforeBirth', function(){
   });
 
   it('should return nothing when there is no death fact', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900-01-01'
+          $formalDate: '+1900-01-01'
         })
       ]
     });
@@ -51,15 +50,15 @@ describe.skip('deathBeforeBirth', function(){
   });
 
   it('should return nothing when there is no death date', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900-01-01'
+          $formalDate: '+1900-01-01'
         }),
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death'
         })
       ]
@@ -70,17 +69,17 @@ describe.skip('deathBeforeBirth', function(){
   });
   
   it('should return nothing when birth is same date as death', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900-01-01'
+          $formalDate: '+1900-01-01'
         }),
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          formalDate: '+1900-01-01'
+          $formalDate: '+1900-01-01'
         })
       ]
     });
@@ -90,17 +89,17 @@ describe.skip('deathBeforeBirth', function(){
   });
 
   it('should return nothing when birth is before death', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900-01-01'
+          $formalDate: '+1900-01-01'
         }),
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          date: 'January 2, 1900'
+          $date: 'January 2, 1900'
         })
       ]
     });
@@ -110,17 +109,17 @@ describe.skip('deathBeforeBirth', function(){
   });
   
   it('should return nothing when death date is an invalid format', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: "+1639",
+          $formalDate: "+1639",
         }),
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          date: 'Deceased',
+          $date: 'Deceased',
         })
       ]
     });
@@ -130,17 +129,17 @@ describe.skip('deathBeforeBirth', function(){
   });
   
   it('should return nothing when birth date is an invalid format', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          date: "12 Jan 1564 or 1592"
+          $date: "12 Jan 1564 or 1592"
         }),
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          formalDate: '+1678-08-27'
+          $formalDate: '+1678-08-27'
         })
       ]
     });
@@ -150,17 +149,17 @@ describe.skip('deathBeforeBirth', function(){
   });
   
   it('should return nothing when birth and death are non-formal', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          date: "12 Jan 1564"
+          $date: "12 Jan 1564"
         }),
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          date: '27 August 1648'
+          $date: '27 August 1648'
         })
       ]
     });
@@ -170,17 +169,17 @@ describe.skip('deathBeforeBirth', function(){
   });
 
   it('should return an opportunity when death is before birth', function() {
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          formalDate: '+1900-01-02'
+          $formalDate: '+1900-01-02'
         }),
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          formalDate: '+1900-01-01'
+          $formalDate: '+1900-01-01'
         })
       ]
     });
