@@ -49,9 +49,10 @@ describe('childBeforeMarriage', function(){
   
   it('should return nothing when no children have a birth fact', function(){
     var persons = {
-      'CHILD': FS.createPerson()
+      'CHILD': FS.createPerson({
+        id: 'CHILD'
+      })
     };
-    persons.CHILD.id = 'CHILD';
     var relationships = {
       getSpouseRelationships: function(){ 
         return [

@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/genealogysystems/fs-check.svg)](https://travis-ci.org/genealogysystems/fs-check)
+[![Codacy Badge](https://www.codacy.com/project/badge/e427fad0dff54bb49b3c6519667678a3)](https://www.codacy.com/public/justincyork/fs-check)
 [![Coverage Status](https://coveralls.io/repos/genealogysystems/fs-check/badge.svg?branch=dev)](https://coveralls.io/r/genealogysystems/fs-check?branch=dev)
 [![Dependency Status](https://david-dm.org/genealogysystems/fs-check.svg)](https://david-dm.org/genealogysystems/fs-check)
 
