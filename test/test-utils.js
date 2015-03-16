@@ -48,6 +48,10 @@ module.exports = {
     if(!data){
       data = {};
     }
+    if(data.gender){
+      data.$gender = data.gender;
+      delete data.gender;
+    }
     var person = this.FS.createPerson(data);
     person.id = data.id;
     person.display = { name: data.name };
