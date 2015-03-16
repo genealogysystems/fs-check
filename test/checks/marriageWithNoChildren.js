@@ -1,16 +1,15 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('marriageWithNoChildren'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('marriageWithNoChildren'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('marriageWithNoChildren', function(){
+describe('marriageWithNoChildren', function(){
 
   it('should return nothing when there are no marriages', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
     });
@@ -27,8 +26,8 @@ describe.skip('marriageWithNoChildren', function(){
   });
 
   it('should return nothing when there is a marriage and at least one child', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
     });
@@ -50,8 +49,8 @@ describe.skip('marriageWithNoChildren', function(){
   });
 
   it('should return an opportunity when there is a marriage and no children', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
     });
@@ -72,8 +71,8 @@ describe.skip('marriageWithNoChildren', function(){
   });
   
   it('should return an opportunity when there are multiple marriages and one has no children', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
     });
@@ -99,8 +98,8 @@ describe.skip('marriageWithNoChildren', function(){
   });
   
   it('should return an opportunity when there are multiple marriages and all have no children', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
     });
@@ -127,8 +126,8 @@ describe.skip('marriageWithNoChildren', function(){
   });
   
   it('should return nothing when there are multiple marriages with children', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
     });
