@@ -1,51 +1,50 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('missingFather'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('missingFather'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('missingFather', function(){
+describe('missingFather', function(){
 
   it('should return nothing when there is a father', function() {
-    var child = new FamilySearch.Person({}),
-        mother = new FamilySearch.Person({}),
-        father = new FamilySearch.Person({}),
-        relationship = new FamilySearch.ChildAndParents(),
+    var child = FS.createPerson({}),
+        mother = FS.createPerson({}),
+        father = FS.createPerson({}),
+        relationship = FS.createChildAndParents(),
         opportunity = fsCheck.check(child, mother, father, relationship);
     expect(opportunity).to.equal(undefined);
   });
   
   it('should return an opportunity when there is no father', function() {
-    var child = new FamilySearch.Person({
+    var child = FS.createPerson({
           names: [
-            new FamilySearch.Name({
-              givenName: 'Bob',
-              surname: 'Freemer'
+            FS.createName({
+              $givenName: 'Bob',
+              $surname: 'Freemer'
             })
           ],
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Birth',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         }),
-        mother = new FamilySearch.Person({
+        mother = FS.createPerson({
           names: [
-            new FamilySearch.Name({
-              givenName: 'Thelma',
-              surname: 'Louise'
+            FS.createName({
+              $givenName: 'Thelma',
+              $surname: 'Louise'
             })
           ]
         }),
         father,
-        relationship = new FamilySearch.ChildAndParents({
-          mother: mother,
-          child: child
+        relationship = FS.createChildAndParents({
+          $mother: mother,
+          $child: child
         });
     
     mother.display = { name: 'Thelma Louise' };
@@ -57,10 +56,6 @@ describe.skip('missingFather', function(){
     
     doc('missingFather', opportunity);
     utils.validateSchema(fsCheck, opportunity, true);
-    expect(opportunity.findarecord.tags).to.deep.equal(['birth']);
-    expect(opportunity.findarecord.from).to.equal(1897);
-    expect(opportunity.findarecord.to).to.equal(1903);
-    expect(opportunity.findarecord.place).to.equal('Provo, Utah, United States of America');
   });
   
 });
