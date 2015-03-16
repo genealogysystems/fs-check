@@ -1,16 +1,15 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('missingBirthPlace'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('missingBirthPlace'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('missingBirthPlace', function(){
+describe('missingBirthPlace', function(){
 
   it('should return nothing when there is no birth', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: []
     });
@@ -21,15 +20,15 @@ describe.skip('missingBirthPlace', function(){
   });
 
   it('should return nothing when there is a birth and a place', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          date: 'January 1, 1900',
-          formalDate: '+1900-01-01',
-          place: 'Provo, Utah, United States of America'
+          $date: 'January 1, 1900',
+          $formalDate: '+1900-01-01',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -40,11 +39,11 @@ describe.skip('missingBirthPlace', function(){
   });
 
   it('should return nothing when there is a birth, no place, and no date', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth'
         })
       ]
@@ -59,24 +58,24 @@ describe.skip('missingBirthPlace', function(){
     var person = utils.generatePerson({
       id: 'PPPP-PPP',
       name: 'Bob Freemer',
-      gender: 'http://gedcomx.org/Male',
+      $gender: 'http://gedcomx.org/Male',
       names: [
-        new FamilySearch.Name({
-          givenName: 'Bob',
-          surname: 'Freemer'
+        FS.createName({
+          $givenName: 'Bob',
+          $surname: 'Freemer'
         })
       ],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          date: 'January 1, 1900',
-          formalDate: '+1900-01-01'
+          $date: 'January 1, 1900',
+          $formalDate: '+1900-01-01'
         }),
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          date: 'January 1, 1950',
-          formalDate: '+1950-01-01',
-          place: 'Provo, Utah, United States of America'
+          $date: 'January 1, 1950',
+          $formalDate: '+1950-01-01',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
