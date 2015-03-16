@@ -1,31 +1,30 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('duplicateNames'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('duplicateNames'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('duplicateNames', function(){
+describe('duplicateNames', function(){
 
   it('should return nothing when there is no name', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person());
+    var opportunity = fsCheck.check(FS.createPerson());
     expect(opportunity).to.not.exist;
   });
   
   it('should return nothing when there are no duplicate names', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Preferred Name',
+        FS.createName({
+          $fullText: 'Preferred Name',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 1',
+        FS.createName({
+          $fullText: 'Alternate Name 1',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name 2',
+        FS.createName({
+          $fullText: 'Alternate Name 2',
           preferred: false
         })
       ]
@@ -35,18 +34,18 @@ describe.skip('duplicateNames', function(){
   });
   
   it('should return an opportunity when there are duplicate names', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Preferred Name',
+        FS.createName({
+          $fullText: 'Preferred Name',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name',
+        FS.createName({
+          $fullText: 'Alternate Name',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'alternate-name',
+        FS.createName({
+          $fullText: 'alternate-name',
           preferred: false
         })
       ]
@@ -54,26 +53,28 @@ describe.skip('duplicateNames', function(){
     person.display = { name: 'Mary Sue' };
     var opportunity = fsCheck.check(person);
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description.match(/<ul>/g).length).to.equal(2);
+    expect(opportunity.template.duplicates).to.deep.equal([
+      ['Alternate Name', 'alternate-name']  
+    ]);
   });
   
   it('should return an opportunity with multiple groups when there are multiple duplicates', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Preferred Name',
+        FS.createName({
+          $fullText: 'Preferred Name',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Alternate Name',
+        FS.createName({
+          $fullText: 'Alternate Name',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: 'alternate-name',
+        FS.createName({
+          $fullText: 'alternate-name',
           preferred: false
         }),
-        new FamilySearch.Name({
-          fullText: ' preferred.NAME',
+        FS.createName({
+          $fullText: ' preferred.NAME',
           preferred: false
         })
       ]
@@ -83,7 +84,10 @@ describe.skip('duplicateNames', function(){
     var opportunity = fsCheck.check(person);
     doc('duplicateNames', opportunity);
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description.match(/<ul>/g).length).to.equal(3);
+    expect(opportunity.template.duplicates).to.deep.equal([ 
+      [ 'Preferred Name', ' preferred.NAME' ],
+      [ 'Alternate Name', 'alternate-name' ] 
+    ]);
   });
   
 });

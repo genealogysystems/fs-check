@@ -5,7 +5,7 @@ var expect = require('chai').expect,
     FS = utils.FS,
     GedcomXDate = require('gedcomx-date');
 
-describe.only('deathBeforeBirth', function(){
+describe('deathBeforeBirth', function(){
 
   it('should return nothing when there is no birth fact', function() {
     var person = FS.createPerson({
