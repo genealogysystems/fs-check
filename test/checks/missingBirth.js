@@ -1,23 +1,22 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('missingBirth'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('missingBirth'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('missingBirth', function(){
+describe('missingBirth', function(){
 
   it('should return nothing when there is a birth', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Female',
       names: [],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          date: 'January 1, 1900',
-          formalDate: '+1900-01-01',
-          place: 'Provo, Utah, United States of America'
+          $date: 'January 1, 1900',
+          $formalDate: '+1900-01-01',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -28,12 +27,12 @@ describe.skip('missingBirth', function(){
   });
 
   it('should return an opportunity when there is no birth', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Male',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Male',
       names: [
-        new FamilySearch.Name({
-          givenName: 'Bob',
-          surname: 'Freemer'
+        FS.createName({
+          $givenName: 'Bob',
+          $surname: 'Freemer'
         })
       ],
       facts: []
@@ -44,16 +43,16 @@ describe.skip('missingBirth', function(){
   });
 
   it('should return an opportunity when there is a birth but no date AND place', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Male',
+    var person = FS.createPerson({
+      $gender: 'http://gedcomx.org/Male',
       names: [
-        new FamilySearch.Name({
-          givenName: 'Bob',
-          surname: 'Freemer'
+        FS.createName({
+          $givenName: 'Bob',
+          $surname: 'Freemer'
         })
       ],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Birth'
         })
       ]
@@ -67,19 +66,19 @@ describe.skip('missingBirth', function(){
     var person = utils.generatePerson({
       id: 'PPPP-PPP',
       name: 'Bob Freemer',
-      gender: 'http://gedcomx.org/Male',
+      $gender: 'http://gedcomx.org/Male',
       names: [
-        new FamilySearch.Name({
-          givenName: 'Bob',
-          surname: 'Freemer'
+        FS.createName({
+          $givenName: 'Bob',
+          $surname: 'Freemer'
         })
       ],
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          date: 'January 1, 1900',
-          formalDate: '+1900-01-01',
-          place: 'Provo, Utah, United States of America'
+          $date: 'January 1, 1900',
+          $formalDate: '+1900-01-01',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
