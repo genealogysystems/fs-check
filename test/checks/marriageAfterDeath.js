@@ -1,12 +1,11 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('marriageAfterDeath'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('marriageAfterDeath'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS,
+    GedcomXDate = require('gedcomx-date');
 
-describe.skip('marriageAfterDeath', function(){
+describe('marriageAfterDeath', function(){
 
   describe('should return nothing', function(){
 
@@ -19,7 +18,7 @@ describe.skip('marriageAfterDeath', function(){
     
     it('cant extract formal death date', function(){
       var opportunity = fsCheck.check(generatePerson({
-        date: '1st June 1980'
+        $date: '1st June 1980'
       }), generateRelationships({
           'SPOUSE1': {}
         }), {});
@@ -28,14 +27,14 @@ describe.skip('marriageAfterDeath', function(){
 
     it('death date but no marriages', function(){
       var opportunity = fsCheck.check(generatePerson({
-        date: '1 June 1980'
+        $date: '1 June 1980'
       }), generateRelationships(), {});
       expect(opportunity).to.not.exist;
     });
     
     it('marriage has no facts', function(){
       var person = generatePerson({
-          date: '1 June 1980'
+          $date: '1 June 1980'
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {}
@@ -45,7 +44,7 @@ describe.skip('marriageAfterDeath', function(){
     
     it('marriage fact with no date', function(){
       var person = generatePerson({
-          date: '1 June 1980'
+          $date: '1 June 1980'
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
@@ -59,14 +58,14 @@ describe.skip('marriageAfterDeath', function(){
     
       it('both formal', function(){
         var person = generatePerson({
-          date: '1 June 1980',
-          formalDate: '+1980-06-01'
+          $date: '1 June 1980',
+          $formalDate: '+1980-06-01'
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
             facts: [
               {
-                formalDate: '+1960-09-28'
+                $formalDate: '+1960-09-28'
               }
             ]
           }
@@ -76,13 +75,13 @@ describe.skip('marriageAfterDeath', function(){
       
       it('death non-formal', function(){
         var person = generatePerson({
-          date: '1 June 1980'
+          $date: '1 June 1980'
         }),
         opportunity = fsCheck.check(person, generateRelationships({
           'SPOUSE1': {
             facts: [
               {
-                formalDate: '+1960-09-28'
+                $formalDate: '+1960-09-28'
               }
             ]
           }
@@ -94,13 +93,13 @@ describe.skip('marriageAfterDeath', function(){
         
         it('different year', function(){
           var person = generatePerson({
-            formalDate: '+1980-01-28'
+            $formalDate: '+1980-01-28'
           }),
           opportunity = fsCheck.check(person, generateRelationships({
             'SPOUSE1': {
               facts: [
                 {
-                  date: '28 Sep 1960'
+                  $date: '28 Sep 1960'
                 }
               ]
             }
@@ -114,13 +113,13 @@ describe.skip('marriageAfterDeath', function(){
         
         it('different year', function(){
           var person = generatePerson({
-            date: '1 June 1980'
+            $date: '1 June 1980'
           }),
           opportunity = fsCheck.check(person, generateRelationships({
             'SPOUSE1': {
               facts: [
                 {
-                  date: '28 Sep 1960'
+                  $date: '28 Sep 1960'
                 }
               ]
             }
@@ -130,20 +129,20 @@ describe.skip('marriageAfterDeath', function(){
         
         it('multiple marriages', function(){
           var person = generatePerson({
-            date: '1 June 1980'
+            $date: '1 June 1980'
           }),
           opportunity = fsCheck.check(person, generateRelationships({
             'SPOUSE1': {
               facts: [
                 {
-                  date: '28 Sep 1960'
+                  $date: '28 Sep 1960'
                 }
               ]
             },
             'SPOUSE2': {
               facts: [
                 {
-                  date: '14 July 1973'
+                  $date: '14 July 1973'
                 }
               ]              
             }
@@ -163,7 +162,7 @@ describe.skip('marriageAfterDeath', function(){
   
       it('both formal', function(){
         var person = generatePerson({
-          formalDate: '+1950-06-01',
+          $formalDate: '+1950-06-01',
           id: 'PPP-PPP',
           name: 'Elmer Gate'
         }),
@@ -172,7 +171,7 @@ describe.skip('marriageAfterDeath', function(){
             coupleId: 'COUPLE1',
             facts: [
               {
-                formalDate: '+1950-09-28'
+                $formalDate: '+1950-09-28'
               }
             ]
           }
@@ -184,7 +183,7 @@ describe.skip('marriageAfterDeath', function(){
         
       it('death non-formal', function(){
         var person = generatePerson({
-          date: '1 June 1950',
+          $date: '1 June 1950',
           id: 'PPP-PPP',
           name: 'Elmer Gate'
         }),
@@ -193,7 +192,7 @@ describe.skip('marriageAfterDeath', function(){
             coupleId: 'COUPLE1',
             facts: [
               {
-                formalDate: '+1951-09-28'
+                $formalDate: '+1951-09-28'
               }
             ]
           }
@@ -205,7 +204,7 @@ describe.skip('marriageAfterDeath', function(){
       
       it('marriage non-formal', function(){
         var person = generatePerson({
-          formalDate: '+1950-06-01',
+          $formalDate: '+1950-06-01',
           id: 'PPP-PPP',
           name: 'Elmer Gate'
         }),
@@ -214,7 +213,7 @@ describe.skip('marriageAfterDeath', function(){
             coupleId: 'COUPLE1',
             facts: [
               {
-                date: '28 September 1955'
+                $date: '28 September 1955'
               }
             ]
           }
@@ -226,7 +225,7 @@ describe.skip('marriageAfterDeath', function(){
       
       it('both non-formal', function(){       
         var person = generatePerson({
-          date: '1 June 1950',
+          $date: '1 June 1950',
           id: 'PPP-PPP',
           name: 'Elmer Gate'
         }),
@@ -235,7 +234,7 @@ describe.skip('marriageAfterDeath', function(){
             coupleId: 'COUPLE1',
             facts: [
               {
-                date: '28 September 1955'
+                $date: '28 September 1955'
               }
             ]
           }
@@ -251,7 +250,7 @@ describe.skip('marriageAfterDeath', function(){
     
       it('one good; one bad', function(){
         var person = generatePerson({
-          formalDate: '+1950-06-01',
+          $formalDate: '+1950-06-01',
           id: 'PPP-PPP',
           name: 'Elmer Gate'
         }),
@@ -260,7 +259,7 @@ describe.skip('marriageAfterDeath', function(){
             coupleId: 'COUPLE1',
             facts: [
               {
-                formalDate: '+1950-09-28'
+                $formalDate: '+1950-09-28'
               }
             ]
           },
@@ -268,7 +267,7 @@ describe.skip('marriageAfterDeath', function(){
             coupleId: 'COUPLE2',
             facts: [
               {
-                formalDate: '+1948-03-07'
+                $formalDate: '+1948-03-07'
               }
             ]
           }
@@ -277,13 +276,18 @@ describe.skip('marriageAfterDeath', function(){
           'SPOUSE2': utils.generatePerson({ name: 'Sarah Jane' })
         });
         utils.validateSchema(fsCheck, opportunity);
-        expect(opportunity.description).to.contain('Molly Sue');
-        expect(opportunity.description).to.not.contain('Sarah Jane');
+        expect(opportunity.template.spouses).to.deep.equal([ 
+          { 
+            spouseName: 'Molly Sue',
+            coupleId: 'COUPLE1',
+            durationString: '3 months' 
+          } 
+        ]);
       });
       
       it('two bad', function(){
         var person = generatePerson({
-          formalDate: '+1950-06-01',
+          $formalDate: '+1950-06-01',
           id: 'PPP-PPP',
           name: 'Elmer Gate'
         }),
@@ -292,7 +296,7 @@ describe.skip('marriageAfterDeath', function(){
             coupleId: 'COUPLE1',
             facts: [
               {
-                formalDate: '+1950-09-28'
+                $formalDate: '+1950-09-28'
               }
             ]
           },
@@ -300,7 +304,7 @@ describe.skip('marriageAfterDeath', function(){
             coupleId: 'COUPLE2',
             facts: [
               {
-                date: '7 March 1952'
+                $date: '7 March 1952'
               }
             ]
           }
@@ -309,8 +313,18 @@ describe.skip('marriageAfterDeath', function(){
           'SPOUSE2': utils.generatePerson({ name: 'Sarah Jane' })
         });
         utils.validateSchema(fsCheck, opportunity);
-        expect(opportunity.description).to.contain('Molly Sue');
-        expect(opportunity.description).to.contain('Sarah Jane');
+        expect(opportunity.template.spouses).to.deep.equal([ 
+          { 
+            spouseName: 'Molly Sue',
+            coupleId: 'COUPLE1',
+            durationString: '3 months'
+          },
+          { 
+            spouseName: 'Sarah Jane',
+            coupleId: 'COUPLE2',
+            durationString: '1 year and 9 months'
+          } 
+        ]);
         doc('marriageAfterDeath', opportunity);
       });
     
@@ -325,12 +339,12 @@ describe.skip('marriageAfterDeath', function(){
     if(!data){
       data = {};
     }
-    if(data.date || data.formalDate){
+    if(data.$date || data.$formalDate){
       data.facts = [
         {
           type: 'http://gedcomx.org/Death',
-          date: data.date,
-          formalDate: data.formalDate
+          $date: data.$date,
+          $formalDate: data.$formalDate
         }
       ];
     }
@@ -370,7 +384,7 @@ describe.skip('marriageAfterDeath', function(){
                 newFacts = [];
             if(originalFacts){
               for(var i = 0; i < originalFacts.length; i++){
-                newFacts.push(new FamilySearch.Fact(originalFacts[i]));
+                newFacts.push(FS.createFact(originalFacts[i]));
               }
             }
             return newFacts;
