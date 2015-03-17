@@ -1,19 +1,17 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('multipleMarriageFacts'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('multipleMarriageFacts'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS;
 
-describe.skip('multipleMarriageFacts', function(){
+describe('multipleMarriageFacts', function(){
   
   it('should return nothing when husband and wife are undefined', function() {
     var husband = undefined,
         wife = undefined,
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: []
         });
 
@@ -23,11 +21,11 @@ describe.skip('multipleMarriageFacts', function(){
   });
 
   it('should return nothing when there are no marriage facts', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: []
         });
 
@@ -37,17 +35,17 @@ describe.skip('multipleMarriageFacts', function(){
   });
 
   it('should return nothing when there is one marriage fact', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         });
@@ -58,23 +56,23 @@ describe.skip('multipleMarriageFacts', function(){
   });
 
   it('should return an opportunity when there is more than one marriage fact', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             }),
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         });
@@ -86,7 +84,7 @@ describe.skip('multipleMarriageFacts', function(){
     var opportunity = fsCheck.check(wife, husband, marriage);
 
     doc('multipleMarriageFacts', opportunity);
-    utils.validateSchema(fsCheck, opportunity);
+    utils.validateSchema(fsCheck, opportunity, true);
     expect(opportunity.person).to.equal(wife);
   });
 
