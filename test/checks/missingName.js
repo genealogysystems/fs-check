@@ -1,20 +1,18 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('missingName'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('missingName'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS;
 
-describe.skip('missingName', function(){
+describe('missingName', function(){
 
   it('should return nothing when there is a name', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       gender: 'http://gedcomx.org/Female',
       names: [
-        new FamilySearch.Name({
-          givenName: 'Mary',
-          surname: 'Adams'
+        FS.createName({
+          $givenName: 'Mary',
+          $surname: 'Adams'
         })
       ]
     });
@@ -23,7 +21,7 @@ describe.skip('missingName', function(){
   });
   
   it('should return an opportunity when there is no name', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person());
+    var opportunity = fsCheck.check(FS.createPerson());
     doc('missingName', opportunity);
     utils.validateSchema(fsCheck, opportunity, true);
   });

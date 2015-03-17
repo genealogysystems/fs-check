@@ -2,8 +2,7 @@ var expect = require('chai').expect,
     fsCheck = require('../../lib/index.js').id('missingBirth'),
     doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    FS = utils.FS,
-    GedcomXDate = require('gedcomx-date');
+    FS = utils.FS;
 
 describe('missingBirth', function(){
 
