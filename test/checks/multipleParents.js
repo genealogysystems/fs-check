@@ -1,19 +1,13 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('multipleParents'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('multipleParents'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS;
 
-describe.skip('multipleParents', function(){
+describe('multipleParents', function(){
 
   it('should return nothing when there are no parent relationships', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
-      names: [],
-      facts: []
-    });
+    var person = FS.createPerson();
     person.id = 'XXX-123';
 
     var relationships = {
@@ -26,11 +20,7 @@ describe.skip('multipleParents', function(){
   });
 
   it('should return nothing for one parent relationship', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
-      names: [],
-      facts: []
-    });
+    var person = FS.createPerson();
     person.id = 'XXX-123';
 
     var relationships = {
@@ -43,11 +33,7 @@ describe.skip('multipleParents', function(){
   });
   
   it('should not return an opportunity when there multiple parent relationships but only one biological mother and father', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
-      names: [],
-      facts: []
-    });
+    var person = FS.createPerson();
     person.id = 'XXX-123';
     person.display = { name: 'Sue Adams' };
 
@@ -65,11 +51,7 @@ describe.skip('multipleParents', function(){
   });
 
   it('should return an opportunity when there is more than one biological parent relationship', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
-      names: [],
-      facts: []
-    });
+    var person = FS.createPerson();
     person.id = 'XXX-123';
     person.display = { name: 'Sue Adams' };
 
@@ -94,14 +76,14 @@ function createParentRelationship(fatherType, motherType){
   return {
     $getFatherFacts: function(){
       return fatherType ? [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/' + fatherType
         })
       ] : [];
     },
     $getMotherFacts: function(){
       return motherType ? [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/' + motherType
         })
       ] : [];
