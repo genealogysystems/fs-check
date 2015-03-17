@@ -1,19 +1,13 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('standardizeDeathDate'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('standardizeDeathDate'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS;
 
-describe.skip('standardizeDeathDate', function(){
+describe('standardizeDeathDate', function(){
 
   it('should return nothing when there is no death', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
-      names: [],
-      facts: []
-    });
+    var person = FS.createPerson();
 
     var opportunity = fsCheck.check(person);
 
@@ -21,13 +15,11 @@ describe.skip('standardizeDeathDate', function(){
   });
 
   it('should return nothing when there is no original date', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
-      names: [],
+    var person = FS.createPerson({
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          place: 'Provo, Utah, United States of America'
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -38,14 +30,12 @@ describe.skip('standardizeDeathDate', function(){
   });
 
   it('should return nothing when there is a formal date', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
-      names: [],
+    var person = FS.createPerson({
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          date: 'January 1, 1900',
-          place: 'Provo, Utah, United States of America'
+          $date: 'January 1, 1900',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -57,14 +47,12 @@ describe.skip('standardizeDeathDate', function(){
   });
 
   it('should return an opportunity when there is a original but no formal date', function() {
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
-      names: [],
+    var person = FS.createPerson({
       facts: [
-        new FamilySearch.Fact({
+        FS.createFact({
           type: 'http://gedcomx.org/Death',
-          date: 'January 1, 1900',
-          place: 'Provo, Utah, United States of America'
+          $date: 'January 1, 1900',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });

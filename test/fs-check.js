@@ -16,7 +16,7 @@ describe('FSCheck', function(){
     expect(FSCheck).to.have.property('utils');
   });
 
-  describe.skip('FSCheck.all', function(){
+  describe('FSCheck.all', function(){
     
     it('should return proper number of checks', function(){
       var checks = FSCheck.all();

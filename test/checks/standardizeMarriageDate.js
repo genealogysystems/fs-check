@@ -1,19 +1,17 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('standardizeMarriageDate'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('standardizeMarriageDate'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS;
 
-describe.skip('standardizeMarriageDate', function(){
+describe('standardizeMarriageDate', function(){
 
   it('should return nothing when the wife or husband is missing', function(){
     var husband,
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: []
         });
 
@@ -23,11 +21,11 @@ describe.skip('standardizeMarriageDate', function(){
   });
 
   it('should return nothing when there is no marriage facts', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: []
         });
 
@@ -37,23 +35,23 @@ describe.skip('standardizeMarriageDate', function(){
   });
 
   it('should return nothing when there is multiple marriage facts', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             }),
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              formalDate: '+1900-01-01',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $formalDate: '+1900-01-01',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         });
@@ -64,15 +62,15 @@ describe.skip('standardizeMarriageDate', function(){
   });
 
   it('should return nothing when there is no original date', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              place: 'Provo, Utah, United States of America'
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         });
@@ -83,16 +81,16 @@ describe.skip('standardizeMarriageDate', function(){
   });
 
   it('should return nothing when there is a formal date', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         });
@@ -104,16 +102,16 @@ describe.skip('standardizeMarriageDate', function(){
   });
 
   it('should return an opportunity when there is an original but no formal date', function() {
-    var husband = new FamilySearch.Person({}),
-        wife = new FamilySearch.Person({}),
-        marriage = new FamilySearch.Couple({
-          husband: husband,
-          wife: wife,
+    var husband = FS.createPerson({}),
+        wife = FS.createPerson({}),
+        marriage = FS.createCouple({
+          $husband: husband,
+          $wife: wife,
           facts: [
-            new FamilySearch.Fact({
+            FS.createFact({
               type: 'http://gedcomx.org/Marriage',
-              date: 'January 1, 1900',
-              place: 'Provo, Utah, United States of America'
+              $date: 'January 1, 1900',
+              $place: 'Provo, Utah, United States of America'
             })
           ]
         });
