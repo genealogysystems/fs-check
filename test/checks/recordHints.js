@@ -1,15 +1,13 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('recordHints'),
-    utils = require('../test-utils.js')
-    doc = require('../../docs/util.js');
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('recordHints'),
+    doc = require('../../docs/util.js'),
+    utils = require('../test-utils.js'),
+    FS = utils.FS;
 
-describe.skip('recordHints', function(){
+describe('recordHints', function(){
 
   it('should return nothing when there are no matches', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person(), generateMatches([]));
+    var opportunity = fsCheck.check(FS.createPerson(), generateMatches([]));
     expect(opportunity).to.not.exist;
   });
   
@@ -19,15 +17,14 @@ describe.skip('recordHints', function(){
           'Michigan Marriages',
           'Another Great Collection'
         ],
-        person = new FamilySearch.Person();
+        person = FS.createPerson();
     person.display = {name: 'Foo Bar'};
     person.id = 'PPPP-III';
     var opportunity = fsCheck.check(person, generateMatches(titles));
     expect(opportunity).to.exist;
     doc('recordHints', opportunity);
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('SSDI');
-    expect(opportunity.description).to.contain('Foo Bar');
+    expect(opportunity.template.titles).to.have.length(3);
   });
   
 });
