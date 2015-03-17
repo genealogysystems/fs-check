@@ -47,11 +47,13 @@ var missingBirthOpportunity = missingBirthCheck.check(person);
 ```
 
 ## Browser
+
 Download [fs-check.js](fs-check.js) and enjoy.
 (Packaged with love by [browserify](http://browserify.org/))
 
 ## Node.js
-Unsuported for now. Waiting on [this issue](https://github.com/rootsdev/familysearch-javascript-sdk/issues/8) in the FamilySearch Javascript SDK.
+
+Node is supported but the package is not in npm yet.
 
 # Methods
 
