@@ -1,24 +1,21 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('orInName'),
-    utils = require('../test-utils.js')
-    doc = require('../../docs/util.js');
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('orInName'),
+    doc = require('../../docs/util.js'),
+    utils = require('../test-utils.js'),
+    FS = utils.FS;
 
-describe.skip('orInName', function(){
+describe('orInName', function(){
 
   it('should return nothing when there is no name', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person());
+    var opportunity = fsCheck.check(FS.createPerson());
     expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there is a name with no or', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Mary Adams'
+        FS.createName({
+          $fullText: 'Mary Adams'
         })
       ]
     });
@@ -27,11 +24,10 @@ describe.skip('orInName', function(){
   });
   
   it('should return nothing when there is a name with or as a substring', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Theodore Adams'
+        FS.createName({
+          $fullText: 'Theodore Adams'
         })
       ]
     });
@@ -40,26 +36,26 @@ describe.skip('orInName', function(){
   });
   
   it('should return an opportunity when the preferred name has an or', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person({
+    var opportunity = fsCheck.check(FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe or Joey'
+        FS.createName({
+          $fullText: 'Joe or Joey'
         })
       ]
     }));
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('preferred');
+    expect(opportunity.template.badNames).to.not.exist;
   });
   
   it('should return nothing when the alternate names have no or', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person({
+    var opportunity = fsCheck.check(FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe',
+        FS.createName({
+          $fullText: 'Joe',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Joey',
+        FS.createName({
+          $fullText: 'Joey',
           preferred: false
         })
       ]
@@ -68,14 +64,14 @@ describe.skip('orInName', function(){
   });
   
   it('should return an opportunity when the alternate names have an or', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe',
+        FS.createName({
+          $fullText: 'Joe',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Joey or Joseph',
+        FS.createName({
+          $fullText: 'Joey or Joseph',
           preferred: false
         })
       ]
@@ -84,24 +80,24 @@ describe.skip('orInName', function(){
     var opportunity = fsCheck.check(person);
     doc('orInName', opportunity);
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('These alternate names');
+    expect(opportunity.template.badNames).to.exist;
   });
   
   it('should return an opportunity when the preferred and alternate names have an or', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person({
+    var opportunity = fsCheck.check(FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe or Joseph',
+        FS.createName({
+          $fullText: 'Joe or Joseph',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Joey or Joe',
+        FS.createName({
+          $fullText: 'Joey or Joe',
           preferred: false
         })
       ]
     }));
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('preferred');
+    expect(opportunity.template.badNames).to.not.exist;
   });
   
 });
