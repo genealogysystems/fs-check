@@ -1,24 +1,21 @@
-var libPath = process.env.TEST_COV ? '../../lib-cov' : '../../lib',
-    path = require('path'),
-    expect = require('chai').expect,
-    FamilySearch = require('../../vendor/familysearch-javascript-sdk.js'),
-    fsCheck = require(path.join(libPath, 'index.js')).id('unusualCharactersInName'),
+var expect = require('chai').expect,
+    fsCheck = require('../../lib/index.js').id('unusualCharactersInName'),
+    doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    doc = require('../../docs/util.js');
+    FS = utils.FS;
 
-describe.skip('unusualCharactersInName', function(){
+describe('unusualCharactersInName', function(){
 
   it('should return nothing when there is no name', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person());
+    var opportunity = fsCheck.check(FS.createPerson());
     expect(opportunity).to.not.exist;
   });
 
   it('should return nothing when there is a name with no special characters', function(){
-    var person = new FamilySearch.Person({
-      gender: 'http://gedcomx.org/Female',
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Mary Adams'
+        FS.createName({
+          $fullText: 'Mary Adams'
         })
       ]
     });
@@ -27,10 +24,10 @@ describe.skip('unusualCharactersInName', function(){
   });
   
   it('should return an opportunity when the preferred name has unusual characters', function(){
-    var person = new FamilySearch.Person({
+    var person = FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe?'
+        FS.createName({
+          $fullText: 'Joe?'
         })
       ]
     });
@@ -38,30 +35,31 @@ describe.skip('unusualCharactersInName', function(){
     var opportunity = fsCheck.check(person);
     doc('unusualCharactersInName', opportunity);
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('These characters are not normally found in names.');
+    expect(opportunity.template.chars).to.exist;
   });
   
   it('should return an opportunity that discusses alternate names', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person({
+    var opportunity = fsCheck.check(FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe (Joey)'
+        FS.createName({
+          $fullText: 'Joe (Joey)'
         })
       ]
     }));
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('Remove the alternate annotations');
+    expect(opportunity.template.chars).to.exist;
+    expect(opportunity.template.brackets).to.be.true;
   });
   
   it('should return nothing when the alternate names have no special characters', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person({
+    var opportunity = fsCheck.check(FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe',
+        FS.createName({
+          $fullText: 'Joe',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Joey',
+        FS.createName({
+          $fullText: 'Joey',
           preferred: false
         })
       ]
@@ -70,37 +68,37 @@ describe.skip('unusualCharactersInName', function(){
   });
   
   it('should return an opportunity when the alternate names have special characters', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person({
+    var opportunity = fsCheck.check(FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe',
+        FS.createName({
+          $fullText: 'Joe',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Joey?',
+        FS.createName({
+          $fullText: 'Joey?',
           preferred: false
         })
       ]
     }));
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('Update these names');
+    expect(opportunity.template.badNames).to.exist;
   });
   
   it('should return an opportunity when the preferred and alternate names have special characters', function(){
-    var opportunity = fsCheck.check(new FamilySearch.Person({
+    var opportunity = fsCheck.check(FS.createPerson({
       names: [
-        new FamilySearch.Name({
-          fullText: 'Joe?',
+        FS.createName({
+          $fullText: 'Joe?',
           preferred: true
         }),
-        new FamilySearch.Name({
-          fullText: 'Joey?',
+        FS.createName({
+          $fullText: 'Joey?',
           preferred: false
         })
       ]
     }));
     utils.validateSchema(fsCheck, opportunity);
-    expect(opportunity.description).to.contain('These characters are not normally found in names.');
+    expect(opportunity.template.chars).to.exist;
   });
   
 });
