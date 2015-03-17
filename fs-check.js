@@ -5,13 +5,14 @@
  *  2. Person has a birth date
  *  3. A Parent has a birth date before Person
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'birthBeforeParentsBirth',
   type: 'problem',
-  title: 'Person Born Before their Parent(s)',
   signature: 'parents',
+  help: help.links('nonexactDates','addingAndCorrecting'),
   check: function(person, parents) {
 
     var birthBeforeParentBirth = [],
@@ -67,53 +68,34 @@ module.exports = {
     }
 
     if(birthBeforeParentBirth.length > 0) {
-    
-      var descr = utils.markdown(function(){/*
-          {{personName}}, born {{personBirth}}, was born before one or more of their parents.
 
-          {{#parents}}
-          * [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{id}}) - {{birth}}
-          {{/parents}}
-
-          Go to [FamilySearch](https://familysearch.org/tree/#view=ancestor&person={{pid}}) and update the person or their parent's birth date(s).
-
-          ## Help
-      
-          * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-          * [Explaining approximate birth dates](https://familysearch.org/ask/productSupport#/Do-not-know-exact-birth-date-or-death-date)
-        */}, {
-          pid:  person.id,
-          personName: person.$getDisplayName(),
-          personBirth: person.$getDisplayBirthDate(),
-          parents: birthBeforeParentBirth
-        });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
+      var template = {
+        pid:  person.id,
+        personName: person.$getDisplayName(),
+        personBirth: person.$getDisplayBirthDate(),
+        parents: birthBeforeParentBirth
       };
+
+      return utils.createOpportunity(this, person, template);
+
     }
   }
 }
-},{"../util.js":40}],2:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],2:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  - The person has a marriage with children where at least one of the children
  *    was born before the marriage.
  */
-var utils = _dereq_('../util.js'),
+var utils = _dereq_('../util'),
+    help = _dereq_('../help'),
     GedcomXDate = _dereq_('gedcomx-date');
 
 module.exports = {
   id: 'childBeforeMarriage',
   type: 'problem',
-  title: 'Child Born Before Marriage',
   signature: 'relationships',
+  help: help.links('addingAndCorrecting'),
   check: function(person, relationships, persons) {
 
     var marriages = relationships.getSpouseRelationships(),
@@ -216,37 +198,18 @@ module.exports = {
         });
       }
 
-      var descr = utils.markdown(function(){/*
-          It is abnormal for a child to be born before a couple is married. Check the marriages with the
-          following people to verify that the marriage date and children's birth dates and fix any incorrect 
-          information in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
-          
-          {{#children}}
-          * [{{childName}}](https://familysearch.org/tree/#view=ancestor&person={{childId}}) was born {{durationString}} before {{name}} married [{{spouseName}}](https://familysearch.org/tree/#view=ancestor&person={{spouseId}}).
-          {{/children}}
-
-          ## Help
-      
-          * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-        */}, {
-          pid: person.id,
-          name: person.$getDisplayName(),
-          children: children
-        });
-
-      return opportunity = {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
+      var template = {
+        pid: person.id,
+        name: person.$getDisplayName(),
+        children: children
       };
+
+      return utils.createOpportunity(this, person, template);
+
     }
   }
 };
-},{"../util.js":40,"gedcomx-date":47}],3:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41,"gedcomx-date":48}],3:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if two children are born less than 9 months apart
  */
@@ -255,8 +218,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'childrenTooClose',
   type: 'problem',
-  title: 'Children Too Close',
   signature: 'children',
+  help: [],
   check: function(person, children) {
 
     // Only look at women
@@ -313,33 +276,18 @@ module.exports = {
     if(problemPairs.length === 0){
       return;
     }
-
-    var descr = utils.markdown(function(){/*
-        [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) has children born less than 9 months apart. This can only happen with
-        the birth of twins or a premature birth. Examine the birth dates of these children
-        closely to verify that they are correct. Find sources to support the birth dates if you can.
-        
-        {{#pairs}}
-        * [{{secondName}}](https://familysearch.org/tree/#view=ancestor&person={{id2}}) was born {{duration}} after [{{firstName}}](https://familysearch.org/tree/#view=ancestor&person={{id1}})
-        {{/pairs}}
-      */}, {
-        pid: person.id,
-        name: person.$getDisplayName(),
-        pairs: problemPairs
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: undefined
+    
+    var template = {
+      pid: person.id,
+      name: person.$getDisplayName(),
+      pairs: problemPairs
     };
+
+    return utils.createOpportunity(this, person, template);
+
   }
 };
-},{"../util.js":40}],4:[function(_dereq_,module,exports){
+},{"../util.js":41}],4:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -347,13 +295,14 @@ module.exports = {
  *  3. There is a death fact
  *  4. There is a death date
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'deathBeforeBirth',
   type: 'problem',
-  title: 'Person Died Before They Were Born',
   signature: 'person',
+  help: help.links('addingAndCorrecting', 'nonexactDates'),
   check: function(person) {
 
     var birth = person.$getBirth(),
@@ -387,46 +336,29 @@ module.exports = {
         return;
       }
     }
-
-    var descr = utils.markdown(function(){/*
-        A person cannot die before they were born. Visit [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}})
-        in the Family Tree and fix the issue by doing one of the following:
-        
-        * Change the birth date to be before the death date
-        * Change the death date to be after the birth date
-
-        ## Help
     
-        * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-        * [Explaining approximate birth dates](https://familysearch.org/ask/productSupport#/Do-not-know-exact-birth-date-or-death-date)
-      */}, {
-        pid: person.id,
-        name: person.$getDisplayName()
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: undefined
+    var template = {
+      pid: person.id,
+      name: person.$getDisplayName()
     };
+
+    return utils.createOpportunity(this, person, template);
+
   }
 };
-},{"../util.js":40}],5:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],5:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are duplicates names (ignoring capitalization and punctuation)
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'duplicateNames',
   type: 'cleanup',
-  title: 'Identical Names',
   signature: 'person',
+  help: help.links('alreadyInTree','customEvents','correctingInformation'),
   check: function(person) {
 
     var names = person.$getNames(),
@@ -455,56 +387,31 @@ module.exports = {
     }
         
     if(duplicates.length > 0) {
-    
-      var descr = utils.markdown(function(){/*
-        This person has names which differ only by capitalization or punctuation.
-        It is not necessary to document all of the different ways a name could be capitalized or punctuated.
-        View [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) in the Family Tree and delete
-        some of the unnecessary names.
 
-        {{#duplicates}} 
-        
-        {{#.}}
-        * {{.}}
-        {{/.}} 
-        
-        {{/duplicates}}
-        
-        ## Help
-    
-        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)
-      */}, {
+      var template = {
         pid: person.id,
         name: person.$getDisplayName(),
         duplicates: duplicates
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
       };
+
+      return utils.createOpportunity(this, person, template);
+
     }
   }
 };
-},{"../util.js":40}],6:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],6:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are 5 or more alternate names
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'manyAlternateNames',
   type: 'cleanup',
-  title: 'Many Alternate Names',
   signature: 'person',
+  help: help.links('alreadyInTree','customEvents','correctingInformation'),
   check: function(person) {
 
     var names = person.$getNames();
@@ -518,35 +425,18 @@ module.exports = {
           alternates.push(names[i].$getFullText());
         }
       }
-    
-      var descr = utils.markdown(function(){/*
-        When a person has many alternate names they are often duplicates, slight misspellings, or differ only in punctuation.
-        Consider deleting some of the alternate names that aren't necessary in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
-
-        {{#names}}
-        * {{.}}
-        {{/names}}
-        
-        ## Help
-    
-        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)
-      */}, {pid: person.id, names: alternates});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
+      
+      var template = {
+        pid: person.id, 
+        names: alternates
       };
+
+      return utils.createOpportunity(this, person, template);
+
     }
   }
 };
-},{"../util.js":40}],7:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],7:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if a marriage date is after the person's death date
  */
@@ -555,8 +445,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'marriageAfterDeath',
   type: 'problem',
-  title: 'Marriage After Death',
   signature: 'relationships',
+  help: [],
   check: function(person, relationships, people) {
 
     var death = person.$getDeath(),
@@ -610,39 +500,20 @@ module.exports = {
           durationString: utils.getSimpleDurationString(duration)
         });
       }
-    
-      var descr = utils.markdown(function(){/*
-          {{name}} died {{deathDate}} but has marriage events which occurred after that date. This is impossible.
-          Either the death date is wrong or the marriage dates are wrong. 
-          View the couple relationships in FamilySearch to fix the problem.
-          
-          {{#spouses}}
-          * [{{spouseName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{coupleId}}) - A marriage event occured {{durationString}} after {{name}}'s death.
-          {{/spouses}}
-
-        */}, {
-          pid: person.id,
-          name: person.$getDisplayName(),
-          deathDate: utils.getNormalizedDateString(formalDeathDate),
-          spouses: spouses 
-        });
-
-      var opportunity = {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
+      
+      var template = {
+        pid: person.id,
+        name: person.$getDisplayName(),
+        deathDate: utils.getNormalizedDateString(formalDeathDate),
+        spouses: spouses 
       };
 
-      return opportunity;
+      return utils.createOpportunity(this, person, template);
 
     }
   }
 };
-},{"../util.js":40}],8:[function(_dereq_,module,exports){
+},{"../util.js":41}],8:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has one or more marriages
@@ -653,8 +524,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'marriageWithNoChildren',
   type: 'family',
-  title: 'Marriage with no Children',
   signature: 'relationships',
+  help: [],
   check: function(person, relationships, people) {
 
     var allSpouseIds = relationships.getSpouseIds(),
@@ -679,46 +550,21 @@ module.exports = {
           name: people[spouseIdsWithoutChildren[i]].$getDisplayName()
         });
       }
-    
-      var descr = utils.markdown(function(){/*
-          {{^multipleSpouses}}
-          The marriage between [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}})
-          and [{{spouse.name}}](https://familysearch.org/tree/#view=ancestor&person={{spouse.id}}) has no children. Though this is possible it still represents
-          an opportunity for research until you are confident that the couple had no children.
-          {{/multipleSpouses}}
-          {{#multipleSpouses}}
-          [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) has multiple marriages
-          with no children. Though this is possible it still represents an opportunity for research 
-          until you are confident that the couples had no children.
-          
-          {{#spouses}}
-          * [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{id}})
-          {{/spouses}}
-          {{/multipleSpouses}}
-        */}, {
-          pid:  person.id,
-          name: person.$getDisplayName(),
-          multipleSpouses: spouses.length > 1,
-          spouse: spouses[0],
-          spouses: spouses
-        });
-
-      var opportunity = {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
+      
+      var template = {
+        pid:  person.id,
+        name: person.$getDisplayName(),
+        multipleSpouses: spouses.length > 1,
+        spouse: spouses[0],
+        spouses: spouses
       };
 
-      return opportunity;
+      return utils.createOpportunity(this, person, template);
 
     }
   }
 };
-},{"../util.js":40}],9:[function(_dereq_,module,exports){
+},{"../util.js":41}],9:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no birth fact OR place and date are both undefined
@@ -728,8 +574,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'missingBirth',
   type: 'person',
-  title: 'Find a Birth',
   signature: 'person',
+  help: [],
   check: function(person) {
 
     var birth = person.$getBirth();
@@ -742,32 +588,16 @@ module.exports = {
 
     // TODO if they have a christening event, change the description
 
-    var descr = utils.markdown(function(){/*
-        Try these steps to find the birth information for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
-        name: person.$getDisplayName(),
-        pid:  person.id
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+    var template = {
+      name: person.$getDisplayName(),
+      pid:  person.id
     };
+
+    return utils.createOpportunity(this, person, template, utils.gensearchPerson(person));
 
   }
 };
-},{"../util.js":40}],10:[function(_dereq_,module,exports){
+},{"../util.js":41}],10:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -779,8 +609,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'missingBirthDate',
   type: 'person',
-  title: 'Find a Birth Date',
   signature: 'person',
+  help: [],
   check: function(person) {
 
     var birth = person.$getBirth();
@@ -803,31 +633,16 @@ module.exports = {
 
     // TODO if they have a christening record, change the description
 
-    var descr = utils.markdown(function(){/*
-        Try these steps to find the birth date for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
-        name: person.$getDisplayName(),
-        pid:  person.id
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+    var template = {
+      name: person.$getDisplayName(),
+      pid:  person.id
     };
+
+    return utils.createOpportunity(this, person, template, utils.gensearchPerson(person));
+
   }
 };
-},{"../util.js":40}],11:[function(_dereq_,module,exports){
+},{"../util.js":41}],11:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
@@ -839,8 +654,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'missingBirthPlace',
   type: 'person',
-  title: 'Find a Birth Place',
   signature: 'person',
+  help: [],
   check: function(person) {
 
     var birth = person.$getBirth();
@@ -863,38 +678,23 @@ module.exports = {
 
     // TODO if they have a christening record, change the description
 
-    var descr = utils.markdown(function(){/*
-        Try these steps to find the birth place for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
-        name: person.$getDisplayName(),
-        pid:  person.id
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+    var template = {
+      name: person.$getDisplayName(),
+      pid:  person.id
     };
+
+    return utils.createOpportunity(this, person, template, utils.gensearchPerson(person));
+
   }
 };
-},{"../util.js":40}],12:[function(_dereq_,module,exports){
+},{"../util.js":41}],12:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
   id: 'missingBirthSource',
   type: 'source',
-  title: 'Find a Birth Record',
   signature: 'personSource',
+  help: [],
   check: function(person, sourceRefs) {
 
     var birth = person.$getBirth();
@@ -930,37 +730,18 @@ module.exports = {
         place: place
       };
     
-      var descr = utils.markdown(function(){/*
-        Try these steps to find a birth record for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-        
-        We use [tags](https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-Changing-and-Removing-Tags-from-Sources&lang=en)
-        to determine whether a source supports birth information. It is possible that a birth
-        source is already attached but not tagged as a birth source.
-      */}, {
-        pid:  person.id,
-        name: person.$getDisplayName()
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: findarecord,
-        gensearch: utils.gensearchPerson(person)
+      var template = {
+        name: person.$getDisplayName(),
+        pid:  person.id
       };
+
+      return utils.createOpportunity(this, person, template, utils.gensearchPerson(person));
+
     }
     
   }
 };
-},{"../util.js":40}],13:[function(_dereq_,module,exports){
+},{"../util.js":41}],13:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no death fact OR place and date are both undefined
@@ -970,8 +751,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'missingDeath',
   type: 'person',
-  title: 'Find a Death',
   signature: 'person',
+  help: [],
   check: function(person) {
 
     var death = person.$getDeath();
@@ -984,31 +765,16 @@ module.exports = {
 
     // TODO if they have a christening record, change the description
 
-    var descr = utils.markdown(function(){/*
-        Try these steps to find the death information for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
-        name: person.$getDisplayName(),
-        pid:  person.id
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+    var template = {
+      name: person.$getDisplayName(),
+      pid:  person.id
     };
+
+    return utils.createOpportunity(this, person, template, utils.gensearchPerson(person));
+
   }
 };
-},{"../util.js":40}],14:[function(_dereq_,module,exports){
+},{"../util.js":41}],14:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1020,8 +786,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'missingDeathDate',
   type: 'person',
-  title: 'Find a Death Date',
   signature: 'person',
+  help: [],
   check: function(person) {
 
     var death = person.$getDeath();
@@ -1030,44 +796,26 @@ module.exports = {
       return;
     }
 
-    // If we already have a death date
     if(utils.getFactYear(death) !== undefined) {
       return;
     }
 
     var place = utils.getFactPlace(death)
 
-    // If we don't have a date AND place, then we count it as not having a death
     if(place === undefined) {
       return;
     }
 
-    var descr = utils.markdown(function(){/*
-        Try these steps to find the death date for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
-        name: person.$getDisplayName(),
-        pid:  person.id
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+    var template = {
+      name: person.$getDisplayName(),
+      pid:  person.id
     };
+
+    return utils.createOpportunity(this, person, template, utils.gensearchPerson(person));
 
   }
 }
-},{"../util.js":40}],15:[function(_dereq_,module,exports){
+},{"../util.js":41}],15:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
@@ -1079,8 +827,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'missingDeathPlace',
   type: 'person',
-  title: 'Find a Death Place',
   signature: 'person',
+  help: [],
   check: function(person) {
 
     var death = person.$getDeath();
@@ -1101,39 +849,23 @@ module.exports = {
       return;
     }
 
-    var descr = utils.markdown(function(){/*
-        Try these steps to find the death place for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
-        name: person.$getDisplayName(),
-        pid:  person.id
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(person)
+    var template = {
+      name: person.$getDisplayName(),
+      pid:  person.id
     };
+
+    return utils.createOpportunity(this, person, template, utils.gensearchPerson(person));
 
   }
 };
-},{"../util.js":40}],16:[function(_dereq_,module,exports){
+},{"../util.js":41}],16:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
   id: 'missingDeathSource',
   type: 'source',
-  title: 'Find a Death Record',
   signature: 'personSource',
+  help: [],
   check: function(person, sourceRefs) {
 
     var death = person.$getDeath();
@@ -1168,45 +900,26 @@ module.exports = {
         to: (year)? year+3:undefined,
         place: place
       };
-    
-      var descr = utils.markdown(function(){/*
-        Try these steps to find a death record for [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-        
-        We use [tags](https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-Changing-and-Removing-Tags-from-Sources&lang=en)
-        to determine whether a source supports death information. It is possible that a death
-        source is already attached but not tagged as a death source.
-      */}, {
-        pid:  person.id,
-        name: person.$getDisplayName()
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: findarecord,
-        gensearch: utils.gensearchPerson(person)
+      
+      var template = {
+        name: person.$getDisplayName(),
+        pid:  person.id
       };
+  
+      return utils.createOpportunity(this, person, template, utils.gensearchPerson(person));
+
     }
     
   }
 };
-},{"../util.js":40}],17:[function(_dereq_,module,exports){
+},{"../util.js":41}],17:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
   id: 'missingFather',
   type: 'family',
-  title: 'Missing a Father',
   signature: 'child',
+  help: [],
   check: function(child, mother, father, childRelationship) {
 
     // Only generate an opportunity if there is no father
@@ -1219,103 +932,65 @@ module.exports = {
         birthPlace = utils.getFactPlace(birth);
       }
       
-      var descr = utils.markdown(function(){/*
-        [{{mothername}}](https://familysearch.org/tree/#view=ancestor&person={{mid}}) is listed as a mother of [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) but there is no father. Try these steps to find the father:
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
+      var template = {
         mothername: mother.$getDisplayName(),
         mid: mother.id,
         name: child.$getDisplayName(),
         pid: child.id
-      });
-
-      return {
-        id: this.id + ':' + child.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: child,
-        findarecord: {
-          tags: ['birth'],
-          from: (birthYear)? birthYear-3:undefined,
-          to: (birthYear)? birthYear+3:undefined,
-          place: birthPlace
-        },
-        gensearch: {
-          givenName: child.$getGivenName(),
-          familyName: child.$getSurname(),
-          birthPlace: birthPlace,
-          birthDate: birthYear+'',
-          motherGivenName: mother.$getGivenName(),
-          motherFamilyName: mother.$getSurname()
-        }
       };
+      
+      var gensearch = {
+        givenName: child.$getGivenName(),
+        familyName: child.$getSurname(),
+        birthPlace: birthPlace,
+        birthDate: birthYear+'',
+        motherGivenName: mother.$getGivenName(),
+        motherFamilyName: mother.$getSurname()
+      };
+  
+      return utils.createOpportunity(this, child, template, gensearch);
+
     }
     
   }
 };
-},{"../util.js":40}],18:[function(_dereq_,module,exports){
+},{"../util.js":41}],18:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a given name but has a surname
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'missingGivenName',
   type: 'person',
-  title: 'Missing a Given Name',
   signature: 'person',
+  help: help.links('alreadyInTree','customEvents','correctingInformation'),
   check: function(person) {
 
     var givenName = person.$getGivenName(),
         surname = person.$getSurname();
 
     if(surname && (givenName === undefined || givenName === '')) {
-
-      var descr = utils.markdown(function(){/*
-        This person is missing a given name. It's possible that the name is known but not filled in.
-        Check to see if the given name appears in the list of alternate names or in any of the attached records.
-        It is possible that the person never had a given name, such as a child that died at birth.
-        
-        ## Help
-    
-        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)  
-      */});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: utils.gensearchPerson(person)
-      };
+      return utils.createOpportunity(this, person, {}, utils.gensearchPerson(person));
     }
   }
 };
-},{"../util.js":40}],19:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],19:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
  *  2. There is only 1 marriage fact
  *  3. There is a place
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util');
 
 module.exports = {
   id: 'missingMarriageDate',
   type: 'family',
-  title: 'Find a Marriage Date',
   signature: 'marriage',
+  help: [],
   check: function(wife, husband, marriage) {
 
     if(!wife || !husband){
@@ -1349,54 +1024,35 @@ module.exports = {
       return;
     }
     
-    var descr = utils.markdown(function(){/*
-      The [marriage](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
-      between [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) has no marriage date. 
-      Try these steps to find the marriage date:
-        
-        1. Review the record hints in FamilySearch for both [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}).
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-    */}, {
+    var template = {
       crid: marriage.id,
       wid: wife.id,
       hid: husband.id,
       wifeName: wife.$getDisplayName(),
       husbandName: husband.$getDisplayName()
-    });
-
-    var opportunity = {
-      id: this.id + ':' + wife.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: wife,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(wife)
     };
     
-    opportunity.gensearch.marriagePlace = place;
-    opportunity.gensearch.spouseGivenName = husband.$getGivenName();
-    opportunity.gensearch.spouseFamilyName = husband.$getSurname();
+    var gensearch = utils.gensearchPerson(wife);
+    
+    gensearch.marriagePlace = place;
+    gensearch.spouseGivenName = husband.$getGivenName();
+    gensearch.spouseFamilyName = husband.$getSurname();
 
-    return opportunity;
-
+    return utils.createOpportunity(this, wife, template, gensearch);
   }
 };
-},{"../util.js":40}],20:[function(_dereq_,module,exports){
+},{"../util":41}],20:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if there is a marriage but no marriage fact,
  * or there is 1 marriage fact with no date and place
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util');
 
 module.exports = {
   id: 'missingMarriageFact',
   type: 'family',
-  title: 'Find a Marriage',
   signature: 'marriage',
+  help: [],
   check: function(wife, husband, marriage) {
 
     if(!wife || !husband){
@@ -1421,43 +1077,23 @@ module.exports = {
     if(marriageFact && (utils.getFactYear(marriageFact) !== undefined || utils.getFactPlace(marriageFact) !== undefined)){
       return;
     }
-
-    var descr = utils.markdown(function(){/*
-      The [marriage](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
-      between [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) has no marriage date or place. 
-      Try these steps to find their marriage information:
-        
-        1. Review the record hints in FamilySearch for both [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}).
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-    */}, {
+    
+    var template = {
       crid: marriage.id,
       wid: wife.id,
       hid: husband.id,
       wifeName: wife.$getDisplayName(),
       husbandName: husband.$getDisplayName()
-    });
-
-    var opportunity = {
-      id: this.id + ':' + wife.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: wife,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(wife)
     };
+    
+    var gensearch = utils.gensearchPerson(wife);
+    gensearch.spouseGivenName = husband.$getGivenName();
+    gensearch.spouseFamilyName = husband.$getSurname();
 
-    opportunity.gensearch.spouseGivenName = husband.$getGivenName();
-    opportunity.gensearch.spouseFamilyName = husband.$getSurname();
-
-    return opportunity;
-
+    return utils.createOpportunity(this, wife, template, gensearch);
   }
 };
-},{"../util.js":40}],21:[function(_dereq_,module,exports){
+},{"../util":41}],21:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -1469,8 +1105,8 @@ var utils = _dereq_('../util.js');
 module.exports = {
   id: 'missingMarriagePlace',
   type: 'family',
-  title: 'Find a Marriage Place',
   signature: 'marriage',
+  help: [],
   check: function(wife, husband, marriage) {
 
     if(!wife || !husband){
@@ -1503,44 +1139,25 @@ module.exports = {
     if(date === undefined) {
       return;
     }
-
-    var descr = utils.markdown(function(){/*
-      The [marriage](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
-      between [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) has no marriage place. 
-      Try these steps to find the marriage place:
-        
-        1. Review the record hints in FamilySearch for both [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}).
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-    */}, {
+    
+    var template = {
       crid: marriage.id,
       wid: wife.id,
       hid: husband.id,
       wifeName: wife.$getDisplayName(),
       husbandName: husband.$getDisplayName()
-    });
-
-    var opportunity = {
-      id: this.id + ':' + husband.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: wife,
-      findarecord: undefined,
-      gensearch: utils.gensearchPerson(wife)
     };
     
-    opportunity.gensearch.marriageDate = date+'';
-    opportunity.gensearch.spouseGivenName = husband.$getGivenName();
-    opportunity.gensearch.spouseFamilyName = husband.$getSurname();
+    var gensearch = utils.gensearchPerson(wife);
+    gensearch.marriageDate = date+'';
+    gensearch.spouseGivenName = husband.$getGivenName();
+    gensearch.spouseFamilyName = husband.$getSurname();
 
-    return opportunity;
+    return utils.createOpportunity(this, wife, template, gensearch);
 
   }
 };
-},{"../util.js":40}],22:[function(_dereq_,module,exports){
+},{"../util.js":41}],22:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Marriage fact exists
@@ -1550,13 +1167,13 @@ module.exports = {
  *  4. Marriage has a date
  *  5. SourceRefs is empty
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util');
 
 module.exports = {
   id: 'missingMarriageSource',
   type: 'source',
-  title: 'Find a Marriage Record',
   signature: 'marriageSource',
+  help: [],
   check: function(wife, husband, marriage, sourceRefs) {
 
     var marriageFact = marriage.$getMarriageFact();
@@ -1597,60 +1214,35 @@ module.exports = {
       return;
     }
     
-    var findarecord = {
-      tags: ['marriage'],
-      from: marriageYear ? marriageYear - 3 : undefined,
-      to: marriageYear ? marriageYear + 3 : undefined,
-      place: marriagePlace
-    };
-
-    var descr = utils.markdown(function(){/*
-        Try these steps to find a marriage record for [{{couple}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{cid}}):
-
-        1. Review the record hints for [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
+    var template ={
       cid: marriage.id, 
       couple: wife.$getDisplayName() + ' and ' + husband.$getDisplayName(),
       wifeName: wife.$getDisplayName(),
       husbandName: husband.$getDisplayName(),
       wid: wife.id,
       hid: husband.id
-    });
-
-    var opportunity = {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: findarecord,
-      gensearch: utils.gensearchPerson(person)
     };
     
-    opportunity.gensearch.marriageDate = marriageYear+'';
-    opportunity.gensearch.marriagePlace = marriagePlace;
-
+    var gensearch = utils.gensearchPerson(person);
+    gensearch.marriageDate = marriageYear+'';
+    gensearch.marriagePlace = marriagePlace;
     if(spouse !== undefined) {
-      opportunity.gensearch.spouseGivenName = spouse.$getGivenName();
-      opportunity.gensearch.spouseFamilyName = spouse.$getSurname();
+      gensearch.spouseGivenName = spouse.$getGivenName();
+      gensearch.spouseFamilyName = spouse.$getSurname();
     }
 
-    return opportunity;
+    return utils.createOpportunity(this, person, template, gensearch);
 
   }
 };
-},{"../util.js":40}],23:[function(_dereq_,module,exports){
+},{"../util":41}],23:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
   id: 'missingMother',
   type: 'family',
-  title: 'Missing a Mother',
   signature: 'child',
+  help: [],
   check: function(child, mother, father, childRelationship) {
 
     // Only generate an opportunity if there is no mother
@@ -1663,95 +1255,54 @@ module.exports = {
         birthPlace = utils.getFactPlace(birth);
       }
       
-      var descr = utils.markdown(function(){/*
-        [{{fathername}}](https://familysearch.org/tree/#view=ancestor&person={{fid}}) is listed as a mother of [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) but there is no father. Try these steps to find the father:
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, {
+      var template = {
         fathername: father.$getDisplayName(),
         fid: father.id,
         name: child.$getDisplayName(),
         pid: child.id
-      });
-
-      return {
-        id: this.id + ':' + child.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: child,
-        findarecord: {
-          tags: ['birth'],
-          from: (birthYear)? birthYear-3:undefined,
-          to: (birthYear)? birthYear+3:undefined,
-          place: birthPlace
-        },
-        gensearch: {
-          givenName: child.$getGivenName(),
-          familyName: child.$getSurname(),
-          birthPlace: birthPlace,
-          birthDate: birthYear+'',
-          fatherGivenName: father.$getGivenName(),
-          fatherFamilyName: father.$getSurname()
-        }
       };
+      
+      var gensearch = {
+        givenName: child.$getGivenName(),
+        familyName: child.$getSurname(),
+        birthPlace: birthPlace,
+        birthDate: birthYear+'',
+        fatherGivenName: father.$getGivenName(),
+        fatherFamilyName: father.$getSurname()
+      };
+  
+      return utils.createOpportunity(this, child, template, gensearch);
     }
     
   }
 };
-},{"../util.js":40}],24:[function(_dereq_,module,exports){
+},{"../util.js":41}],24:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is no name
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'missingName',
   type: 'person',
-  title: 'Missing a Name',
   signature: 'person',
+  help: help.links('alreadyInTree','customEvents','correctingInformation','deletingInformation'),
   check: function(person) {
-
     if(!person.names || person.names.length === 0) {
-
-      var descr = utils.markdown(function(){/*
-        This person's name is not known. There are few reasons for a person to exist in the tree without a name.
-        In fact, FamilySearch no longer allows people to be created without a name.
-        If there is no other information nor relationships for this person then you can safely delete the person.
-
-        ## Help
-    
-        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)
-        * [Deleting a person from Family Tree](https://familysearch.org/ask/productSupport#/Deleting-a-Person-from-the-System)
-      */});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: utils.gensearchPerson(person)
-      };
+      return utils.createOpportunity(this, person, {}, utils.gensearchPerson(person));
     }
   }
 };
-},{"../util.js":40}],25:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],25:[function(_dereq_,module,exports){
 var utils = _dereq_('../util.js');
 
 module.exports = {
   id: 'missingParents',
   type: 'family',
-  title: 'Missing Parents',
   signature: 'parents',
+  help: [],
   check: function(child, parents) {
 
     // Only generate an opportunity if there are no parents
@@ -1764,98 +1315,55 @@ module.exports = {
         birthPlace = utils.getFactPlace(birth);
       }
       
-      var descr = utils.markdown(function(){/*
-        Try these steps to find the parents of [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
-        
-        1. Review the [record hints](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) in FamilySearch.
-        1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
-        1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
-        1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).
-        1. Hire a researcher from the [Genlighten](http://www.genlighten.com/) community.
-      */}, { 
-        pid: child.id,
-        name: child.$getDisplayName()
-      });
-
-      return {
-        id: this.id + ':' + child.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: child,
-        findarecord: {
-          tags: ['birth'],
-          from: (birthYear)? birthYear-3:undefined,
-          to: (birthYear)? birthYear+3:undefined,
-          place: birthPlace
-        },
-        gensearch: utils.gensearchPerson(child)
+      var template = {
+        name: child.$getDisplayName(),
+        pid:  child.id
       };
+  
+      return utils.createOpportunity(this, child, template, utils.gensearchPerson(child));
     }
     
   }
 };
-},{"../util.js":40}],26:[function(_dereq_,module,exports){
+},{"../util.js":41}],26:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The preferred name does not have a surname but does have a given name
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'missingSurname',
   type: 'person',
-  title: 'Missing a Surname',
   signature: 'person',
+  help: help.links('alreadyInTree','customEvents','correctingInformation'),
   check: function(person) {
 
     var givenName = person.$getGivenName(),
         surname = person.$getSurname();
 
     if(givenName && (surname === undefined || surname === '')) {
-
-      var descr = utils.markdown(function(){/*
-        This person is missing a surname. It's possible that the surname is known but not filled in.
-        Check to see if the surname appears in the list of alternate names or in any of the attached records.
-        In most areas of the world, the surname can be inferred if the names of the parents are known.
-        
-        ## Help
-    
-        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)  
-      */});
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: utils.gensearchPerson(person)
-      };
+      return utils.createOpportunity(this, person, {}, utils.gensearchPerson(person));
     }
   }
 };
-},{"../util.js":40}],27:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],27:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is more than one marriage fact
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'multipleMarriageFacts',
   type: 'cleanup',
-  title: 'Multiple Marriage Facts',
   signature: 'marriage',
+  help: help.links('addingAndCorrecting'),
   check: function(wife, husband, marriage) {
 
-    var person = wife,
-        spouse = husband;
-
-    if(!person) {
+    if(!wife || !husband){
       return;
     }
 
@@ -1871,45 +1379,30 @@ module.exports = {
     if(count < 2) {
       return;
     }
-    
-    var coupleDescr = wife.$getDisplayName() + ' and ' + husband.$getDisplayName();
 
-    var descr = utils.markdown(function(){/*
-      The marriage between [{{couple}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
-      has multiple marriage events. This is only possible in the unlikely situation where the couple 
-      remarried after divorcing. Try to merge similar information and reduce the events down to just one.
-      View their [relationship](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}})
-      in the Family Tree to correct this problem.
-
-      ## Help
-
-      * [Removing Marriage Facts in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-    */}, {crid:  marriage.id, couple: coupleDescr});
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: undefined
+    var template = {
+      crid:  marriage.id,
+      wifeName: wife.$getDisplayName(),
+      husbandName: husband.$getDisplayName()
     };
+
+    return utils.createOpportunity(this, wife, template, utils.gensearchPerson(wife));
 
   }
 };
-},{"../util.js":40}],28:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],28:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has more than one parent relationship
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'multipleParents',
   type: 'family',
-  title: 'Multiple Parent Relationships',
   signature: 'relationships',
+  help: help.links('correctingInformation'),
   check: function(person, relationships, people) {
 
     var parentRelationships = relationships.getParentRelationships();
@@ -1951,38 +1444,24 @@ module.exports = {
     if(biologicalFathers < 2 && biologicalMothers < 2){
       return;
     }
-
-    var descr = utils.markdown(function(){/*
-        {{name}} is listed as having multiple biological parents, which is highly improbable.
-        Fix this problem by visiting [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}})
-        in the Family Tree and examining the parent relationships.
-
-        ## Help
-        
-        * [Correcting information in the Family Tree](https://familysearch.org/ask/productSupport#/Adding-and-Correcting-Information-about-People-and-Relationships)
-      */}, {
-        pid:  person.id,
-        name: person.$getDisplayName()
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: undefined
+    
+    var template = {
+      name: person.$getDisplayName(),
+      pid:  person.id
     };
+
+    return utils.createOpportunity(this, person, template);
+
   }
 };
-},{"../util.js":40}],29:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],29:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. The person's preferred name has an "or" in it (Joe or Joey Adams)
  *  2. The person's preferred name doesn't have an or but an alternate name does
  */
-var utils = _dereq_('../util.js'),
+var utils = _dereq_('../util'),
+    help = _dereq_('../help'),
     regex = / or /;
 
 // TODO: suggest what the new preferred name and alternate names should be
@@ -1991,32 +1470,24 @@ var utils = _dereq_('../util.js'),
 module.exports = {
   id: 'orInName',
   type: 'cleanup',
-  title: 'Incorrect Alternate Name Format',
   signature: 'person',
+  help: help.links('alreadyInTree','customEvents','correctingInformation'),
   check: function(person) {
 
     var descr,
         name = person.$getPreferredName(),
         nameText = name && name.$getFullText() ? name.$getFullText() : '',
-        nameMatches = nameText.match(regex);
+        nameMatches = nameText.match(regex),
+        template = {
+          pid: person.id
+        };
 
+    // Have an "or" in the preferred name
     if(nameMatches) {
-
-      descr = utils.markdown(function(){/*
-        This person's name has an "or" in it which is incorrectly used to document alternate given names or alternate surnames.
-        It is better to add the alternate form as a separate name altogether.
-        In the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}), add the alternate form as an
-        alternate name then remove it from the person's preferred name.
-        
-        ## Help
-    
-        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)      
-      */}, { pid: person.id });
+      return utils.createOpportunity(this, person, template);
     } 
     
-    // If the preferred name doesn't have any unusual characters
+    // If the preferred name doesn't have a problem
     // then examine the alternate names
     else if(person.$getNames().length > 1){
       
@@ -2037,53 +1508,28 @@ module.exports = {
       }
       
       if(badNames.length > 0){
-        descr = utils.markdown(function(){/*
-          These alternate names have an "or" in it which is often incorrectly used to document alternate given names or alternate surnames.
-          It is better to add the alternate form as a separate alternate name instead.
-          In the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}), add the alternate form as
-          another alternate name and remove it from the original alternate name.
-          
-          {{#badNames}}
-          * {{.}}
-          {{/badNames}}
-          
-          ## Help
-      
-          * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-          * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-          * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)      
-        */}, {
-          badNames: badNames,
-          pid: person.id
-        });
+        
+        template.badNames = badNames;
+        
+        return utils.createOpportunity(this, person, template);
       }
     }
     
-    if(descr){
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
-      };
-    }
   }
 };
-},{"../util.js":40}],30:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],30:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has possible matches
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'possibleDuplicates',
   type: 'cleanup',
-  title: 'Possible Duplicate Persons',
   signature: 'duplicates',
+  help: help.links('mergingDuplicates'),
   check: function(person, matches) {
   
     // Short-circuit if there are no matches
@@ -2105,41 +1551,27 @@ module.exports = {
     if(goodMatches === 0){
       return;
     }
-  
-    var descr = utils.markdown(function(){/*
-        FamilySearch has identified {{count}} {{people}} {{name}}.
-        Review the [list of duplicates](https://familysearch.org/tree/#view=possibleDuplicates&person={{pid}}) in FamilySearch.
-        Merge duplicate persons and mark incorrect matches as "Not a Match".
-
-        ## Help
     
-        * [Merging duplicate records in Family Tree](https://familysearch.org/ask/productSupport#/Merging-Duplicate-Records-in-Family-Tree-1381814853391)
-      */}, {
-        pid: person.id,
-        name: person.$getDisplayName(),
-        count: goodMatches,
-        people: goodMatches === 1 ? 'person as a potential duplicate' : 'people as potential duplicates'
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: undefined
+    var template = {
+      pid: person.id,
+      name: person.$getDisplayName(),
+      count: goodMatches,
+      singular: goodMatches === 1
     };
+
+    return utils.createOpportunity(this, person, template);
+
   }
 };
-},{"../util.js":40}],31:[function(_dereq_,module,exports){
-var utils = _dereq_('../util.js');
+},{"../help":39,"../util":41}],31:[function(_dereq_,module,exports){
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'recordHints',
   type: 'source',
-  title: 'Record Hints',
   signature: 'recordHints',
+  help: help.links('recordHints'),
   check: function(person, matches) {
 
     // Short-circuit if there are no hints
@@ -2154,50 +1586,31 @@ module.exports = {
       titles.push(results[i].title);
     }
 
-    var descr = utils.markdown(function(){/*
-        FamilySearch has found matching records for {{name}} in the following collections:
-
-        {{#titles}}
-        * {{.}}
-        {{/titles}}
-        
-        [Review these matches](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) and attach the sources to your tree.
-        
-        ## Help
-    
-        * [Record Hints](https://familysearch.org/ask/productSupport#/Record-Hints)
-      */}, {
-        titles: titles,
-        name: person.$getDisplayName(),
-        pid: person.id
-      });
-
-    return {
-      id: this.id + ':' + person.id,
-      type: this.type,
-      title: this.title,
-      description: descr,
-      person: person,
-      findarecord: undefined,
-      gensearch: undefined
+    var template = {
+      titles: titles,
+      name: person.$getDisplayName(),
+      pid: person.id
     };
+
+    return utils.createOpportunity(this, person, template);
 
   }
 };
-},{"../util.js":40}],32:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],32:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
  *  2. There is an original date
  *  3. There is no formal date
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'standardizeBirthDate',
   type: 'cleanup',
-  title: 'Standardize a Birth Date',
   signature: 'person',
+  help: help.links('standardizing'),
   check: function(person) {
 
     var birth = person.$getBirth();
@@ -2209,48 +1622,33 @@ module.exports = {
 
     // If we have an original date without a formal date
     if(birth.$getDate() !== undefined && birth.$getNormalizedDate() === undefined) {
-
-      var descr = utils.markdown(function(){/*
-        [{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) birth date of `{{date}}` has not been standardized.
-
-        ## Why?
-        Standardization ensures that everyone knows when this event took place.
-        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example. Is this March 11, 2000 or November 3, 2000?
-        By standardizing the date we can avoid this confusion.
-        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-      */}, {
+      
+      var template = {
         pid: person.id,
         name: person.$getDisplayName(),
         date: birth.$getDate()
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
       };
+  
+      return utils.createOpportunity(this, person, template);
+
     }
   }
 };
-},{"../util.js":40}],33:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],33:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a birth fact
  *  2. There is an original place
  *  3. There is no normalized place
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'standardizeBirthPlace',
   type: 'cleanup',
-  title: 'Standardize a Birth Place',
   signature: 'person',
+  help: help.links('standardizing'),
   check: function(person) {
 
     var birth = person.$getBirth();
@@ -2263,47 +1661,32 @@ module.exports = {
     // If we have an original place without a normalized place
     if(birth.$getPlace() !== undefined && birth.$getNormalizedPlace() === undefined) {
 
-      var descr = utils.markdown(function(){/*
-        [{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) birth place of `{{place}}` has not been standardized.
-
-        ## Why?
-        Standardization ensures that everyone knows where this event took place.
-        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example. Is this the London in England, Kentucky, or Ontario?
-        By standardizing the place we can avoid this confusion.
-        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-      */}, {
+      var template = {
         pid: person.id,
         name: person.$getDisplayName(),
         place: birth.$getPlace()
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
       };
+  
+      return utils.createOpportunity(this, person, template);
+
     }
   }
 };
-},{"../util.js":40}],34:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],34:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
  *  2. There is an original date
  *  3. There is no formal date
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'standardizeDeathDate',
   type: 'cleanup',
-  title: 'Standardize a Death Date',
   signature: 'person',
+  help: help.links('standardizing'),
   check: function(person) {
 
     var death = person.$getDeath();
@@ -2316,47 +1699,32 @@ module.exports = {
     // If we have an original date without a formal date
     if(death.$getDate() !== undefined && death.$getNormalizedDate() === undefined) {
 
-      var descr = utils.markdown(function(){/*
-        [{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) death date of `{{date}}` has not been standardized.
-
-        ## Why?
-        Standardization ensures that everyone knows when this event took place.
-        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example. Is this March 11, 2000 or November 3, 2000?
-        By standardizing the date we can avoid this confusion.
-        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-      */}, {
+      var template = {
         pid: person.id,
         name: person.$getDisplayName(),
         date: death.$getDate()
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
       };
+  
+      return utils.createOpportunity(this, person, template);
+
     }
   }
 };
-},{"../util.js":40}],35:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],35:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a death fact
  *  2. There is an original place
  *  3. There is no normalized place
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'standardizeDeathPlace',
   type: 'cleanup',
-  title: 'Standardize a Death Place',
   signature: 'person',
+  help: help.links('standardizing'),
   check: function(person) {
 
     var death = person.$getDeath();
@@ -2369,34 +1737,18 @@ module.exports = {
     // If we have an original place without a normalized place
     if(death.$getPlace() !== undefined && death.$getNormalizedPlace() === undefined) {
 
-      var descr = utils.markdown(function(){/*
-        [{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) death place of `{{place}}` has not been standardized.
-
-        ## Why?
-        Standardization ensures that everyone knows where this event took place.
-        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example. Is this the London in England, Kentucky, or Ontario?
-        By standardizing the place we can avoid this confusion.
-        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-      */}, {
+      var template = {
         pid: person.id,
         name: person.$getDisplayName(),
         place: death.$getPlace()
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
       };
+  
+      return utils.createOpportunity(this, person, template);
+
     }
   }
 };
-},{"../util.js":40}],36:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],36:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -2404,13 +1756,14 @@ module.exports = {
  *  3. There is an original date
  *  4. There is no formal date
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'standardizeMarriageDate',
   type: 'cleanup',
-  title: 'Standardize a Marriage Date',
   signature: 'marriage',
+  help: help.links('standardizing'),
   check: function(wife, husband, marriage) {
 
     if(!wife || !husband){
@@ -2435,36 +1788,19 @@ module.exports = {
     // If we have an original date without a formal date
     if(marriageFact.$getDate() !== undefined && marriageFact.$getNormalizedDate() === undefined) {
 
-      var descr = utils.markdown(function(){/*
-        The marriage date of `{{date}}` has not been standardized for the marriage between
-        [{{wifeName}} and {{husbandName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}).
-
-        ## Why?
-        Standardization ensures that everyone knows when this event took place.
-        Because there are many date formats used accross the world, it may not always be obvious what the date actually is.
-        Take `3/11/2000` for example. Is this March 11, 2000 or November 3, 2000?
-        By standardizing the date we can avoid this confusion.
-        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-      */}, {
+      var template = {
         crid: marriage.id, 
         wifeName: wife.$getDisplayName(),
         husbandName: husband.$getDisplayName(),
         date: facts[0].$getDate()
-      });
-
-      return {
-        id: this.id + ':' + wife.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: wife,
-        findarecord: undefined,
-        gensearch: undefined
       };
+  
+      return utils.createOpportunity(this, wife, template);
+
     }
   }
 };
-},{"../util.js":40}],37:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],37:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There is a wife OR husband
@@ -2472,13 +1808,14 @@ module.exports = {
  *  3. There is an original place
  *  4. There is no normalized place
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util'),
+    help = _dereq_('../help');
 
 module.exports = {
   id: 'standardizeMarriagePlace',
   type: 'cleanup',
-  title: 'Standardize a Marriage Place',
   signature: 'marriage',
+  help: help.links('standardizing'),
   check: function(wife, husband, marriage) {
 
     if(!wife || !husband){
@@ -2503,43 +1840,26 @@ module.exports = {
     // If we have an original place without a normalized place
     if(marriageFact.$getPlace() !== undefined && marriageFact.$getNormalizedPlace() === undefined) {
 
-      var descr = utils.markdown(function(){/*
-        The marriage place of `{{place}}` has not been standardized for the marriage between
-        [{{wifeName}} and {{husbandName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}). 
-
-        ## Why?
-        Standardization ensures that everyone knows where this event took place.
-        Because there are many different ways to spell or qualify a place, it may not always be obvious where that place actually is.
-        Take `London` for example. Is this the London in England, Kentucky, or Ontario?
-        By standardizing the place we can avoid this confusion.
-        Read a guide from FamilySearch about [standardizing dates and places](https://familysearch.org/ask/productSupport#/Entering-Standardized-Dates-and-Places).
-
-      */}, {
+      var template = {
         crid: marriage.id,
         wifeName: wife.$getDisplayName(),
         husbandName: husband.$getDisplayName(),
         place: marriageFact.$getPlace()
-      });
-
-      return {
-        id: this.id + ':' + wife.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: wife,
-        findarecord: undefined,
-        gensearch: undefined
       };
+  
+      return utils.createOpportunity(this, wife, template);
+
     }
   }
 };
-},{"../util.js":40}],38:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],38:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are unusual characters in the preferred name
  *  2. There are no unusual characters in the preferred name but there are unusual characters in an alternate name
  */
-var utils = _dereq_('../util.js'),
+var utils = _dereq_('../util'),
+    help = _dereq_('../help'),
     badChars = /[\{\}\[\]\(\)\<\>\!\@\#\$\%\^\&\*\+\=\/\|\\\?\_]/g;
 
 // TODO: suggest what the new preferred name and alternate names should be
@@ -2548,45 +1868,20 @@ var utils = _dereq_('../util.js'),
 module.exports = {
   id: 'unusualCharactersInName',
   type: 'cleanup',
-  title: 'Unusual Characters in a Name',
   signature: 'person',
+  help: help.links('alreadyInTree','customEvents','correctingInformation'),
   check: function(person) {
 
     var name = person.$getPreferredName(),
         nameText = name && name.$getFullText() ? name.$getFullText() : '',
-        nameMatches = nameText.match(badChars);
+        nameMatches = nameText.match(badChars),
+        template;
 
     if(nameMatches) {
-
-      var descr = utils.markdown(function(){/*
-        This person has the following unusual characters in their name: {{chars}}.
-        {{#brackets}}
-        These characters are often used to annotate an alternate given name or surname, but this is better done by adding an alternate name.
-        Remove the alternate annotations from the preferred name and add them as alternate names.
-        {{/brackets}}
-        {{^brackets}}      
-        These characters are not normally found in names. Update the person's name in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to remove the unusual characters.
-        {{/brackets}}      
-        
-        ## Help
-    
-        * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-        * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-        * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)      
-      */}, {
+      template = {
         chars: '`' + nameMatches.join('`, `') + '`',
         pid: person.id,
         brackets: nameText.match(/(\([^\)]*\))|(\{[^\}]*\})|(\[[^\]]*\])|(\<[^\>]*\>)/) !== null
-      });
-
-      return {
-        id: this.id + ':' + person.id,
-        type: this.type,
-        title: this.title,
-        description: descr,
-        person: person,
-        findarecord: undefined,
-        gensearch: undefined
       };
     } 
     
@@ -2611,39 +1906,49 @@ module.exports = {
       }
       
       if(badNames.length > 0){
-        var descr = utils.markdown(function(){/*
-          These alternate names have characters which normally do not appear in names:
-          
-          {{#badNames}}
-          * {{.}}
-          {{/badNames}}
-          
-          Update these names in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to remove the unusual characters.   
-          
-          ## Help
-      
-          * [Adding more information about a person who is already in Family Tree](https://familysearch.org/ask/productSupport#/Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree)
-          * [Adding a custom event or fact to a person](https://familysearch.org/ask/productSupport#/Adding-a-Custom-Event-or-Fact-to-a-Person)
-          * [Correcting information about a person](https://familysearch.org/ask/productSupport#/Correcting-Information-about-a-Person)      
-        */}, {
+        template = {
           badNames: badNames,
           pid: person.id
-        });
-
-        return {
-          id: this.id + ':' + person.id,
-          type: this.type,
-          title: this.title,
-          description: descr,
-          person: person,
-          findarecord: undefined,
-          gensearch: undefined
         };
       }
     }
+    
+    if(template){
+      return utils.createOpportunity(this, person, template);
+    }
   }
 };
-},{"../util.js":40}],39:[function(_dereq_,module,exports){
+},{"../help":39,"../util":41}],39:[function(_dereq_,module,exports){
+/**
+ * Central control of help doc links
+ */
+ 
+var docs = {
+  addingAndCorrecting: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-and-Correcting-Information-about-People-and-Relationships',
+  alreadyInTree: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree',
+  correctingInformation: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Correcting-Information-about-a-Person',
+  customEvents: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-a-Custom-Event-or-Fact-to-a-Person',
+  deletingInformation: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Deleting-a-Person-from-the-System',
+  mergingDuplicates: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Merging-Duplicate-Records-in-Family-Tree-1381814853391',
+  nonexactDates: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Do-not-know-exact-birth-date-or-death-date',
+  recordHints: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Record-Hints',
+  standardizing: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Entering-Standardized-Dates-and-Places'
+};
+
+module.exports = {
+  
+  links: function(){
+    var links = [];
+    for(var i = 0; i < arguments.length; i++){
+      if(docs[arguments[i]]){
+        links.push(docs[arguments[i]]);
+      }
+    }
+    return links;
+  }
+  
+};
+},{}],40:[function(_dereq_,module,exports){
 var utils = _dereq_('./util.js');
 
 var checks = [
@@ -2713,6 +2018,8 @@ for(var i = 0; i < checks.length; i++){
   types[type].push(checks[i]);
 }
 
+var languages = {};
+
 module.exports = {
 
   all: function(){
@@ -2763,6 +2070,26 @@ module.exports = {
   },
   
   /**
+   * Add a language
+   */
+  addLanguage: function(code, data){
+    languages[code] = data;
+  },
+  
+  /**
+   * Translate an opportunity
+   */
+  translate: function(opportunity, lang){
+    if(languages[lang]){
+      var translation = languages[lang][opportunity.checkId];
+      if(translation){
+        opportunity.title = translation.title;
+        opportunity.description = utils.markdown(translation.description, opportunity.template);
+      }
+    }
+  },
+  
+  /**
    * Expose useful internals
    */
   utils: {
@@ -2773,15 +2100,15 @@ module.exports = {
   }
   
 };
-},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/childrenTooClose.js":3,"./checks/deathBeforeBirth.js":4,"./checks/duplicateNames.js":5,"./checks/manyAlternateNames.js":6,"./checks/marriageAfterDeath.js":7,"./checks/marriageWithNoChildren.js":8,"./checks/missingBirth.js":9,"./checks/missingBirthDate.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathPlace.js":15,"./checks/missingDeathSource.js":16,"./checks/missingFather.js":17,"./checks/missingGivenName.js":18,"./checks/missingMarriageDate.js":19,"./checks/missingMarriageFact.js":20,"./checks/missingMarriagePlace.js":21,"./checks/missingMarriageSource.js":22,"./checks/missingMother.js":23,"./checks/missingName.js":24,"./checks/missingParents.js":25,"./checks/missingSurname.js":26,"./checks/multipleMarriageFacts.js":27,"./checks/multipleParents.js":28,"./checks/orInName.js":29,"./checks/possibleDuplicates.js":30,"./checks/recordHints.js":31,"./checks/standardizeBirthDate.js":32,"./checks/standardizeBirthPlace.js":33,"./checks/standardizeDeathDate.js":34,"./checks/standardizeDeathPlace.js":35,"./checks/standardizeMarriageDate.js":36,"./checks/standardizeMarriagePlace.js":37,"./checks/unusualCharactersInName.js":38,"./util.js":40,"gedcomx-date":47}],40:[function(_dereq_,module,exports){
+},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/childrenTooClose.js":3,"./checks/deathBeforeBirth.js":4,"./checks/duplicateNames.js":5,"./checks/manyAlternateNames.js":6,"./checks/marriageAfterDeath.js":7,"./checks/marriageWithNoChildren.js":8,"./checks/missingBirth.js":9,"./checks/missingBirthDate.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathPlace.js":15,"./checks/missingDeathSource.js":16,"./checks/missingFather.js":17,"./checks/missingGivenName.js":18,"./checks/missingMarriageDate.js":19,"./checks/missingMarriageFact.js":20,"./checks/missingMarriagePlace.js":21,"./checks/missingMarriageSource.js":22,"./checks/missingMother.js":23,"./checks/missingName.js":24,"./checks/missingParents.js":25,"./checks/missingSurname.js":26,"./checks/multipleMarriageFacts.js":27,"./checks/multipleParents.js":28,"./checks/orInName.js":29,"./checks/possibleDuplicates.js":30,"./checks/recordHints.js":31,"./checks/standardizeBirthDate.js":32,"./checks/standardizeBirthPlace.js":33,"./checks/standardizeDeathDate.js":34,"./checks/standardizeDeathPlace.js":35,"./checks/standardizeMarriageDate.js":36,"./checks/standardizeMarriagePlace.js":37,"./checks/unusualCharactersInName.js":38,"./util.js":41,"gedcomx-date":48}],41:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date'),
-    multiline = _dereq_('multiline'),
     marked = _dereq_('marked'),
     renderer = new marked.Renderer(),
     mustache = _dereq_('mustache');
 
 module.exports = {
   gensearchPerson: gensearchPerson,
+  createOpportunity: createOpportunity,
   getFactYear: getFactYear,
   getFactPlace: getFactPlace,
   getFormalDate: getFormalDate,
@@ -2979,18 +2306,11 @@ function getSimpleDurationString(duration){
   return string;
 };
 
-function markdown(func) {
-  var text,
-      data = {};
+function markdown(text) {
+  var data = {};
 
   if(arguments.length > 1) {
     data = arguments[1];
-  }
-
-  try{
-    text = multiline.stripIndent(func);
-  } catch(e) {
-    text = 'Unsupported Browser';
   }
 
   return marked(mustache.render(text, data), { renderer: renderer });
@@ -3061,7 +2381,22 @@ function compareFormalDates(date1, date2){
     return 1;
   }
 };
-},{"gedcomx-date":47,"marked":53,"multiline":54,"mustache":56}],41:[function(_dereq_,module,exports){
+
+/**
+ * Generate an opportunity
+ */
+function createOpportunity(check, person, template, gensearch){
+  return {
+    id: check.id + ':' + person.id,
+    type: check.type,
+    checkId: check.id,
+    personId: person.id,
+    person: person,
+    gensearch: gensearch,
+    template: template
+  };
+}
+},{"gedcomx-date":48,"marked":54,"mustache":55}],42:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -3086,7 +2421,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],42:[function(_dereq_,module,exports){
+},{}],43:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3134,11 +2469,8 @@ process.argv = [];
 function noop() {}
 
 process.on = noop;
-process.addListener = noop;
 process.once = noop;
 process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
 process.emit = noop;
 
 process.binding = function (name) {
@@ -3151,14 +2483,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],43:[function(_dereq_,module,exports){
+},{}],44:[function(_dereq_,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],44:[function(_dereq_,module,exports){
+},{}],45:[function(_dereq_,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3747,8 +3079,8 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-}).call(this,_dereq_("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":43,"FWaASH":42,"inherits":41}],45:[function(_dereq_,module,exports){
+}).call(this,_dereq_("/home/ubuntu/workspace/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./support/isBuffer":44,"/home/ubuntu/workspace/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":43,"inherits":42}],46:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     Simple = _dereq_('./simple.js');
 
@@ -3790,7 +3122,7 @@ Approximate.prototype.toFormalString = function() {
 }
 
 module.exports = Approximate;
-},{"./simple.js":50,"util":44}],46:[function(_dereq_,module,exports){
+},{"./simple.js":51,"util":45}],47:[function(_dereq_,module,exports){
 /**
  * A gedcomX Duration
  */
@@ -4047,7 +3379,7 @@ Duration.prototype.toFormalString = function() {
 }
 
 module.exports = Duration;
-},{}],47:[function(_dereq_,module,exports){
+},{}],48:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -4113,7 +3445,7 @@ GedcomXDate.now = GedUtil.now;
 GedcomXDate.fromJSDate = GedUtil.fromJSDate;
 
 module.exports = GedcomXDate;
-},{"./approximate.js":45,"./duration.js":46,"./range.js":48,"./recurring.js":49,"./simple.js":50,"./util.js":52}],48:[function(_dereq_,module,exports){
+},{"./approximate.js":46,"./duration.js":47,"./range.js":49,"./recurring.js":50,"./simple.js":51,"./util.js":53}],49:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -4238,7 +3570,7 @@ Range.prototype.toFormalString = function() {
 }
 
 module.exports = Range;
-},{"./approximate.js":45,"./duration.js":46,"./simple.js":50,"./util.js":52}],49:[function(_dereq_,module,exports){
+},{"./approximate.js":46,"./duration.js":47,"./simple.js":51,"./util.js":53}],50:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     GedUtil = _dereq_('./util.js'),
     Range = _dereq_('./range.js');
@@ -4324,7 +3656,7 @@ Recurring.prototype.toFormalString = function() {
 }
 
 module.exports = Recurring;
-},{"./range.js":48,"./util.js":52,"util":44}],50:[function(_dereq_,module,exports){
+},{"./range.js":49,"./util.js":53,"util":45}],51:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js');
 /**
  * The simplest representation of a date.
@@ -4736,7 +4068,7 @@ Simple.prototype.toFormalString = function() {
 }
 
 module.exports = Simple;
-},{"./util-global.js":51}],51:[function(_dereq_,module,exports){
+},{"./util-global.js":52}],52:[function(_dereq_,module,exports){
 module.exports = {
   daysInMonth: daysInMonth
 }
@@ -4780,7 +4112,7 @@ function daysInMonth(month, year) {
       throw new Error('Unknown Month');
   }
 }
-},{}],52:[function(_dereq_,module,exports){
+},{}],53:[function(_dereq_,module,exports){
 var GlobalUtil = _dereq_('./util-global.js'),
     Duration = _dereq_('./duration.js'),
     Simple = _dereq_('./simple.js'),
@@ -5215,7 +4547,7 @@ function fromJSDate(date){
   // Remove the millisecond time component
   return new Simple('+' + date.toISOString().replace(/\.\d{3}/,''));
 };
-},{"./approximate.js":45,"./duration.js":46,"./simple.js":50,"./util-global.js":51}],53:[function(_dereq_,module,exports){
+},{"./approximate.js":46,"./duration.js":47,"./simple.js":51,"./util-global.js":52}],54:[function(_dereq_,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -5239,7 +4571,7 @@ var block = {
   lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
   blockquote: /^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
   list: /^( *)(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,
-  html: /^ *(?:comment|closed|closing) *(?:\n{2,}|\s*$)/,
+  html: /^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   table: noop,
   paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
@@ -6087,7 +5419,7 @@ Renderer.prototype.link = function(href, title, text) {
     } catch (e) {
       return '';
     }
-    if (prot.indexOf('javascript:') === 0) {
+    if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0) {
       return '';
     }
   }
@@ -6373,8 +5705,13 @@ function marked(src, opt, callback) {
 
     pending = tokens.length;
 
-    var done = function() {
-      var out, err;
+    var done = function(err) {
+      if (err) {
+        opt.highlight = highlight;
+        return callback(err);
+      }
+
+      var out;
 
       try {
         out = Parser.parse(tokens, opt);
@@ -6403,6 +5740,7 @@ function marked(src, opt, callback) {
           return --pending || done();
         }
         return highlight(token.text, token.lang, function(err, code) {
+          if (err) return done(err);
           if (code == null || code === token.text) {
             return --pending || done();
           }
@@ -6472,7 +5810,7 @@ marked.inlineLexer = InlineLexer.output;
 
 marked.parse = marked;
 
-if (typeof exports === 'object') {
+if (typeof module !== 'undefined' && typeof exports === 'object') {
   module.exports = marked;
 } else if (typeof define === 'function' && define.amd) {
   define(function() { return marked; });
@@ -6485,48 +5823,7 @@ if (typeof exports === 'object') {
 }());
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],54:[function(_dereq_,module,exports){
-'use strict';
-var stripIndent = _dereq_('strip-indent');
-
-// start matching after: comment start block => ! or @preserve => optional whitespace => newline
-// stop matching before: last newline => optional whitespace => comment end block
-var reCommentContents = /\/\*!?(?:\@preserve)?[ \t]*(?:\r\n|\n)([\s\S]*?)(?:\r\n|\n)\s*\*\//;
-
-var multiline = module.exports = function (fn) {
-	if (typeof fn !== 'function') {
-		throw new TypeError('Expected a function.');
-	}
-
-	var match = reCommentContents.exec(fn.toString());
-
-	if (!match) {
-		throw new TypeError('Multiline comment missing.');
-	}
-
-	return match[1];
-};
-
-multiline.stripIndent = function (fn) {
-	return stripIndent(multiline(fn));
-};
-
-},{"strip-indent":55}],55:[function(_dereq_,module,exports){
-'use strict';
-module.exports = function (str) {
-	var match = str.match(/^[ \t]*(?=[^\s])/gm);
-
-	if (!match) {
-		return str;
-	}
-
-	var indent = Math.min.apply(Math, match.map(function (el) { return el.length }));
-	var re = new RegExp('^[ \\t]{' + indent + '}', 'gm');
-
-	return indent > 0 ? str.replace(re, '') : str;
-};
-
-},{}],56:[function(_dereq_,module,exports){
+},{}],55:[function(_dereq_,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -7098,6 +6395,6 @@ module.exports = function (str) {
 
 }));
 
-},{}]},{},[39])
-(39)
+},{}]},{},[40])
+(40)
 });

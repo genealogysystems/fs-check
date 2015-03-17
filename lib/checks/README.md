@@ -6,123 +6,123 @@ Checks are organized in two ways: by function signature and by type. The functio
 
 ### Parents
 
-* [Person Born Before their Parent(s)](birthBeforeParentsBirth.js)
-* [Missing Parents](missingParents.js)
+* [undefined](birthBeforeParentsBirth.js)
+* [undefined](missingParents.js)
 
 ### Relationships
 
-* [Child Born Before Marriage](childBeforeMarriage.js)
-* [Marriage After Death](marriageAfterDeath.js)
-* [Marriage with no Children](marriageWithNoChildren.js)
-* [Multiple Parent Relationships](multipleParents.js)
+* [undefined](childBeforeMarriage.js)
+* [undefined](marriageAfterDeath.js)
+* [undefined](marriageWithNoChildren.js)
+* [undefined](multipleParents.js)
 
 ### Children
 
-* [Children Too Close](childrenTooClose.js)
+* [undefined](childrenTooClose.js)
 
 ### Person
 
-* [Person Died Before They Were Born](deathBeforeBirth.js)
-* [Identical Names](duplicateNames.js)
-* [Many Alternate Names](manyAlternateNames.js)
-* [Find a Birth](missingBirth.js)
-* [Find a Birth Date](missingBirthDate.js)
-* [Find a Birth Place](missingBirthPlace.js)
-* [Find a Death](missingDeath.js)
-* [Find a Death Date](missingDeathDate.js)
-* [Find a Death Place](missingDeathPlace.js)
-* [Missing a Given Name](missingGivenName.js)
-* [Missing a Name](missingName.js)
-* [Missing a Surname](missingSurname.js)
-* [Incorrect Alternate Name Format](orInName.js)
-* [Standardize a Birth Date](standardizeBirthDate.js)
-* [Standardize a Birth Place](standardizeBirthPlace.js)
-* [Standardize a Death Date](standardizeDeathDate.js)
-* [Standardize a Death Place](standardizeDeathPlace.js)
-* [Unusual Characters in a Name](unusualCharactersInName.js)
+* [undefined](deathBeforeBirth.js)
+* [undefined](duplicateNames.js)
+* [undefined](manyAlternateNames.js)
+* [undefined](missingBirth.js)
+* [undefined](missingBirthDate.js)
+* [undefined](missingBirthPlace.js)
+* [undefined](missingDeath.js)
+* [undefined](missingDeathDate.js)
+* [undefined](missingDeathPlace.js)
+* [undefined](missingGivenName.js)
+* [undefined](missingName.js)
+* [undefined](missingSurname.js)
+* [undefined](orInName.js)
+* [undefined](standardizeBirthDate.js)
+* [undefined](standardizeBirthPlace.js)
+* [undefined](standardizeDeathDate.js)
+* [undefined](standardizeDeathPlace.js)
+* [undefined](unusualCharactersInName.js)
 
 ### PersonSource
 
-* [Find a Birth Record](missingBirthSource.js)
-* [Find a Death Record](missingDeathSource.js)
+* [undefined](missingBirthSource.js)
+* [undefined](missingDeathSource.js)
 
 ### Child
 
-* [Missing a Father](missingFather.js)
-* [Missing a Mother](missingMother.js)
+* [undefined](missingFather.js)
+* [undefined](missingMother.js)
 
 ### Marriage
 
-* [Find a Marriage Date](missingMarriageDate.js)
-* [Find a Marriage](missingMarriageFact.js)
-* [Find a Marriage Place](missingMarriagePlace.js)
-* [Multiple Marriage Facts](multipleMarriageFacts.js)
-* [Standardize a Marriage Date](standardizeMarriageDate.js)
-* [Standardize a Marriage Place](standardizeMarriagePlace.js)
+* [undefined](missingMarriageDate.js)
+* [undefined](missingMarriageFact.js)
+* [undefined](missingMarriagePlace.js)
+* [undefined](multipleMarriageFacts.js)
+* [undefined](standardizeMarriageDate.js)
+* [undefined](standardizeMarriagePlace.js)
 
 ### MarriageSource
 
-* [Find a Marriage Record](missingMarriageSource.js)
+* [undefined](missingMarriageSource.js)
 
 ### Duplicates
 
-* [Possible Duplicate Persons](possibleDuplicates.js)
+* [undefined](possibleDuplicates.js)
 
 ### RecordHints
 
-* [Record Hints](recordHints.js)
+* [undefined](recordHints.js)
 
 ## Type
 
 ### Problem
 
-* [Person Born Before their Parent(s)](birthBeforeParentsBirth.js)
-* [Child Born Before Marriage](childBeforeMarriage.js)
-* [Children Too Close](childrenTooClose.js)
-* [Person Died Before They Were Born](deathBeforeBirth.js)
-* [Marriage After Death](marriageAfterDeath.js)
+* [undefined](birthBeforeParentsBirth.js)
+* [undefined](childBeforeMarriage.js)
+* [undefined](childrenTooClose.js)
+* [undefined](deathBeforeBirth.js)
+* [undefined](marriageAfterDeath.js)
 
 ### Cleanup
 
-* [Identical Names](duplicateNames.js)
-* [Many Alternate Names](manyAlternateNames.js)
-* [Multiple Marriage Facts](multipleMarriageFacts.js)
-* [Incorrect Alternate Name Format](orInName.js)
-* [Possible Duplicate Persons](possibleDuplicates.js)
-* [Standardize a Birth Date](standardizeBirthDate.js)
-* [Standardize a Birth Place](standardizeBirthPlace.js)
-* [Standardize a Death Date](standardizeDeathDate.js)
-* [Standardize a Death Place](standardizeDeathPlace.js)
-* [Standardize a Marriage Date](standardizeMarriageDate.js)
-* [Standardize a Marriage Place](standardizeMarriagePlace.js)
-* [Unusual Characters in a Name](unusualCharactersInName.js)
+* [undefined](duplicateNames.js)
+* [undefined](manyAlternateNames.js)
+* [undefined](multipleMarriageFacts.js)
+* [undefined](orInName.js)
+* [undefined](possibleDuplicates.js)
+* [undefined](standardizeBirthDate.js)
+* [undefined](standardizeBirthPlace.js)
+* [undefined](standardizeDeathDate.js)
+* [undefined](standardizeDeathPlace.js)
+* [undefined](standardizeMarriageDate.js)
+* [undefined](standardizeMarriagePlace.js)
+* [undefined](unusualCharactersInName.js)
 
 ### Family
 
-* [Marriage with no Children](marriageWithNoChildren.js)
-* [Missing a Father](missingFather.js)
-* [Find a Marriage Date](missingMarriageDate.js)
-* [Find a Marriage](missingMarriageFact.js)
-* [Find a Marriage Place](missingMarriagePlace.js)
-* [Missing a Mother](missingMother.js)
-* [Missing Parents](missingParents.js)
-* [Multiple Parent Relationships](multipleParents.js)
+* [undefined](marriageWithNoChildren.js)
+* [undefined](missingFather.js)
+* [undefined](missingMarriageDate.js)
+* [undefined](missingMarriageFact.js)
+* [undefined](missingMarriagePlace.js)
+* [undefined](missingMother.js)
+* [undefined](missingParents.js)
+* [undefined](multipleParents.js)
 
 ### Person
 
-* [Find a Birth](missingBirth.js)
-* [Find a Birth Date](missingBirthDate.js)
-* [Find a Birth Place](missingBirthPlace.js)
-* [Find a Death](missingDeath.js)
-* [Find a Death Date](missingDeathDate.js)
-* [Find a Death Place](missingDeathPlace.js)
-* [Missing a Given Name](missingGivenName.js)
-* [Missing a Name](missingName.js)
-* [Missing a Surname](missingSurname.js)
+* [undefined](missingBirth.js)
+* [undefined](missingBirthDate.js)
+* [undefined](missingBirthPlace.js)
+* [undefined](missingDeath.js)
+* [undefined](missingDeathDate.js)
+* [undefined](missingDeathPlace.js)
+* [undefined](missingGivenName.js)
+* [undefined](missingName.js)
+* [undefined](missingSurname.js)
 
 ### Source
 
-* [Find a Birth Record](missingBirthSource.js)
-* [Find a Death Record](missingDeathSource.js)
-* [Find a Marriage Record](missingMarriageSource.js)
-* [Record Hints](recordHints.js)
+* [undefined](missingBirthSource.js)
+* [undefined](missingDeathSource.js)
+* [undefined](missingMarriageSource.js)
+* [undefined](recordHints.js)

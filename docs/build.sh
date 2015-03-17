@@ -10,7 +10,7 @@ mkdir $TMPDIR
 # Run tests and spit out opportunities
 export BUILD_DOCS=$TMPDIR
 
-mocha --reporter min
+npm test
 
 # build the docs
 echo "building docs"

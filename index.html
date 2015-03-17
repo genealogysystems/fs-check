@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>FS Check</title>
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="///netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style>
       .opp-group {
         padding: 20px 0;
@@ -12,7 +12,9 @@
         border-top: 1px solid #ccc;
       }
     </style>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="///cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="fs-check.js"></script>
+    <script src="//cdn.rawgit.com/genealogysystems/fs-check-en/master/fs-check-en.js"></script>
     <script>
       $(document).ready(function(){
         $.getJSON('docs/opportunities.json').done(function(opportunities){
@@ -36,10 +38,11 @@
       
       function displayOpportunity(opportunity){
         var oppDOM = $('#opportunity');
+        FSCheck.translate(opportunity, 'en');
         $('.opp-title', oppDOM).html(opportunity.title);
         $('.opp-type', oppDOM).html(opportunity.type);
         $('.opp-description', oppDOM).html(opportunity.description);
-        $('.opp-findarecord', oppDOM).text(JSON.stringify(opportunity.findarecord, null, 2) || 'A findarecord object was not generated for this opportunity.');
+        $('.opp-help', oppDOM).html(JSON.stringify(FSCheck.id(opportunity.checkId).help));
         $('.opp-gensearch', oppDOM).text(JSON.stringify(opportunity.gensearch, null, 2) || 'A gensearch object was not generated for this opportunity.');
       };
     </script>
@@ -82,8 +85,8 @@
             <div class="opp-description"></div>
           </div>
           <div class="opp-group">
-            <h4 class="text-muted">Find-A-Record</h4>
-            <pre class="opp-findarecord"></pre>
+            <h4 class="text-muted">Help Links</h4>
+            <pre class="opp-help"></pre>
           </div>
           <div class="opp-group">
             <h4 class="text-muted">Gensearch</h4>

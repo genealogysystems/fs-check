@@ -6,7 +6,7 @@ var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
 describe('FSCheck', function(){
 
   it('should expose seven functions', function(){
-    expect(Object.keys(FSCheck)).to.have.length(7);
+    expect(Object.keys(FSCheck)).to.have.length(9);
     expect(FSCheck).to.have.property('all');
     expect(FSCheck).to.have.property('id');
     expect(FSCheck).to.have.property('signature');
@@ -14,6 +14,8 @@ describe('FSCheck', function(){
     expect(FSCheck).to.have.property('type');
     expect(FSCheck).to.have.property('types');
     expect(FSCheck).to.have.property('utils');
+    expect(FSCheck).to.have.property('addLanguage');
+    expect(FSCheck).to.have.property('translate');
   });
 
   describe('FSCheck.all', function(){
@@ -151,6 +153,28 @@ describe('FSCheck', function(){
     });
     
   });
+  
+  describe('languages', function(){
+    
+    it('should translate', function(){
+      FSCheck.addLanguage('foo', {
+        bar: {
+          title: 'Fizz Buzz',
+          description: '{{name}} has a fizz buzz named fooz bazz.'
+        }
+      });
+      var opportunity = {
+        checkId: 'bar',
+        template: {
+          name: 'Grand Stand'
+        }
+      };
+      FSCheck.translate(opportunity, 'foo');
+      expect(opportunity.title).to.equal('Fizz Buzz');
+      expect(opportunity.description).to.equal('<p>Grand Stand has a fizz buzz named fooz bazz.</p>\n');
+    })
+    
+  })
 
 });
 

@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "gedcomx-date": "git://github.com/genealogysystems/gedcomx-date-js.git#dev",
-    "multiline": "^0.3.4",
     "marked": "^0.3.2",
     "mustache": "^0.8.1"
   },

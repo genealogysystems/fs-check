@@ -340,23 +340,12 @@ describe('util', function(){
   describe('markdown()', function(){
     
     it('should return html', function() {
-      var html = util.markdown(function(){/*
-        # h1
-        ## h2
-        ### h3
-        Stuff!
-      */});
-
+      var html = util.markdown('# h1\n## h2\n### h3\nStuff!');
       expect(html).to.equal("<h1>h1</h1>\n<h2>h2</h2>\n<h3>h3</h3>\n<p>Stuff!</p>\n");
     });
 
     it('should replace mustache vars', function() {
-      var html = util.markdown(function(){/*
-        number {{one}}
-        number {{two}}
-        missing {{three}}
-      */},{one:'one', two: 'two'});
-
+      var html = util.markdown('number {{one}}\nnumber {{two}}\nmissing {{three}}',{one:'one', two: 'two'});
       expect(html).to.equal("<p>number one\nnumber two\nmissing </p>\n");
     });
 
