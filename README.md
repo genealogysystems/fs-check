@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/genealogysystems/fs-check.svg)](https://travis-ci.org/genealogysystems/fs-check)
 [![Codacy Badge](https://www.codacy.com/project/badge/e427fad0dff54bb49b3c6519667678a3)](https://www.codacy.com/public/justincyork/fs-check)
-[![Coverage Status](https://coveralls.io/repos/genealogysystems/fs-check/badge.svg?branch=dev)](https://coveralls.io/r/genealogysystems/fs-check?branch=dev)
+[![Coverage Status](https://coveralls.io/repos/genealogysystems/fs-check/badge.svg)](https://coveralls.io/r/genealogysystems/fs-check)
 [![Dependency Status](https://david-dm.org/genealogysystems/fs-check.svg)](https://david-dm.org/genealogysystems/fs-check)
 
 # fs-check
@@ -13,7 +13,7 @@ fs-check depends on the [FamilySearch-javascript-sdk](https://github.com/rootsde
 
 ```js
 // fs-check was designed to be paired with fs-traversal
-var FS = FamilySearch.init({});
+var FS = new FamilySearch({});
 var traversal = FSTraversal(FS)
       .order('wrd')
       .person(function(person) {
