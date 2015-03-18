@@ -156,13 +156,11 @@ describe('FSCheck', function(){
   
   describe('languages', function(){
     
+    before(function(){
+      FSCheck.addLanguage(getFooLang());
+    })
+    
     it('should translate', function(){
-      FSCheck.addLanguage('foo', {
-        bar: {
-          title: 'Fizz Buzz',
-          description: '{{name}} has a fizz buzz named fooz bazz.'
-        }
-      });
       var opportunity = {
         checkId: 'bar',
         template: {
@@ -172,6 +170,15 @@ describe('FSCheck', function(){
       FSCheck.translate(opportunity, 'foo');
       expect(opportunity.title).to.equal('Fizz Buzz');
       expect(opportunity.description).to.equal('<p>Grand Stand has a fizz buzz named fooz bazz.</p>\n');
+    })
+    
+    it('partials', function(){
+      var opportunity = {
+        checkId: 'bang'
+      };
+      FSCheck.translate(opportunity, 'foo');
+      expect(opportunity.title).to.equal('Lorum Ipsum');
+      expect(opportunity.description).to.equal('<p><strong>partialing</strong></p>\n');
     })
     
   })
@@ -219,4 +226,26 @@ function validateCheck(check){
     console.error(check.id + ' failed');
     throw error;
   }
-};
+}
+
+/**
+ * Mock template language for testing
+ */
+function getFooLang(){
+  return {
+    code: 'foo',
+    checks: {
+      bar: {
+        title: 'Fizz Buzz',
+        description: '{{name}} has a fizz buzz named fooz bazz.'
+      },
+      bang: {
+        title: 'Lorum Ipsum',
+        description: '{{> part1}}'
+      }
+    },
+    partials: {
+      part1: '__partialing__'
+    }
+  };
+}
