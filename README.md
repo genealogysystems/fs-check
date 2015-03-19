@@ -236,7 +236,9 @@ npm run docs
 npm run build
 ```
 
-Run `node server.js` to get a simple web server that allows you to view the coverage (localhost:8888/coverage/coverage.html) and documentation (localhost:8888).
+Run `node server.js` to get a simple web server that allows you to view the 
+coverage `localhost:8888/coverage/lcov-report/index.html` 
+and documentation `localhost:8888`.
 
 # License
 
