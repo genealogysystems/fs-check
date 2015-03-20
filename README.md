@@ -236,9 +236,20 @@ npm run docs
 npm run build
 ```
 
-Run `node server.js` to get a simple web server that allows you to view the 
-coverage `localhost:8888/coverage/lcov-report/index.html` 
-and documentation `localhost:8888`.
+## Viewing Examples and Test Coverage Locally
+
+Just need to setup a simple http server that handles static files. We recommend
+[https-server](https://github.com/indexzero/http-server).
+
+1. Install the server `npm install -g http-server`
+2. Navigate to the directory of this repo `cd fs-check`
+3. Run the server `http-server`
+
+To view the coverage, run `npm run coverage` then open 
+[localhost:8080/coverage/lcov-report](localhost:8080/coverage/lcov-report).
+
+To view the examples, run `npm build docs` then open
+[localhost:8080](localhost:8080).
 
 # License
 
