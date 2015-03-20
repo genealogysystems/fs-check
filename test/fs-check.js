@@ -14,7 +14,7 @@ describe('FSCheck', function(){
     expect(FSCheck).to.have.property('type');
     expect(FSCheck).to.have.property('types');
     expect(FSCheck).to.have.property('utils');
-    expect(FSCheck).to.have.property('addLanguage');
+    expect(FSCheck).to.have.property('language');
     expect(FSCheck).to.have.property('translate');
   });
 
@@ -157,7 +157,11 @@ describe('FSCheck', function(){
   describe('languages', function(){
     
     before(function(){
-      FSCheck.addLanguage(getFooLang());
+      FSCheck.language('foo', getFooLang());
+    })
+    
+    it('get langage', function(){
+      expect(FSCheck.language('foo')).to.deep.equal(getFooLang());
     })
     
     it('should translate', function(){
@@ -233,7 +237,6 @@ function validateCheck(check){
  */
 function getFooLang(){
   return {
-    code: 'foo',
     checks: {
       bar: {
         title: 'Fizz Buzz',
