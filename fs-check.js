@@ -2072,7 +2072,7 @@ module.exports = {
   /**
    * Add a language
    */
-  addLanguage: function(data){
+  language: function(data){
     languages[data.code] = data;
   },
   
@@ -2106,18 +2106,7 @@ var GedcomXDate = _dereq_('gedcomx-date'),
     renderer = new marked.Renderer(),
     mustache = _dereq_('mustache');
 
-module.exports = {
-  gensearchPerson: gensearchPerson,
-  createOpportunity: createOpportunity,
-  getFactYear: getFactYear,
-  getFactPlace: getFactPlace,
-  getFormalDate: getFormalDate,
-  getSimpleFormalDate: getSimpleFormalDate,
-  getNormalizedDateString: getNormalizedDateString,
-  getSimpleDurationString: getSimpleDurationString,
-  compareFormalDates: compareFormalDates,
-  markdown: markdown,
-  monthNumberToString: monthNumberToString,
+var utils = module.exports = {
   GedcomXDate: GedcomXDate
 };
 
@@ -2135,14 +2124,14 @@ renderer.heading = function (text, level) {
  * Do all we can to extract a 4 digit year from a Fact.
  * Returns undefined if we fail.
  */
-function getFactYear(fact) {
+utils.getFactYear = function(fact) {
   if(fact.$getFormalDate()) {
-    var simple = getSimpleFormalDate(fact.$getFormalDate());
+    var simple = utils.getSimpleFormalDate(fact.$getFormalDate());
     if(simple){
       return simple.getYear();
     }
   } else if(fact.$getDate()) {
-    return extractYearFromDateString(fact.$getDate());
+    return utils.extractYearFromDateString(fact.$getDate());
   }
 };
 
@@ -2150,7 +2139,7 @@ function getFactYear(fact) {
  * Extract a place string from a fact.
  * Returns undefined if there is no place.
  */
-function getFactPlace(fact) {
+utils.getFactPlace = function(fact) {
   if(fact.$getNormalizedPlace()) {
     return fact.$getNormalizedPlace();
   } else if(fact.$getPlace()) {
@@ -2168,9 +2157,9 @@ function getFactPlace(fact) {
  *   - Try to parse with JS date object and generate a simple formal date with it
  *   - Return undefined if this fails
  */
-function getFormalDate(fact){
+utils.getFormalDate = function(fact){
   if(fact.$getFormalDate()) {
-    var date = getSimpleFormalDate(fact.$getFormalDate());
+    var date = utils.getSimpleFormalDate(fact.$getFormalDate());
     if(date){
       return date.toFormalString();
     }
@@ -2198,7 +2187,7 @@ function getFormalDate(fact){
  * - If the date is an open-ended date range, return a date representing the beginning or end
  * - If the date is a closed date range, return a date representing the middle
  */
-function getSimpleFormalDate(formalDateString){
+utils.getSimpleFormalDate = function(formalDateString){
   try {
     var date = new GedcomXDate(formalDateString);
     if(date.getType() != 'single') {
@@ -2223,7 +2212,7 @@ function getSimpleFormalDate(formalDateString){
  * Do all we can to extract a 4 digit year from an arbitraty date string.
  * Returns undefined if we can't get anything
  */
-function extractYearFromDateString(date){
+utils.extractYearFromDateString = function(date){
   if(/^\d{4}$/.test(date)){
     return date;
   } else {
@@ -2237,11 +2226,12 @@ function extractYearFromDateString(date){
 /**
  * Return an FS normalized date string from a GedcomX formal date string
  */
-function getNormalizedDateString(formalString){
+utils.getNormalizedDateString = function(formalString){
   var date = new GedcomXDate(formalString);
-  return date.getDay() + ' ' + monthNumberToString(date.getMonth()) + ' ' + date.getYear();
+  return date.getDay() + ' ' + utils.monthNumberToString(date.getMonth()) + ' ' + date.getYear();
 };
-function monthNumberToString(month){
+// Expose monthNumberToString for testing
+utils.monthNumberToString = function(month){
   switch(month){
     case 1:
       return 'January';
@@ -2274,7 +2264,7 @@ function monthNumberToString(month){
 /**
  * Return a human-readable string representing a duration
  */
-function getSimpleDurationString(duration){
+utils.getSimpleDurationString = function(duration){
   var string = '',
       years = duration.getYears(),
       months = duration.getMonths(),
@@ -2306,7 +2296,7 @@ function getSimpleDurationString(duration){
   return string;
 };
 
-function markdown(text, data, partials) {
+utils.markdown = function(text, data, partials) {
   return marked(mustache.render(text, data, partials), { renderer: renderer });
 };
 
@@ -2314,7 +2304,7 @@ function markdown(text, data, partials) {
  * Generate a gensearch object with as much
  * person data as we can get
  */
-function gensearchPerson(person){
+utils.gensearchPerson = function(person){
   var gensearch = {};
   
   var givenName = person.$getGivenName();
@@ -2329,11 +2319,11 @@ function gensearchPerson(person){
   
   var birth = person.$getBirth();
   if(birth !== undefined){
-    var birthPlace = getFactPlace(birth);
+    var birthPlace = utils.getFactPlace(birth);
     if(birthPlace){
       gensearch.birthPlace = birthPlace;
     }
-    var birthDate = getFactYear(birth);
+    var birthDate = utils.getFactYear(birth);
     if(birthDate){
       gensearch.birthDate = birthDate+'';
     }
@@ -2341,11 +2331,11 @@ function gensearchPerson(person){
   
   var death = person.$getDeath();
   if(death !== undefined){
-    var deathPlace = getFactPlace(death);
+    var deathPlace = utils.getFactPlace(death);
     if(deathPlace){
       gensearch.deathPlace = deathPlace;
     }
-    var deathDate = getFactYear(death);
+    var deathDate = utils.getFactYear(death);
     if(deathDate){
       gensearch.deathDate = deathDate+'';
     }
@@ -2357,7 +2347,7 @@ function gensearchPerson(person){
 /**
  * Compare two formal dates
  */
-function compareFormalDates(date1, date2){
+utils.compareFormalDates = function(date1, date2){
   // Ignore leading A which denote approximate date
   if(date1.charAt(0) === 'A'){
     date1 = date1.substr(1);
@@ -2379,7 +2369,7 @@ function compareFormalDates(date1, date2){
 /**
  * Generate an opportunity
  */
-function createOpportunity(check, person, template, gensearch){
+utils.createOpportunity = function(check, person, template, gensearch){
   return {
     id: check.id + ':' + person.id,
     type: check.type,
@@ -3073,8 +3063,8 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-}).call(this,_dereq_("/home/ubuntu/workspace/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":44,"/home/ubuntu/workspace/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":43,"inherits":42}],46:[function(_dereq_,module,exports){
+}).call(this,_dereq_("/home/ubuntu/workspace/fs-check/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./support/isBuffer":44,"/home/ubuntu/workspace/fs-check/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":43,"inherits":42}],46:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     Simple = _dereq_('./simple.js');
 

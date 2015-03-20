@@ -2,3 +2,4 @@ node_modules/
 coverage
 .c9
 npm-debug.log
+fs-check-en.js

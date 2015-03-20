@@ -14,7 +14,8 @@
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="fs-check.js"></script>
-    <script src="//cdn.rawgit.com/genealogysystems/fs-check-en/master/fs-check-en.js"></script>
+    <!-- <script src="//cdn.rawgit.com/genealogysystems/fs-check-en/master/fs-check-en.js"></script> -->
+    <script src="fs-check-en.js"></script>
     <script>
       $(document).ready(function(){
         $.getJSON('docs/opportunities.json').done(function(opportunities){
@@ -42,9 +43,19 @@
         $('.opp-title', oppDOM).html(opportunity.title);
         $('.opp-type', oppDOM).html(opportunity.type);
         $('.opp-description', oppDOM).html(opportunity.description);
-        $('.opp-help', oppDOM).html(JSON.stringify(FSCheck.id(opportunity.checkId).help));
+        $('.opp-help', oppDOM).html(displayHelpLinks(FSCheck.id(opportunity.checkId).help));
         $('.opp-gensearch', oppDOM).text(JSON.stringify(opportunity.gensearch, null, 2) || 'A gensearch object was not generated for this opportunity.');
       };
+      
+      function displayHelpLinks(links){
+        var $list = $('<ul>');
+        $.each(links, function(i, url){
+          $('<li>')
+            .append($('<a>').attr('href', url).attr('target', '_blank').text(url))
+            .appendTo($list);
+        })
+        return $list;
+      }
     </script>
   </head>
   <body>
@@ -86,7 +97,7 @@
           </div>
           <div class="opp-group">
             <h4 class="text-muted">Help Links</h4>
-            <pre class="opp-help"></pre>
+            <div class="opp-help"></div>
           </div>
           <div class="opp-group">
             <h4 class="text-muted">Gensearch</h4>
