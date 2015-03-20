@@ -157,13 +157,9 @@ describe('FSCheck', function(){
   describe('languages', function(){
     
     before(function(){
-      FSCheck.language('foo', getFooLang());
+      FSCheck.language(getFooLang());
     })
-    
-    it('get langage', function(){
-      expect(FSCheck.language('foo')).to.deep.equal(getFooLang());
-    })
-    
+
     it('should translate', function(){
       var opportunity = {
         checkId: 'bar',
@@ -237,6 +233,7 @@ function validateCheck(check){
  */
 function getFooLang(){
   return {
+    code: 'foo',
     checks: {
       bar: {
         title: 'Fizz Buzz',
