@@ -16,7 +16,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive",
-    "build": "browserify lib/index.js -s FSCheck -o fs-check.js",
+    "build": "sh build.sh",
+    "browserify": "browserify lib/index.js -s FSCheck -o fs-check.js",
     "docs": "node docs/checks-list.js && ./docs/build.sh",
     "coverage": "istanbul cover -x **/docs/** -x **/vendor/** ./node_modules/mocha/bin/_mocha -- -R spec --recursive",
     "coveralls": "istanbul cover -x **/docs/** -x **/vendor/** ./node_modules/mocha/bin/_mocha -- -R spec --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
