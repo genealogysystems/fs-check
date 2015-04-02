@@ -248,7 +248,7 @@ Just need to setup a simple http server that handles static files. We recommend
 To view the coverage, run `npm run coverage` then open 
 [localhost:8080/coverage/lcov-report](localhost:8080/coverage/lcov-report).
 
-To view the examples, run `npm build docs` then open
+To view the examples, run `npm run docs` then open
 [localhost:8080](localhost:8080).
 
 # License
