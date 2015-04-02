@@ -186,15 +186,12 @@ module.exports = {
         var data = childrenBeforeMarriage[i],
             spouseId = data.marriage.$getSpouseId(person.id),
             spouse = persons[spouseId],
-            child = data.child,
-            duration = utils.GedcomXDate.getDuration(new utils.GedcomXDate(data.birthDate), new utils.GedcomXDate(marriageDate)),
-            durationString = utils.getSimpleDurationString(duration);
+            child = data.child;
         children.push({
           spouseName: spouse.$getDisplayName(),
           spouseId: spouseId,
           childName: child.$getDisplayName(),
-          childId: child.id,
-          durationString: durationString
+          childId: child.id
         });
       }
 
@@ -266,8 +263,7 @@ module.exports = {
             firstName: previousChild.$getDisplayName(),
             id1: previousChild.id,
             secondName: currentChild.$getDisplayName(),
-            id2: currentChild.id,
-            duration: utils.getSimpleDurationString(birthDuration)
+            id2: currentChild.id
           });
         }
       }
@@ -492,19 +488,16 @@ module.exports = {
     
       var spouses = [];
       for(var i = 0; i < problemMarriages.length; i++){
-        var spouseId = problemMarriages[i].spouseId,
-            duration = utils.GedcomXDate.getDuration(new utils.GedcomXDate(formalDeathDate), new utils.GedcomXDate(problemMarriages[i].formalDate));
+        var spouseId = problemMarriages[i].spouseId;
         spouses.push({
           spouseName: people[spouseId].$getDisplayName(),
-          coupleId: problemMarriages[i].coupleId,
-          durationString: utils.getSimpleDurationString(duration)
+          coupleId: problemMarriages[i].coupleId
         });
       }
       
       var template = {
         pid: person.id,
         name: person.$getDisplayName(),
-        deathDate: utils.getNormalizedDateString(formalDeathDate),
         spouses: spouses 
       };
 
@@ -2224,78 +2217,8 @@ utils.extractYearFromDateString = function(date){
 };
 
 /**
- * Return an FS normalized date string from a GedcomX formal date string
+ * Convert mustache markdown template into HTML
  */
-utils.getNormalizedDateString = function(formalString){
-  var date = new GedcomXDate(formalString);
-  return date.getDay() + ' ' + utils.monthNumberToString(date.getMonth()) + ' ' + date.getYear();
-};
-// Expose monthNumberToString for testing
-utils.monthNumberToString = function(month){
-  switch(month){
-    case 1:
-      return 'January';
-    case 2:
-      return 'February';
-    case 3:
-      return 'March';
-    case 4:
-      return 'April';
-    case 5:
-      return 'May';
-    case 6:
-      return 'June';
-    case 7:
-      return 'July';
-    case 8:
-      return 'August';
-    case 9:
-      return 'September';
-    case 10:
-      return 'October';
-    case 11:
-      return 'November';
-    case 12:
-      return 'December';
-  }
-  return '';
-};
-
-/**
- * Return a human-readable string representing a duration
- */
-utils.getSimpleDurationString = function(duration){
-  var string = '',
-      years = duration.getYears(),
-      months = duration.getMonths(),
-      days = duration.getDays();
-  if(years){
-    if(years === 1){
-      string = '1 year';
-    } else {
-      string += years + ' years';
-    }
-  }
-  if(months){
-    if(string){
-      string += ' and ';
-    }
-    if(months === 1){
-      string += '1 month';
-    } else {
-      string += months + ' months';
-    }
-  }
-  if(!string && days){
-    if(days === 1){
-      string += '1 day';
-    } else {
-      string += days + ' days';
-    }
-  }
-  return string;
-};
-
 utils.markdown = function(text, data, partials) {
   return marked(mustache.render(text, data, partials), { renderer: renderer });
 };
@@ -3063,8 +2986,8 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-}).call(this,_dereq_("/home/ubuntu/workspace/fs-check/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":44,"/home/ubuntu/workspace/fs-check/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":43,"inherits":42}],46:[function(_dereq_,module,exports){
+}).call(this,_dereq_("/home/ubuntu/workspace/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./support/isBuffer":44,"/home/ubuntu/workspace/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":43,"inherits":42}],46:[function(_dereq_,module,exports){
 var util = _dereq_('util'),
     Simple = _dereq_('./simple.js');
 
