@@ -279,8 +279,7 @@ describe('marriageAfterDeath', function(){
         expect(opportunity.template.spouses).to.deep.equal([ 
           { 
             spouseName: 'Molly Sue',
-            coupleId: 'COUPLE1',
-            durationString: '3 months' 
+            coupleId: 'COUPLE1'
           } 
         ]);
       });
@@ -316,13 +315,11 @@ describe('marriageAfterDeath', function(){
         expect(opportunity.template.spouses).to.deep.equal([ 
           { 
             spouseName: 'Molly Sue',
-            coupleId: 'COUPLE1',
-            durationString: '3 months'
+            coupleId: 'COUPLE1'
           },
           { 
             spouseName: 'Sarah Jane',
-            coupleId: 'COUPLE2',
-            durationString: '1 year and 9 months'
+            coupleId: 'COUPLE2'
           } 
         ]);
         doc('marriageAfterDeath', opportunity);

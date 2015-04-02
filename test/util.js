@@ -278,64 +278,6 @@ describe('util', function(){
     });
   
   });
-  
-  describe('getSimpleDurationString()', function(){
-  
-    function getDurationString(start, end){
-      return util.getSimpleDurationString(util.GedcomXDate.getDuration(util.GedcomXDate(start), util.GedcomXDate(end)));
-    };
-    
-    it('1 year', function(){
-      var string = getDurationString('+1900-01-01', '+1901-01-01');
-      expect(string).to.equal('1 year');
-    });
-    
-    it('2 years', function(){
-      var string = getDurationString('+1900-01-01', '+1902-01-01');
-      expect(string).to.equal('2 years');
-    });
-    
-    it('1 month', function(){
-      var string = getDurationString('+1900-01-01', '+1900-02-01');
-      expect(string).to.equal('1 month');
-    });
-    
-    it('2 months', function(){
-      var string = getDurationString('+1900-01-01', '+1900-03-01');
-      expect(string).to.equal('2 months');
-    });
-    
-    it('1 day', function(){
-      var string = getDurationString('+1900-01-01', '+1900-01-02');
-      expect(string).to.equal('1 day');
-    });
-    
-    it('2 days', function(){
-      var string = getDurationString('+1900-01-01', '+1900-01-03');
-      expect(string).to.equal('2 days');
-    });
-    
-    it('1 year and 1 month', function(){
-      var string = getDurationString('+1900-01-01', '+1901-02-01');
-      expect(string).to.equal('1 year and 1 month');
-    });
-    
-    it('1 month (ignore days)', function(){
-      var string = getDurationString('+1900-01-01', '+1900-02-02');
-      expect(string).to.equal('1 month');
-    });
-    
-    it('3 years and 5 months', function(){
-      var string = getDurationString('+1900-01-01', '+1903-06-01');
-      expect(string).to.equal('3 years and 5 months');
-    });
-    
-    it('7 months (ignore days)', function(){
-      var string = getDurationString('+1900-01-01', '+1900-08-15');
-      expect(string).to.equal('7 months');
-    });
-  
-  });
 
   describe('markdown()', function(){
     
@@ -510,31 +452,6 @@ describe('util', function(){
       expect(result).to.equal(0);
     });
   
-  });
-  
-  describe('getNormalizedDateString()', function(){
-  
-    it('1 September 1840', function(){
-      expect(util.getNormalizedDateString('+1840-09-01')).to.equal('1 September 1840');
-    });
-  
-  });
-  
-  it('monthNumberToString()', function(){
-    expect(util.monthNumberToString(0)).to.equal('');
-    expect(util.monthNumberToString(1)).to.equal('January');
-    expect(util.monthNumberToString(2)).to.equal('February');
-    expect(util.monthNumberToString(3)).to.equal('March');
-    expect(util.monthNumberToString(4)).to.equal('April');
-    expect(util.monthNumberToString(5)).to.equal('May');
-    expect(util.monthNumberToString(6)).to.equal('June');
-    expect(util.monthNumberToString(7)).to.equal('July');
-    expect(util.monthNumberToString(8)).to.equal('August');
-    expect(util.monthNumberToString(9)).to.equal('September');
-    expect(util.monthNumberToString(10)).to.equal('October');
-    expect(util.monthNumberToString(11)).to.equal('November');
-    expect(util.monthNumberToString(12)).to.equal('December');
-    expect(util.monthNumberToString(13)).to.equal('');
   });
 
 });

@@ -3,5 +3,5 @@ following people to verify that the marriage date and children's birth dates and
 information in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}).
 
 {{#children}}
-* [{{childName}}](https://familysearch.org/tree/#view=ancestor&person={{childId}}) was born {{durationString}} before {{name}} married [{{spouseName}}](https://familysearch.org/tree/#view=ancestor&person={{spouseId}}).
+* [{{childName}}](https://familysearch.org/tree/#view=ancestor&person={{childId}}) was born before {{name}} married [{{spouseName}}](https://familysearch.org/tree/#view=ancestor&person={{spouseId}}).
 {{/children}}

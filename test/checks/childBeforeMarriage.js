@@ -229,8 +229,7 @@ describe('childBeforeMarriage', function(){
         spouseName: 'Mary Adams',
         spouseId: 'SPOUSE',
         childName: undefined,
-        childId: 'CHILD',
-        durationString: '1 year and 1 month'
+        childId: 'CHILD'
       }
     ]);
   });
@@ -322,15 +321,13 @@ describe('childBeforeMarriage', function(){
         spouseName: 'Mary Adams',
         spouseId: 'SPOUSE1',
         childName: 'Elmer Fudd',
-        childId: 'CHILD1',
-        durationString: '1 year and 4 months'
+        childId: 'CHILD1'
       },
       { 
         spouseName: 'Sarah Jane',
         spouseId: 'SPOUSE2',
         childName: 'Mary Sue',
-        childId: 'CHILD2',
-        durationString: '1 year and 4 months'
+        childId: 'CHILD2'
       }
     ]);
   });
@@ -414,8 +411,7 @@ describe('childBeforeMarriage', function(){
       spouseName: 'Mary Adams',
       spouseId: 'SPOUSE1',
       childName: undefined,
-      childId: 'CHILD1',
-      durationString: '1 year and 4 months'
+      childId: 'CHILD1'
     }]);
   });
   
