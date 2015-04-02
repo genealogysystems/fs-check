@@ -14,7 +14,7 @@ for(var i = 0; i < signatures.length; i++){
   var checks = FSCheck.signature(signature);
   for(var j = 0; j < checks.length; j++){
     var check = checks[j];
-    readme.write('\n* ['+check.title+']('+check.id+'.js)');
+    readme.write('\n* ['+check.id+']('+check.id+'.js)');
   }
   readme.write('\n');
 };
@@ -28,7 +28,7 @@ for(var i = 0; i < types.length; i++){
   var checks = FSCheck.type(type);
   for(var j = 0; j < checks.length; j++){
     var check = checks[j];
-    readme.write('\n* ['+check.title+']('+check.id+'.js)');
+    readme.write('\n* ['+check.id+']('+check.id+'.js)');
   }
   readme.write('\n');
 };

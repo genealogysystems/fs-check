@@ -58,7 +58,7 @@
 "orInName":
 {"id":"orInName:PPPP-PPP","type":"cleanup","checkId":"orInName","personId":"PPPP-PPP","person":{"names":[{"preferred":true,"nameForms":[{"fullText":"Joe"}]},{"preferred":false,"nameForms":[{"fullText":"Joey or Joseph"}]}],"id":"PPPP-PPP"},"template":{"pid":"PPPP-PPP","badNames":["Joey or Joseph"]}},
 "possibleDuplicates":
-{"id":"possibleDuplicates:PPPP-PPP","type":"cleanup","checkId":"possibleDuplicates","personId":"PPPP-PPP","person":{"id":"PPPP-PPP","display":{"name":"Bob Freemer"}},"template":{"pid":"PPPP-PPP","name":"Bob Freemer","count":2,"singular":false}},
+{"id":"possibleDuplicates:PPPP-PPP","type":"problem","checkId":"possibleDuplicates","personId":"PPPP-PPP","person":{"id":"PPPP-PPP","display":{"name":"Bob Freemer"}},"template":{"pid":"PPPP-PPP","name":"Bob Freemer","count":2,"singular":false}},
 "recordHints":
 {"id":"recordHints:PPPP-III","type":"source","checkId":"recordHints","personId":"PPPP-III","person":{"display":{"name":"Foo Bar"},"id":"PPPP-III"},"template":{"titles":["SSDI","Michigan Marriages","Another Great Collection"],"name":"Foo Bar","pid":"PPPP-III"}},
 "standardizeBirthDate":

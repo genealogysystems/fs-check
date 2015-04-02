@@ -1,6 +1,27 @@
 var expect = require('chai').expect,
     FSCheck = require('../');
 
+var signatureCounts = {
+  person: 18,
+  personSource: 2,
+  marriage: 6,
+  marriageSource: 1,
+  child: 2,
+  children: 1,
+  parents: 2,
+  relationships: 4,
+  duplicates: 1,
+  recordHints: 1
+};
+
+var typeCounts = {
+  source: 4,
+  person: 9,
+  family: 8,
+  cleanup: 11,
+  problem: 6
+};
+
 describe('FSCheck', function(){
 
   it('should expose seven functions', function(){
@@ -63,83 +84,20 @@ describe('FSCheck', function(){
   
   describe('FSCheck.signature', function(){
     
-    it('should return correct number of person checks', function(){
-      var checks = FSCheck.signature('person');
-      expect(checks).to.have.length(18);
-    });
-    
-    it('should return correct number of personSource checks', function(){
-      var checks = FSCheck.signature('personSource');
-      expect(checks).to.have.length(2);
-    });
-    
-    it('should return correct number of marriage checks', function(){
-      var checks = FSCheck.signature('marriage');
-      expect(checks).to.have.length(6);
-    });
-    
-    it('should return correct number of marriageSource checks', function(){
-      var checks = FSCheck.signature('marriageSource');
-      expect(checks).to.have.length(1);
-    });
-    
-    it('should return correct number of child checks', function(){
-      var checks = FSCheck.signature('child');
-      expect(checks).to.have.length(2);
-    });
-    
-    it('should return correct number of children checks', function(){
-      var checks = FSCheck.signature('children');
-      expect(checks).to.have.length(1);
-    });
-    
-    it('should return correct number of parents checks', function(){
-      var checks = FSCheck.signature('parents');
-      expect(checks).to.have.length(2);
-    });
-    
-    it('should return correct number of relationships checks', function(){
-      var checks = FSCheck.signature('relationships');
-      expect(checks).to.have.length(4);
-    });
-    
-    it('should return correct number of duplicates checks', function(){
-      var checks = FSCheck.signature('duplicates');
-      expect(checks).to.have.length(1);
-    });
-    
-    it('should return correct number of recordHints checks', function(){
-      var checks = FSCheck.signature('recordHints');
-      expect(checks).to.have.length(1);
+    it('should return correct number of checks by signature', function(){
+      for(var signature in signatureCounts){
+        expect(FSCheck.signature(signature)).to.have.length(signatureCounts[signature]);
+      }
     });
     
   });
   
   describe('FSCheck.type', function(){
   
-    it('should return correct number of source checks', function(){
-      var checks = FSCheck.type('source');
-      expect(checks).to.have.length(4);
-    });
-    
-    it('should return correct number of person checks', function(){
-      var checks = FSCheck.type('person');
-      expect(checks).to.have.length(9);
-    });
-    
-    it('should return correct number of family checks', function(){
-      var checks = FSCheck.type('family');
-      expect(checks).to.have.length(8);
-    });
-    
-    it('should return correct number of cleanup checks', function(){
-      var checks = FSCheck.type('cleanup');
-      expect(checks).to.have.length(12);
-    });
-  
-    it('should return correct number of problem checks', function(){
-      var checks = FSCheck.type('problem');
-      expect(checks).to.have.length(5);
+    it('should return correct number of checks by type', function(){
+      for(var type in typeCounts){
+        expect(FSCheck.type(type)).to.have.length(typeCounts[type]);
+      }
     });
   
   });

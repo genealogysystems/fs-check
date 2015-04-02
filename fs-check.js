@@ -1520,7 +1520,7 @@ var utils = _dereq_('../util'),
 
 module.exports = {
   id: 'possibleDuplicates',
-  type: 'cleanup',
+  type: 'problem',
   signature: 'duplicates',
   help: help.links('mergingDuplicates'),
   check: function(person, matches) {
