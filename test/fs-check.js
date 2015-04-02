@@ -1,7 +1,6 @@
-var libPath = process.env.TEST_COV ? '../lib-cov' : '../lib',
-    path = require('path'),
+var path = require('path'),
     expect = require('chai').expect,
-    FSCheck = require(path.join(libPath, 'index.js'));
+    FSCheck = require(path.join('../lib', 'index.js'));
 
 describe('FSCheck', function(){
 
