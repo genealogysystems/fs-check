@@ -1,6 +1,5 @@
-var path = require('path'),
-    expect = require('chai').expect,
-    FSCheck = require(path.join('../lib', 'index.js'));
+var expect = require('chai').expect,
+    FSCheck = require('../');
 
 describe('FSCheck', function(){
 

@@ -97,22 +97,6 @@ Return the check that matches the given ID
 var check = FSCheck.id('missingDeath');
 ```
 
-### addLanguage(code, data)
-
-Register a language to support translations. The `data` object is a map
-that is keyed by the check IDs. The values are objects with `title` and 
-`description` strings. The `description` can contain markdown; it will be
-converted to HTML as part of the translation process.
-
-```js
-FSCheck.addLanguage('en', { 
-  deathBeforeBirth: {
-    title: 'Died Before Born',
-    description: '# header\nparagraph'
-  }
-});
-```
-
 ### translate(opportunity, language)
 
 Translate an opportunity into the specified language. `title` and `description`
@@ -120,6 +104,29 @@ properties will be added to the opportunity.
 
 ```js
 FSCheck.translate(opportunity, 'de');
+```
+
+### language(code, data)
+
+Register a language to support translations. The `data` object is a map
+that is keyed by the check IDs. The values are objects with `title` and 
+`description` strings. The `description` can contain markdown; it will be
+converted to HTML as part of the translation process.
+
+This method should only be used directly when using custom language packs.
+All packaged langauge packs are setup to register themselves when included
+in the browser. All languages are automatically included when using node.
+
+```js
+FSCheck.language({
+  code: 'en',
+  checks: {
+    deathBeforeBirth: {
+      title: 'Died Before Born',
+      description: '# header\nparagraph'
+    }
+  }
+});
 ```
 
 # Checks
