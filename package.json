@@ -17,7 +17,7 @@
   "scripts": {
     "test": "mocha --recursive",
     "build": "sh build.sh",
-    "browserify": "browserify lib/index.js -s FSCheck -o fs-check.js",
+    "browserify": "browserify lib/index.js -s FSCheck | uglifyjs > fs-check.js",
     "docs": "node docs/checks-list.js && ./docs/build.sh",
     "coverage": "istanbul cover -x **/docs/** -x **/vendor/** ./node_modules/mocha/bin/_mocha -- -R spec --recursive",
     "coveralls": "istanbul cover -x **/docs/** -x **/vendor/** ./node_modules/mocha/bin/_mocha -- -R spec --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
@@ -33,6 +33,7 @@
     "coveralls": "2.11.2",
     "istanbul": "0.3.7",
     "mocha": "2.2.1",
-    "q": "^1.2.0"
+    "q": "1.2.0",
+    "uglify-js": "2.4.20"
   }
 }
