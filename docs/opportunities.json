@@ -56,7 +56,7 @@
 "multipleParents":
 {"id":"multipleParents:XXX-123","type":"family","checkId":"multipleParents","personId":"XXX-123","person":{"id":"XXX-123","display":{"name":"Sue Adams"}},"template":{"name":"Sue Adams","pid":"XXX-123"}},
 "orInName":
-{"id":"orInName:PPPP-PPP","type":"cleanup","checkId":"orInName","personId":"PPPP-PPP","person":{"names":[{"preferred":true,"nameForms":[{"fullText":"Joe"}]},{"preferred":false,"nameForms":[{"fullText":"Joey or Joseph"}]}],"id":"PPPP-PPP"},"template":{"pid":"PPPP-PPP","badNames":["Joey or Joseph"]}},
+{"id":"orInName:PPPP-PPP","type":"cleanup","checkId":"orInName","personId":"PPPP-PPP","person":{"names":[{"preferred":true,"nameForms":[{"fullText":"Joe"}]},{"preferred":false,"nameForms":[{"fullText":"Joey or Joseph"}]}],"id":"PPPP-PPP"},"template":{"pid":"PPPP-PPP","badNames":["Joey or Joseph"],"preferred":false}},
 "possibleDuplicates":
 {"id":"possibleDuplicates:PPPP-PPP","type":"problem","checkId":"possibleDuplicates","personId":"PPPP-PPP","person":{"id":"PPPP-PPP","display":{"name":"Bob Freemer"}},"template":{"pid":"PPPP-PPP","name":"Bob Freemer","count":2,"singular":false}},
 "recordHints":
@@ -74,4 +74,4 @@
 "standardizeMarriagePlace":
 {"id":"standardizeMarriagePlace:undefined","type":"cleanup","checkId":"standardizeMarriagePlace","person":{"display":{"name":"Thelma Lousie"}},"template":{"crid":"MMMM-MMM","wifeName":"Thelma Lousie","husbandName":"Elmer Fudd","place":"Provo, Utah, United States of America"}},
 "unusualCharactersInName":
-{"id":"unusualCharactersInName:PPPP-PPP","type":"cleanup","checkId":"unusualCharactersInName","personId":"PPPP-PPP","person":{"names":[{"nameForms":[{"fullText":"Joe?"}],"preferred":false}],"id":"PPPP-PPP"},"template":{"chars":"`?`","pid":"PPPP-PPP","brackets":false}}}
+{"id":"unusualCharactersInName:PPPP-PPP","type":"cleanup","checkId":"unusualCharactersInName","personId":"PPPP-PPP","person":{"names":[{"nameForms":[{"fullText":"Joe?"}],"preferred":false}],"id":"PPPP-PPP"},"template":{"chars":"`?`","pid":"PPPP-PPP","brackets":false,"preferred":true}}}

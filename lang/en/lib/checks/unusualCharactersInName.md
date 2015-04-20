@@ -1,4 +1,4 @@
-{{preferred}}
+{{#preferred}}
 This person has the following unusual characters in their name: {{chars}}.
 {{#brackets}}
 These characters are often used to annotate an alternate given name or surname, but this is better done by adding an alternate name.

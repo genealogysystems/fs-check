@@ -1,4 +1,4 @@
-{{preferred}}
+{{#preferred}}
 This person's name has an "or" in it which is incorrectly used to document alternate names.
 It is better to add the alternate form as a separate name altogether.
 In the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}), add the alternate form as an
