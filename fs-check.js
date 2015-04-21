@@ -256,6 +256,12 @@ module.exports = {
           currentChild = compareChildrenList[i],
           previousChildBirthDate = previousChild.$getBirth().$getFormalDate(),
           currentChildBirthDate = currentChild.$getBirth().$getFormalDate();
+      if(previousChildBirthDate.indexOf('A') === 0){
+        previousChildBirthDate = previousChildBirthDate.substr(1);
+      }
+      if(currentChildBirthDate.indexOf('A') === 0){
+        currentChildBirthDate = currentChildBirthDate.substr(1);
+      }
       if(previousChildBirthDate && currentChildBirthDate && previousChildBirthDate !== currentChildBirthDate){
         var birthDuration = utils.GedcomXDate.getDuration(new utils.GedcomXDate(previousChildBirthDate), new utils.GedcomXDate(currentChildBirthDate));
         if(!birthDuration.getYears() && birthDuration.getMonths() < 9){
