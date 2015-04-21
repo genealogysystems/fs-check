@@ -128,6 +128,15 @@ FSCheck.language({
 });
 ```
 
+### title(checkId, language)
+
+Get the translated title of a check. Useful for display purposes if you want to
+display to users the checks being used without having to run them.
+
+```js
+FSCheck.title('deathBeforeBirth', 'de');
+```
+
 # Checks
 
 View a list of the [checks grouped by signature and type](lib/checks#checks).

@@ -25,7 +25,7 @@ var typeCounts = {
 describe('FSCheck', function(){
 
   it('should expose seven functions', function(){
-    expect(Object.keys(FSCheck)).to.have.length(9);
+    expect(Object.keys(FSCheck)).to.have.length(10);
     expect(FSCheck).to.have.property('all');
     expect(FSCheck).to.have.property('id');
     expect(FSCheck).to.have.property('signature');
@@ -35,6 +35,7 @@ describe('FSCheck', function(){
     expect(FSCheck).to.have.property('utils');
     expect(FSCheck).to.have.property('language');
     expect(FSCheck).to.have.property('translate');
+    expect(FSCheck).to.have.property('title');
   });
 
   describe('FSCheck.all', function(){
@@ -135,6 +136,10 @@ describe('FSCheck', function(){
       FSCheck.translate(opportunity, 'foo');
       expect(opportunity.title).to.equal('Lorum Ipsum');
       expect(opportunity.description).to.equal('<p><strong>partialing</strong></p>\n');
+    })
+    
+    it('get title', function(){
+      expect(FSCheck.title('deathBeforeBirth','en')).to.equal('Person Died Before They Were Born');
     })
     
   })
