@@ -55,7 +55,7 @@ describe('childrenTooClose', function(){
     utils.validateSchema(fsCheck, opportunity);
   });
   
-  it('should return opportunity for females with multiple children close than 9 months', function(){
+  it('should return opportunity for females with multiple children closer than 9 months', function(){
     var person = utils.generatePerson({
       gender: 'http://gedcomx.org/Female',
       name: 'Sarah Sue'
@@ -71,6 +71,19 @@ describe('childrenTooClose', function(){
     utils.validateSchema(fsCheck, opportunity);
     doc('childrenTooClose', opportunity);
   });
+  
+  it('should ignore approximate flag on dates', function(){
+    function invalid(){
+      var person = utils.generatePerson({
+        gender: 'http://gedcomx.org/Female'
+      });
+      fsCheck.check(person, generateChildren([
+        {$formalDate: 'A+1776'},
+        {$formalDate: '+1776'}
+      ]));
+    };
+    expect(invalid).to.not.throw(Error);
+  })
   
 });
 
