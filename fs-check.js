@@ -255,15 +255,11 @@ module.exports = {
       var previousChild = compareChildrenList[i-1],
           currentChild = compareChildrenList[i],
           previousChildBirthDate = previousChild.$getBirth().$getFormalDate(),
-          currentChildBirthDate = currentChild.$getBirth().$getFormalDate();
-      if(previousChildBirthDate.indexOf('A') === 0){
-        previousChildBirthDate = previousChildBirthDate.substr(1);
-      }
-      if(currentChildBirthDate.indexOf('A') === 0){
-        currentChildBirthDate = currentChildBirthDate.substr(1);
-      }
-      if(previousChildBirthDate && currentChildBirthDate && previousChildBirthDate !== currentChildBirthDate){
-        var birthDuration = utils.GedcomXDate.getDuration(new utils.GedcomXDate(previousChildBirthDate), new utils.GedcomXDate(currentChildBirthDate));
+          currentChildBirthDate = currentChild.$getBirth().$getFormalDate(),
+          previousGedcomXDate = new utils.GedcomXDate(previousChildBirthDate),
+          currentGedcomXDate = new utils.GedcomXDate(currentChildBirthDate);
+      if(previousChildBirthDate && currentChildBirthDate && utils.compareFormalDates(previousGedcomXDate, currentGedcomXDate) !== 0){
+        var birthDuration = utils.GedcomXDate.getDuration(previousGedcomXDate, currentGedcomXDate);
         if(!birthDuration.getYears() && birthDuration.getMonths() < 9){
           problemPairs.push({
             firstName: previousChild.$getDisplayName(),
@@ -287,6 +283,20 @@ module.exports = {
 
     return utils.createOpportunity(this, person, template);
 
+  }
+};
+
+/**
+ * Returns true of the formal dates are exactly equal.
+ * If one of the dates is a partial date, such as +1904,
+ * then compare the dates using all dates parts that
+ * both dates have specified. In other words, consider
+ * +1904 to equal any formal date in 1904 and consider
+ * +1904-02 to equal any formal date in Feb 1904.
+ */
+function formalDatesEqual(date1, date2){
+  if(date1 === date2){
+    
   }
 };
 },{"../util.js":41}],4:[function(_dereq_,module,exports){
@@ -2293,22 +2303,7 @@ utils.gensearchPerson = function(person){
  * Compare two formal dates
  */
 utils.compareFormalDates = function(date1, date2){
-  // Ignore leading A which denote approximate date
-  if(date1.charAt(0) === 'A'){
-    date1 = date1.substr(1);
-  }
-  if(date2.charAt(0) === 'A'){
-    date2 = date2.substr(1);
-  }
-  if(date1 === date2){
-    return 0;
-  }
-  try {
-    GedcomXDate.getDuration(new GedcomXDate(date1), new GedcomXDate(date2));
-    return -1;
-  } catch(e) {
-    return 1;
-  }
+  return GedcomXDate.compare(date1, date2);
 };
 
 /**
@@ -3311,7 +3306,6 @@ module.exports = Duration;
 },{}],48:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
-    Duration = _dereq_('./duration.js'),
     Approximate = _dereq_('./approximate.js'),
     Recurring = _dereq_('./recurring.js'),
     Range = _dereq_('./range.js');
@@ -3373,8 +3367,13 @@ GedcomXDate.now = GedUtil.now;
  */
 GedcomXDate.fromJSDate = GedUtil.fromJSDate;
 
+/**
+ * Expose compare.
+ */
+GedcomXDate.compare = GedUtil.compare;
+
 module.exports = GedcomXDate;
-},{"./approximate.js":46,"./duration.js":47,"./range.js":49,"./recurring.js":50,"./simple.js":51,"./util.js":53}],49:[function(_dereq_,module,exports){
+},{"./approximate.js":46,"./range.js":49,"./recurring.js":50,"./simple.js":51,"./util.js":53}],49:[function(_dereq_,module,exports){
 var GedUtil = _dereq_('./util.js'),
     Simple = _dereq_('./simple.js'),
     Duration = _dereq_('./duration.js'),
@@ -4053,7 +4052,8 @@ module.exports = {
   addDuration: addDuration,
   multiplyDuration: multiplyDuration,
   now: now,
-  fromJSDate: fromJSDate
+  fromJSDate: fromJSDate,
+  compare: compare
 }
 
 /**
@@ -4486,6 +4486,86 @@ function fromJSDate(date){
   // Remove the millisecond time component
   return new Simple('+' + date.toISOString().replace(/\.\d{3}/,''));
 };
+
+/**
+ * Compare two dates. Only works for single dates right now.
+ * Designed to be usable as a custom compare function for sorting an array of dates.
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+ */
+function compare(date1, date2){
+  
+  // Allow formal strings as input
+  if(isString(date1)){
+    if(date1[0] === 'A'){
+      date1 = new Approximate(date1);
+    } else {
+      date1 = new Simple(date1);
+    }
+  }
+  if(isString(date2)){
+    if(date2[0] === 'A'){
+      date2 = new Approximate(date2);
+    } else {
+      date2 = new Simple(date2);
+    }
+  }
+  
+  // Only allow simple dates
+  if(!(date1 instanceof Simple) || !(date2 instanceof Simple)){
+    throw new Error('Bad input. Can only compare simple dates.');
+  }
+  
+  // Compare date parts in descending order
+  var parts = [
+    '_year',
+    '_month',
+    '_day',
+    '_hours',
+    '_minutes',
+    '_seconds'
+  ];
+  
+  // We will short-circuit when we determine whether one
+  // date is greater than the other
+  for(var i = 0; i < parts.length; i++){
+    var part = parts[i];
+    
+    // If these parts match exactly, 
+    if(date1[part] === date2[part]){
+      continue;
+    }
+
+    // If either part is undefined then consider the dates equal.
+    // Undefined parts are only allowed for lower order positions and
+    // cannot occur if anything is defined in a lower order. For example,
+    // you can't have a year and day but no month. So once we see something
+    // that was undefined we know everything before that matched and
+    // therefore the dates are effectively equal (either we're done comparing
+    // because nothing else is defined or we're comparing two dates with
+    // different specifities, i.e. comparing +1900 to +1900-04)
+    if(typeof date1[part] === 'undefined' || typeof date2[part] === 'undefined'){
+      break;
+    }
+    
+    // By this point we're guaranteed that this part is defined in both dates
+    // so we can finally do some > and <
+    if(date1[part] > date2[part]){
+      return 1;
+    } else {
+      return -1;
+    }
+    
+  }
+  
+  // If we make it here then the dates are equal
+  return 0;
+  
+};
+
+function isString(obj){
+  return typeof obj === 'string' || obj instanceof String;
+};
+
 },{"./approximate.js":46,"./duration.js":47,"./simple.js":51,"./util-global.js":52}],54:[function(_dereq_,module,exports){
 (function (global){
 /**
