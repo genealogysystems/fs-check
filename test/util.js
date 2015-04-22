@@ -276,6 +276,19 @@ describe('util', function(){
           newFormal = date.toFormalString();
       expect(newFormal).to.equal('+1707-03-02');
     });
+    
+    it('should not hit a parse error on tricky ranges', function(){
+      var ranges = [
+        '+1771-08-30/+1771-10-01',
+        '+1827-10-30/+1827-12-01',
+        '+1615-01-28/+1615-03-01',
+        '+1909-01-30/+1909-03-03',
+        '+1694-10-30/+1694-12-01'
+      ];
+      for(var i = 0; i < ranges.length; i++){
+        expect(util.getSimpleFormalDate(ranges[i])).to.exist;
+      }
+    })
   
   });
 
