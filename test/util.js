@@ -464,6 +464,22 @@ describe('util', function(){
       result = util.compareFormalDates('+1662', 'A+1662');
       expect(result).to.equal(0);
     });
+    
+    it('work for partial dates', function(){
+      var result = util.compareFormalDates('+1880', '+1880-02-04');
+      expect(result).to.equal(0);
+      result = util.compareFormalDates('+1880-02', '+1880-02-04');
+      expect(result).to.equal(0);
+      result = util.compareFormalDates('+1880', '+1880-02');
+      expect(result).to.equal(0);
+      
+      result = util.compareFormalDates('+1881', '+1880-02-04');
+      expect(result).to.equal(1);
+      result = util.compareFormalDates('+1881-02', '+1880-02-04');
+      expect(result).to.equal(1);
+      result = util.compareFormalDates('+1881', '+1880-02');
+      expect(result).to.equal(1);
+    })
   
   });
 

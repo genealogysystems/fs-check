@@ -83,7 +83,20 @@ describe('childrenTooClose', function(){
       ]));
     };
     expect(invalid).to.not.throw(Error);
-  })
+  });
+  
+  it('should work for partial dates', function(){
+    function invalid(){
+      var person = utils.generatePerson({
+        gender: 'http://gedcomx.org/Female'
+      });
+      fsCheck.check(person, generateChildren([
+        {$formalDate: '+1880'},
+        {$formalDate: '+1880-01-01'}
+      ]));
+    };
+    expect(invalid).to.not.throw(Error);
+  });
   
 });
 
