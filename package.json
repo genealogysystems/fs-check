@@ -7,7 +7,7 @@
     "Family History"
   ],
   "homepage": "https://github.com/genealogysystems/fs-check",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "repository": {
     "type": "git",
     "url": "git@github.com:genealogysystems/fs-check.git"
@@ -17,7 +17,8 @@
   "scripts": {
     "test": "mocha --recursive",
     "build": "sh build.sh",
-    "browserify": "browserify lib/index.js -s FSCheck -o fs-check.js && uglifyjs fs-check.js -o fs-check.min.js --source-map fs-check.min.js.map --source-map-root http://genealogysystems.github.io/fs-check/",
+    "build:browserify": "browserify lib/index.js -s FSCheck -o fs-check.js",
+    "build:minify": "uglifyjs fs-check.js -o fs-check.min.js --source-map fs-check.min.js.map --source-map-root http://genealogysystems.github.io/fs-check/",
     "docs": "node docs/checks-list.js && ./docs/build.sh",
     "coverage": "istanbul cover -x **/docs/** -x **/vendor/** ./node_modules/mocha/bin/_mocha -- -R spec --recursive",
     "coveralls": "istanbul cover -x **/docs/** -x **/vendor/** ./node_modules/mocha/bin/_mocha -- -R spec --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"

@@ -2208,7 +2208,10 @@ utils.getSimpleFormalDate = function(formalDateString){
       } else if(!date.getStart() && date.getEnd()) {
         date = date.getEnd();
       } else {
-        date = GedcomXDate.addDuration(date.getStart(), GedcomXDate.multiplyDuration(date.getDuration(), .5));
+        var start = date.getStart(),
+            duration = date.getDuration(),
+            halfDuration = GedcomXDate.multiplyDuration(duration, .5);
+        date = GedcomXDate.addDuration(start, halfDuration);
       }
     }
     return date;
@@ -3612,7 +3615,7 @@ function Simple() {
  */
 Simple.prototype._parse = function(str) {
 
-  var end = str.length;
+  var end = str.length,
       offset = 0;
 
   // There is a minimum length of 5 characters
@@ -4196,9 +4199,6 @@ function addDuration(startDate, duration) {
       end.year += 1;
     }
   }
-  if(end.day != undefined) {
-    endString = '-'+('00'+end.day).substr(-2,2)+endString;
-  }
 
   if(duration.getMonths()) {
     end.month += duration.getMonths();
@@ -4206,6 +4206,19 @@ function addDuration(startDate, duration) {
   while(end.month && end.month > 12) {
     end.month -= 12;
     end.year += 1;
+  }
+  // After readjusting the month, check again for days overflow
+  if(end.day && end.day > GlobalUtil.daysInMonth(end.month, end.year)){
+    end.day = end.day - GlobalUtil.daysInMonth(end.month, end.year);
+    end.month += 1;
+    if(end.month > 12) {
+      end.month -= 12;
+      end.year += 1;
+    }
+  }
+  
+  if(end.day != undefined) {
+    endString = '-'+('00'+end.day).substr(-2,2)+endString;
   }
   if(end.month != undefined) {
     endString = '-'+('00'+end.month).substr(-2,2)+endString;

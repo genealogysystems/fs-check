@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # Build main lib
-npm run browserify
+npm run build:browserify
+npm run build:minify
 
 # Build languages
 for dir in lang/*/
