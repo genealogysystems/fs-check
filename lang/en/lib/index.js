@@ -3,6 +3,14 @@ var fs = require('fs'),
 
 var data = module.exports = {
   code: 'en',
+  help: {
+    addingAndCorrecting: 'Adding and Correcting Information in the Tree',
+    customEvents: 'Custom Events and Facts',
+    mergingDuplicates: 'Merging Duplicate Persons',
+    nonexactDates: 'Approximate Dates',
+    recordHints: 'Reviewing Record Hints',
+    standardizing: 'Standardizing Dates and Places'
+  },
   checks: {
     birthBeforeParentsBirth: {
       title: 'Person Born Before their Parent(s)'
