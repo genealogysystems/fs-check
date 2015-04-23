@@ -7,7 +7,7 @@
     "Family History"
   ],
   "homepage": "https://github.com/genealogysystems/fs-check",
-  "version": "2.1.5",
+  "version": "2.2.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:genealogysystems/fs-check.git"
