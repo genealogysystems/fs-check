@@ -191,5 +191,24 @@ describe('deathBeforeBirth', function(){
     doc('deathBeforeBirth', opportunity);
     utils.validateSchema(fsCheck, opportunity);
   });
+  
+  it('should work for date ranges', function() {
+    var person = FS.createPerson({
+      gender: 'http://gedcomx.org/Female',
+      facts: [
+        FS.createFact({
+          type: 'http://gedcomx.org/Birth',
+          $formalDate: '+1900/+1904'
+        }),
+        FS.createFact({
+          type: 'http://gedcomx.org/Death',
+          $formalDate: '+1885/+1900'
+        })
+      ]
+    });
+    person.id = 'PPPP-PPP';
+    var opportunity = fsCheck.check(person);
+    utils.validateSchema(fsCheck, opportunity);
+  });
 
 });

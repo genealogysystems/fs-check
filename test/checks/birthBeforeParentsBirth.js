@@ -253,5 +253,42 @@ describe('birthBeforeParentsBirth', function(){
     doc('birthBeforeParentsBirth', opportunity);
     utils.validateSchema(fsCheck, opportunity);
   });
+  
+  it('should handle date ranges', function(){
+    var person = FS.createPerson({
+      facts: [
+        FS.createFact({
+          type: 'http://gedcomx.org/Birth',
+          $formalDate: '+1820-01-01/+1821-12-31'
+        })
+      ],
+      id: 'XXX-123'
+    });
+    var parents = [
+      FS.createPerson({
+        gender: 'http://gedcomx.org/Female',
+        facts: [
+          FS.createFact({
+            type: 'http://gedcomx.org/Birth',
+            $formalDate: '+1900/+1905'
+          })
+        ]
+      }),
+      FS.createPerson({
+        gender: 'http://gedcomx.org/Male',
+        facts: [
+          FS.createFact({
+            type: 'http://gedcomx.org/Birth',
+            $date: 'January 1, 1895'
+          })
+        ]
+      })
+    ];
+    parents[0].id = 'XXX-456';
+    parents[1].id = 'XXX-789';
+    
+    var opportunity = fsCheck.check(person, parents);
+    utils.validateSchema(fsCheck, opportunity);
+  });
 
 });
