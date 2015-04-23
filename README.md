@@ -138,6 +138,37 @@ display to users the checks being used without having to run them.
 FSCheck.title('deathBeforeBirth', 'de');
 ```
 
+### help(helpId, language)
+
+Get the title and url for a help doc. `helpId`s are obtained from the `help`
+property of checks. May also pass in multiple `helpId`s via an array.
+
+```js
+// single
+FSCheck.help('customEvents', 'en');
+
+// returns
+{
+  title: 'Custom Events and Facts',
+  url: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-a-Custom-Event-or-Fact-to-a-Person'
+}
+
+// multiple
+FSCheck.help(['customEvents', 'recordHints'], 'en');
+
+// returns
+[
+  {
+    title: 'Custom Events and Facts',
+    url: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-a-Custom-Event-or-Fact-to-a-Person'
+  },
+  {
+    title: 'Reviewing Record Hints',
+    url: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Record-Hints'
+  }
+]
+```
+
 # Checks
 
 View a list of the [checks grouped by signature and type](lib/checks#checks).
@@ -153,6 +184,7 @@ All checks have the following properties:
     * `source`
     * `person`
     * `family`
+* `help` - An array of ids that can be used to retrieve urls and translated titles via the `help` method.
 * `check` - The function called to run the check and possibly generate opportunities; `undefined` is returned if there is no opportunity available for this check.
 
 # Opportunities

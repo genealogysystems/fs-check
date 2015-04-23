@@ -12,7 +12,7 @@ module.exports = {
   id: 'birthBeforeParentsBirth',
   type: 'problem',
   signature: 'parents',
-  help: help.links('nonexactDates','addingAndCorrecting'),
+  help: ['nonexactDates','addingAndCorrecting'],
   check: function(person, parents) {
 
     var birthBeforeParentBirth = [],
@@ -67,7 +67,7 @@ module.exports = {
   id: 'childBeforeMarriage',
   type: 'problem',
   signature: 'relationships',
-  help: help.links('addingAndCorrecting'),
+  help: ['addingAndCorrecting'],
   check: function(person, relationships, persons) {
 
     var marriages = relationships.getSpouseRelationships(),
@@ -286,7 +286,7 @@ module.exports = {
   id: 'deathBeforeBirth',
   type: 'problem',
   signature: 'person',
-  help: help.links('addingAndCorrecting', 'nonexactDates'),
+  help: ['addingAndCorrecting', 'nonexactDates'],
   check: function(person) {
 
     var birth = person.$getBirth(),
@@ -342,7 +342,7 @@ module.exports = {
   id: 'duplicateNames',
   type: 'cleanup',
   signature: 'person',
-  help: help.links('alreadyInTree','customEvents','correctingInformation'),
+  help: ['addingAndCorrecting','customEvents'],
   check: function(person) {
 
     var names = person.$getNames(),
@@ -395,7 +395,7 @@ module.exports = {
   id: 'manyAlternateNames',
   type: 'cleanup',
   signature: 'person',
-  help: help.links('alreadyInTree','customEvents','correctingInformation'),
+  help: ['addingAndCorrecting','customEvents'],
   check: function(person) {
 
     var names = person.$getNames();
@@ -947,7 +947,7 @@ module.exports = {
   id: 'missingGivenName',
   type: 'person',
   signature: 'person',
-  help: help.links('alreadyInTree','customEvents','correctingInformation'),
+  help: ['addingAndCorrecting','customEvents'],
   check: function(person) {
 
     var givenName = person.$getGivenName(),
@@ -1269,7 +1269,7 @@ module.exports = {
   id: 'missingName',
   type: 'person',
   signature: 'person',
-  help: help.links('alreadyInTree','customEvents','correctingInformation','deletingInformation'),
+  help: ['addingAndCorrecting','customEvents'],
   check: function(person) {
     if(!person.names || person.names.length === 0) {
       return utils.createOpportunity(this, person, {}, utils.gensearchPerson(person));
@@ -1318,7 +1318,7 @@ module.exports = {
   id: 'missingSurname',
   type: 'person',
   signature: 'person',
-  help: help.links('alreadyInTree','customEvents','correctingInformation'),
+  help: ['addingAndCorrecting','customEvents'],
   check: function(person) {
 
     var givenName = person.$getGivenName(),
@@ -1341,7 +1341,7 @@ module.exports = {
   id: 'multipleMarriageFacts',
   type: 'cleanup',
   signature: 'marriage',
-  help: help.links('addingAndCorrecting'),
+  help: ['addingAndCorrecting'],
   check: function(wife, husband, marriage) {
 
     if(!wife || !husband){
@@ -1383,7 +1383,7 @@ module.exports = {
   id: 'multipleParents',
   type: 'family',
   signature: 'relationships',
-  help: help.links('correctingInformation'),
+  help: ['addingAndCorrecting'],
   check: function(person, relationships, people) {
 
     var parentRelationships = relationships.getParentRelationships();
@@ -1452,11 +1452,10 @@ module.exports = {
   id: 'orInName',
   type: 'cleanup',
   signature: 'person',
-  help: help.links('alreadyInTree','customEvents','correctingInformation'),
+  help: ['addingAndCorrecting','customEvents'],
   check: function(person) {
 
-    var descr,
-        name = person.$getPreferredName(),
+    var name = person.$getPreferredName(),
         nameText = name && name.$getFullText() ? name.$getFullText() : '',
         nameMatches = nameText.match(regex),
         template = {
@@ -1512,7 +1511,7 @@ module.exports = {
   id: 'possibleDuplicates',
   type: 'problem',
   signature: 'duplicates',
-  help: help.links('mergingDuplicates'),
+  help: ['mergingDuplicates'],
   check: function(person, matches) {
   
     // Short-circuit if there are no matches
@@ -1554,7 +1553,7 @@ module.exports = {
   id: 'recordHints',
   type: 'source',
   signature: 'recordHints',
-  help: help.links('recordHints'),
+  help: ['recordHints'],
   check: function(person, matches) {
 
     // Short-circuit if there are no hints
@@ -1593,7 +1592,7 @@ module.exports = {
   id: 'standardizeBirthDate',
   type: 'cleanup',
   signature: 'person',
-  help: help.links('standardizing'),
+  help: ['standardizing'],
   check: function(person) {
 
     var birth = person.$getBirth();
@@ -1631,7 +1630,7 @@ module.exports = {
   id: 'standardizeBirthPlace',
   type: 'cleanup',
   signature: 'person',
-  help: help.links('standardizing'),
+  help: ['standardizing'],
   check: function(person) {
 
     var birth = person.$getBirth();
@@ -1669,7 +1668,7 @@ module.exports = {
   id: 'standardizeDeathDate',
   type: 'cleanup',
   signature: 'person',
-  help: help.links('standardizing'),
+  help: ['standardizing'],
   check: function(person) {
 
     var death = person.$getDeath();
@@ -1707,7 +1706,7 @@ module.exports = {
   id: 'standardizeDeathPlace',
   type: 'cleanup',
   signature: 'person',
-  help: help.links('standardizing'),
+  help: ['standardizing'],
   check: function(person) {
 
     var death = person.$getDeath();
@@ -1746,7 +1745,7 @@ module.exports = {
   id: 'standardizeMarriageDate',
   type: 'cleanup',
   signature: 'marriage',
-  help: help.links('standardizing'),
+  help: ['standardizing'],
   check: function(wife, husband, marriage) {
 
     if(!wife || !husband){
@@ -1798,7 +1797,7 @@ module.exports = {
   id: 'standardizeMarriagePlace',
   type: 'cleanup',
   signature: 'marriage',
-  help: help.links('standardizing'),
+  help: ['standardizing'],
   check: function(wife, husband, marriage) {
 
     if(!wife || !husband){
@@ -1852,7 +1851,7 @@ module.exports = {
   id: 'unusualCharactersInName',
   type: 'cleanup',
   signature: 'person',
-  help: help.links('alreadyInTree','customEvents','correctingInformation'),
+  help: ['addingAndCorrecting','customEvents'],
   check: function(person) {
 
     var name = person.$getPreferredName(),
@@ -1907,11 +1906,8 @@ module.exports = {
 /**
  * Central control of help doc links
  */
- 
-var docs = {
+module.exports = {
   addingAndCorrecting: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-and-Correcting-Information-about-People-and-Relationships',
-  alreadyInTree: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-More-Information-about-a-Person-Who-Is-Already-in-Family-Tree',
-  correctingInformation: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Correcting-Information-about-a-Person',
   customEvents: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-a-Custom-Event-or-Fact-to-a-Person',
   deletingInformation: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Deleting-a-Person-from-the-System',
   mergingDuplicates: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Merging-Duplicate-Records-in-Family-Tree-1381814853391',
@@ -1919,62 +1915,49 @@ var docs = {
   recordHints: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Record-Hints',
   standardizing: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Entering-Standardized-Dates-and-Places'
 };
-
-module.exports = {
-  
-  links: function(){
-    var links = [];
-    for(var i = 0; i < arguments.length; i++){
-      if(docs[arguments[i]]){
-        links.push(docs[arguments[i]]);
-      }
-    }
-    return links;
-  }
-  
-};
 },{}],40:[function(_dereq_,module,exports){
-var utils = _dereq_('./util.js');
+var utils = _dereq_('./util'),
+    help = _dereq_('./help');
 
 var checks = [
-  _dereq_('./checks/birthBeforeParentsBirth.js'),
-  _dereq_('./checks/childBeforeMarriage.js'),
-  _dereq_('./checks/childrenTooClose.js'),
-  _dereq_('./checks/deathBeforeBirth.js'),
-  _dereq_('./checks/duplicateNames.js'),
-  _dereq_('./checks/manyAlternateNames.js'),
-  _dereq_('./checks/marriageAfterDeath.js'),
-  _dereq_('./checks/marriageWithNoChildren.js'),
-  _dereq_('./checks/missingBirth.js'),
-  _dereq_('./checks/missingBirthDate.js'),
-  _dereq_('./checks/missingBirthPlace.js'),
-  _dereq_('./checks/missingBirthSource.js'),
-  _dereq_('./checks/missingDeath.js'),
-  _dereq_('./checks/missingDeathDate.js'),
-  _dereq_('./checks/missingDeathPlace.js'),
-  _dereq_('./checks/missingDeathSource.js'),
-  _dereq_('./checks/missingFather.js'),
-  _dereq_('./checks/missingGivenName.js'),
-  _dereq_('./checks/missingMarriageDate.js'),
-  _dereq_('./checks/missingMarriageFact.js'),
-  _dereq_('./checks/missingMarriagePlace.js'),
-  _dereq_('./checks/missingMarriageSource.js'),
-  _dereq_('./checks/missingMother.js'),
-  _dereq_('./checks/missingName.js'),
-  _dereq_('./checks/missingParents.js'),
-  _dereq_('./checks/missingSurname.js'),
-  _dereq_('./checks/multipleMarriageFacts.js'),
-  _dereq_('./checks/multipleParents.js'),
-  _dereq_('./checks/orInName.js'),
-  _dereq_('./checks/possibleDuplicates.js'),
-  _dereq_('./checks/recordHints.js'),
-  _dereq_('./checks/standardizeBirthDate.js'),
-  _dereq_('./checks/standardizeBirthPlace.js'),
-  _dereq_('./checks/standardizeDeathDate.js'),
-  _dereq_('./checks/standardizeDeathPlace.js'),
-  _dereq_('./checks/standardizeMarriageDate.js'),
-  _dereq_('./checks/standardizeMarriagePlace.js'),
-  _dereq_('./checks/unusualCharactersInName.js')
+  _dereq_('./checks/birthBeforeParentsBirth'),
+  _dereq_('./checks/childBeforeMarriage'),
+  _dereq_('./checks/childrenTooClose'),
+  _dereq_('./checks/deathBeforeBirth'),
+  _dereq_('./checks/duplicateNames'),
+  _dereq_('./checks/manyAlternateNames'),
+  _dereq_('./checks/marriageAfterDeath'),
+  _dereq_('./checks/marriageWithNoChildren'),
+  _dereq_('./checks/missingBirth'),
+  _dereq_('./checks/missingBirthDate'),
+  _dereq_('./checks/missingBirthPlace'),
+  _dereq_('./checks/missingBirthSource'),
+  _dereq_('./checks/missingDeath'),
+  _dereq_('./checks/missingDeathDate'),
+  _dereq_('./checks/missingDeathPlace'),
+  _dereq_('./checks/missingDeathSource'),
+  _dereq_('./checks/missingFather'),
+  _dereq_('./checks/missingGivenName'),
+  _dereq_('./checks/missingMarriageDate'),
+  _dereq_('./checks/missingMarriageFact'),
+  _dereq_('./checks/missingMarriagePlace'),
+  _dereq_('./checks/missingMarriageSource'),
+  _dereq_('./checks/missingMother'),
+  _dereq_('./checks/missingName'),
+  _dereq_('./checks/missingParents'),
+  _dereq_('./checks/missingSurname'),
+  _dereq_('./checks/multipleMarriageFacts'),
+  _dereq_('./checks/multipleParents'),
+  _dereq_('./checks/orInName'),
+  _dereq_('./checks/possibleDuplicates'),
+  _dereq_('./checks/recordHints'),
+  _dereq_('./checks/standardizeBirthDate'),
+  _dereq_('./checks/standardizeBirthPlace'),
+  _dereq_('./checks/standardizeDeathDate'),
+  _dereq_('./checks/standardizeDeathPlace'),
+  _dereq_('./checks/standardizeMarriageDate'),
+  _dereq_('./checks/standardizeMarriagePlace'),
+  _dereq_('./checks/unusualCharactersInName')
 ];
 
 // Group checks by ID
@@ -2065,6 +2048,12 @@ module.exports = {
    * Translate an opportunity
    */
   translate: function(opportunity, lang){
+    if(!lang){
+      throw new Error('Second parameter `lang` is required');
+    }
+    if(!languages[lang]){
+      throw new Error('The given language is not defined: ' + lang);
+    }
     if(languages[lang]){
       var translation = languages[lang].checks[opportunity.checkId];
       if(translation){
@@ -2078,8 +2067,35 @@ module.exports = {
    * Get the title for a check
    */
   title: function(checkId, lang){
-    if(languages[lang].checks[checkId]){
+    if(!lang){
+      throw new Error('Second parameter `lang` is required');
+    }
+    if(!languages[lang]){
+      throw new Error('The given language is not defined: ' + lang);
+    }
+    if(languages[lang] && languages[lang].checks[checkId]){
       return languages[lang].checks[checkId].title;
+    }
+  },
+  
+  /**
+   * Get the url and title for a help link
+   */
+  help: function(helpId, lang){
+    if(!lang){
+      throw new Error('Second parameter `lang` is required');
+    }
+    if(!languages[lang]){
+      throw new Error('The given language is not defined: ' + lang);
+    }
+    if(Array.isArray(helpId)){
+      var links = [];
+      for(var i = 0; i < helpId.length; i++){
+        links.push(_help(helpId[i], lang));
+      }
+      return links;
+    } else {
+      return _help(helpId, lang);
     }
   },
   
@@ -2094,7 +2110,19 @@ module.exports = {
   }
   
 };
-},{"./checks/birthBeforeParentsBirth.js":1,"./checks/childBeforeMarriage.js":2,"./checks/childrenTooClose.js":3,"./checks/deathBeforeBirth.js":4,"./checks/duplicateNames.js":5,"./checks/manyAlternateNames.js":6,"./checks/marriageAfterDeath.js":7,"./checks/marriageWithNoChildren.js":8,"./checks/missingBirth.js":9,"./checks/missingBirthDate.js":10,"./checks/missingBirthPlace.js":11,"./checks/missingBirthSource.js":12,"./checks/missingDeath.js":13,"./checks/missingDeathDate.js":14,"./checks/missingDeathPlace.js":15,"./checks/missingDeathSource.js":16,"./checks/missingFather.js":17,"./checks/missingGivenName.js":18,"./checks/missingMarriageDate.js":19,"./checks/missingMarriageFact.js":20,"./checks/missingMarriagePlace.js":21,"./checks/missingMarriageSource.js":22,"./checks/missingMother.js":23,"./checks/missingName.js":24,"./checks/missingParents.js":25,"./checks/missingSurname.js":26,"./checks/multipleMarriageFacts.js":27,"./checks/multipleParents.js":28,"./checks/orInName.js":29,"./checks/possibleDuplicates.js":30,"./checks/recordHints.js":31,"./checks/standardizeBirthDate.js":32,"./checks/standardizeBirthPlace.js":33,"./checks/standardizeDeathDate.js":34,"./checks/standardizeDeathPlace.js":35,"./checks/standardizeMarriageDate.js":36,"./checks/standardizeMarriagePlace.js":37,"./checks/unusualCharactersInName.js":38,"./util.js":41,"gedcomx-date":48}],41:[function(_dereq_,module,exports){
+
+/**
+ * Help link helper
+ */
+function _help(helpId, lang){
+  if(languages[lang] && languages[lang].help[helpId]){
+    return {
+      title: languages[lang].help[helpId],
+      url: help[helpId]
+    };
+  }
+};
+},{"./checks/birthBeforeParentsBirth":1,"./checks/childBeforeMarriage":2,"./checks/childrenTooClose":3,"./checks/deathBeforeBirth":4,"./checks/duplicateNames":5,"./checks/manyAlternateNames":6,"./checks/marriageAfterDeath":7,"./checks/marriageWithNoChildren":8,"./checks/missingBirth":9,"./checks/missingBirthDate":10,"./checks/missingBirthPlace":11,"./checks/missingBirthSource":12,"./checks/missingDeath":13,"./checks/missingDeathDate":14,"./checks/missingDeathPlace":15,"./checks/missingDeathSource":16,"./checks/missingFather":17,"./checks/missingGivenName":18,"./checks/missingMarriageDate":19,"./checks/missingMarriageFact":20,"./checks/missingMarriagePlace":21,"./checks/missingMarriageSource":22,"./checks/missingMother":23,"./checks/missingName":24,"./checks/missingParents":25,"./checks/missingSurname":26,"./checks/multipleMarriageFacts":27,"./checks/multipleParents":28,"./checks/orInName":29,"./checks/possibleDuplicates":30,"./checks/recordHints":31,"./checks/standardizeBirthDate":32,"./checks/standardizeBirthPlace":33,"./checks/standardizeDeathDate":34,"./checks/standardizeDeathPlace":35,"./checks/standardizeMarriageDate":36,"./checks/standardizeMarriagePlace":37,"./checks/unusualCharactersInName":38,"./help":39,"./util":41,"gedcomx-date":48}],41:[function(_dereq_,module,exports){
 var GedcomXDate = _dereq_('gedcomx-date'),
     marked = _dereq_('marked'),
     renderer = new marked.Renderer(),
@@ -2292,6 +2320,12 @@ utils.createOpportunity = function(check, person, template, gensearch){
     person: person,
     gensearch: gensearch,
     template: template
+  };
+};
+
+if (!Array.isArray) {
+  Array.isArray = function(arg) {
+    return Object.prototype.toString.call(arg) === '[object Array]';
   };
 }
 },{"gedcomx-date":48,"marked":54,"mustache":55}],42:[function(_dereq_,module,exports){

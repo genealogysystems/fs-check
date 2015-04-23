@@ -25,7 +25,7 @@ var typeCounts = {
 describe('FSCheck', function(){
 
   it('should expose seven functions', function(){
-    expect(Object.keys(FSCheck)).to.have.length(10);
+    expect(Object.keys(FSCheck)).to.have.length(11);
     expect(FSCheck).to.have.property('all');
     expect(FSCheck).to.have.property('id');
     expect(FSCheck).to.have.property('signature');
@@ -36,6 +36,7 @@ describe('FSCheck', function(){
     expect(FSCheck).to.have.property('language');
     expect(FSCheck).to.have.property('translate');
     expect(FSCheck).to.have.property('title');
+    expect(FSCheck).to.have.property('help');
   });
 
   describe('FSCheck.all', function(){
@@ -115,7 +116,7 @@ describe('FSCheck', function(){
     
     before(function(){
       FSCheck.language(getFooLang());
-    })
+    });
 
     it('should translate', function(){
       var opportunity = {
@@ -127,6 +128,17 @@ describe('FSCheck', function(){
       FSCheck.translate(opportunity, 'foo');
       expect(opportunity.title).to.equal('Fizz Buzz');
       expect(opportunity.description).to.equal('<p>Grand Stand has a fizz buzz named fooz bazz.</p>\n');
+    });
+    
+    it('translate throws error when language is missing', function(){
+      expect(function(){
+        FSCheck.translate({
+          checkId: 'bar',
+          template: {
+            name: 'Grand Stand'
+          }
+        });
+      }).to.throw(Error);
     })
     
     it('partials', function(){
@@ -136,13 +148,45 @@ describe('FSCheck', function(){
       FSCheck.translate(opportunity, 'foo');
       expect(opportunity.title).to.equal('Lorum Ipsum');
       expect(opportunity.description).to.equal('<p><strong>partialing</strong></p>\n');
-    })
+    });
     
     it('get title', function(){
       expect(FSCheck.title('deathBeforeBirth','en')).to.equal('Person Died Before They Were Born');
+    });
+    
+    it('get throws error when language is missing', function(){
+      expect(function(){
+        FSCheck.title('deathBeforeBirth');
+      }).to.throw(Error);
+    });
+    
+    it('help link single', function(){
+      expect(FSCheck.help('customEvents', 'en')).to.deep.equal({
+        title: 'Custom Events and Facts',
+        url: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-a-Custom-Event-or-Fact-to-a-Person'
+      });
+    });
+    
+    it('help link multiple', function(){
+      expect(FSCheck.help(['customEvents', 'recordHints'], 'en')).to.deep.equal([
+        {
+          title: 'Custom Events and Facts',
+          url: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-a-Custom-Event-or-Fact-to-a-Person'
+        },
+        {
+          title: 'Reviewing Record Hints',
+          url: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Record-Hints'
+        }
+      ]);
+    });
+    
+    it('help throws error when lang is missing', function(){
+      expect(function(){
+        FSCheck.help('customEvents');
+      }).to.throw(Error);
     })
     
-  })
+  });
 
 });
 
