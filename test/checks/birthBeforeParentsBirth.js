@@ -23,11 +23,45 @@ describe('birthBeforeParentsBirth', function(){
       facts: [
         FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          place: 'Provo, Utah, United States of America'
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
     var opportunity = fsCheck.check(person, []);
+    expect(opportunity).to.equal(undefined);
+  });
+  
+  it('should return nothing when the birth date has no extractable formal value for comparison', function(){
+    var person = FS.createPerson({
+      gender: 'http://gedcomx.org/Female',
+      names: [],
+      facts: [
+        FS.createFact({
+          type: 'http://gedcomx.org/Birth',
+          $place: 'Provo, Utah, United States of America',
+          $date: 'Oct 6th'
+        })
+      ]
+    });
+    var opportunity = fsCheck.check(person, [
+      FS.createPerson({
+        gender: 'http://gedcomx.org/Male',
+        names: [
+          FS.createName({
+            givenName: 'Bob',
+            surname: 'Freemer'
+          })
+        ],
+        facts: [
+          FS.createFact({
+            type: 'http://gedcomx.org/Birth',
+            $date: 'January 1, 1895',
+            $formalDate: '+1895-01-01',
+            $place: 'Provo, Utah, United States of America'
+          })
+        ]
+      })  
+    ]);
     expect(opportunity).to.equal(undefined);
   });
 
@@ -38,9 +72,9 @@ describe('birthBeforeParentsBirth', function(){
       facts: [
         FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          date: 'January 1, 1900',
-          formalDate: '+1900-01-01',
-          place: 'Provo, Utah, United States of America'
+          $date: 'January 1, 1900',
+          $formalDate: '+1900-01-01',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -55,9 +89,9 @@ describe('birthBeforeParentsBirth', function(){
       facts: [
         FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          date: 'January 1, 1920',
-          formalDate: '+1920-01-01',
-          place: 'Provo, Utah, United States of America'
+          $date: 'January 1, 1920',
+          $formalDate: '+1920-01-01',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -68,7 +102,7 @@ describe('birthBeforeParentsBirth', function(){
         facts: [
           FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            place: 'Provo, Utah, United States of America'
+            $place: 'Provo, Utah, United States of America'
           })
         ]
       })
@@ -87,9 +121,9 @@ describe('birthBeforeParentsBirth', function(){
       facts: [
         FS.createFact({
           type: 'http://gedcomx.org/Birth',
-          date: 'May 1, 1920',
-          formalDate: '+1920-05-01',
-          place: 'Provo, Utah, United States of America'
+          $date: 'May 1, 1920',
+          $formalDate: '+1920-05-01',
+          $place: 'Provo, Utah, United States of America'
         })
       ]
     });
@@ -99,16 +133,16 @@ describe('birthBeforeParentsBirth', function(){
         gender: 'http://gedcomx.org/Female',
         names: [
           FS.createName({
-            givenName: 'Thelma',
-            surname: 'Louise'
+            $givenName: 'Thelma',
+            $surname: 'Louise'
           })
         ],
         facts: [
           FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            date: 'January 1, 1920',
-            formalDate: '+1920-01-01',
-            place: 'Provo, Utah, United States of America'
+            $date: 'January 1, 1920',
+            $formalDate: '+1920-01-01',
+            $place: 'Provo, Utah, United States of America'
           })
         ]
       }),
@@ -116,16 +150,16 @@ describe('birthBeforeParentsBirth', function(){
         gender: 'http://gedcomx.org/Male',
         names: [
           FS.createName({
-            givenName: 'Bob',
-            surname: 'Freemer'
+            $givenName: 'Bob',
+            $surname: 'Freemer'
           })
         ],
         facts: [
           FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            date: 'January 1, 1895',
-            formalDate: '+1895-01-01',
-            place: 'Provo, Utah, United States of America'
+            $date: 'January 1, 1895',
+            $formalDate: '+1895-01-01',
+            $place: 'Provo, Utah, United States of America'
           })
         ]
       })

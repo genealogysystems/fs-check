@@ -25,12 +25,15 @@ module.exports = {
           });
         };
         
-    // If we don't have a birth
     if(!birth || !birth.date) {
       return;
     }
     
     var birthFormal = utils.getFormalDate(birth);
+    
+    if(!birthFormal){
+      return;
+    }
     
     for(var i = 0; i < parents.length; i++){
       var parentBirth = parents[i].$getBirth();
