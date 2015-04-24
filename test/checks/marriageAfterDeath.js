@@ -2,8 +2,7 @@ var expect = require('chai').expect,
     fsCheck = require('../../lib/index.js').id('marriageAfterDeath'),
     doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    FS = utils.FS,
-    GedcomXDate = require('gedcomx-date');
+    FS = utils.FS;
 
 describe('marriageAfterDeath', function(){
 
@@ -151,6 +150,27 @@ describe('marriageAfterDeath', function(){
         });
         
       });
+      
+      it('partial', function(){
+        var person = generatePerson({
+          $formalDate: '+1950',
+          id: 'PPP-PPP',
+          name: 'Elmer Gate'
+        }),
+        opportunity = fsCheck.check(person, generateRelationships({
+          'SPOUSE1': {
+            coupleId: 'COUPLE1',
+            facts: [
+              {
+                $formalDate: '+1950-09'
+              }
+            ]
+          }
+        }), {
+          'SPOUSE1': utils.generatePerson({ name: 'Molly Sue' })
+        });
+        expect(opportunity).to.not.exist;
+      });
 
     });
   
@@ -243,7 +263,7 @@ describe('marriageAfterDeath', function(){
         });
         utils.validateSchema(fsCheck, opportunity);
       });
-      
+
     });
     
     describe('multiple marriages', function(){

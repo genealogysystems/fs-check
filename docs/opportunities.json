@@ -4,7 +4,7 @@
 "childBeforeMarriage":
 {"id":"childBeforeMarriage:PPPP-PPP","type":"problem","checkId":"childBeforeMarriage","personId":"PPPP-PPP","person":{"id":"PPPP-PPP","name":"John Adams","display":{"name":"John Adams"}},"template":{"pid":"PPPP-PPP","name":"John Adams","children":[{"spouseName":"Mary Adams","spouseId":"SPOUSE1","childName":"Elmer Fudd","childId":"CHILD1"},{"spouseName":"Sarah Jane","spouseId":"SPOUSE2","childName":"Mary Sue","childId":"CHILD2"}]}},
 "childrenTooClose":
-{"id":"childrenTooClose:undefined","type":"problem","checkId":"childrenTooClose","person":{"name":"Sarah Sue","gender":{"type":"http://gedcomx.org/Female"},"display":{"name":"Sarah Sue"}},"template":{"name":"Sarah Sue","pairs":[{"firstName":"Joe Adams","secondName":"Adam Smith"},{"firstName":"Adam Smith","secondName":"Mary Jane"},{"firstName":"Mary Jane","secondName":"Laura Doe"}]}},
+{"id":"childrenTooClose:undefined","type":"problem","checkId":"childrenTooClose","person":{"name":"Sarah Sue","gender":{"type":"http://gedcomx.org/Female"},"display":{"name":"Sarah Sue"}},"template":{"name":"Sarah Sue","pairs":[{},{},{}]}},
 "deathBeforeBirth":
 {"id":"deathBeforeBirth:PPPP-PPP","type":"problem","checkId":"deathBeforeBirth","personId":"PPPP-PPP","person":{"gender":"http://gedcomx.org/Female","names":[],"facts":[{"type":"http://gedcomx.org/Birth","date":{"formal":"+1900-01-02"}},{"type":"http://gedcomx.org/Death","date":{"formal":"+1900-01-01"}}],"id":"PPPP-PPP","display":{"name":"Mary Sue"}},"template":{"pid":"PPPP-PPP","name":"Mary Sue"}},
 "duplicateNames":

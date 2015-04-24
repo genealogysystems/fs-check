@@ -324,5 +324,32 @@ describe('birthBeforeParentsBirth', function(){
     var opportunity = fsCheck.check(person, parents);
     utils.validateSchema(fsCheck, opportunity);
   });
+  
+  it('should not error when processing partial dates', function(){
+    var person = FS.createPerson({
+      facts: [
+        FS.createFact({
+          type: 'http://gedcomx.org/Birth',
+          $formalDate: '+1820-01-01/+1821-12-31'
+        })
+      ],
+      id: 'XXX-123'
+    });
+    var parents = [
+      FS.createPerson({
+        id: 'XXX-456',
+        gender: 'http://gedcomx.org/Female',
+        facts: [
+          FS.createFact({
+            type: 'http://gedcomx.org/Birth',
+            $formalDate: '+1900'
+          })
+        ]
+      })
+    ];
+    
+    var opportunity = fsCheck.check(person, parents);
+    expect(opportunity).to.not.exist;
+  });
 
 });

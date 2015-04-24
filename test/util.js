@@ -1,7 +1,8 @@
 var expect = require('chai').expect,
     FSCheck = require('../lib/index.js'),
     util = require('../lib/util'),
-    FS = require('./test-utils').FS;
+    FS = require('./test-utils').FS,
+    GedcomXDate = require('gedcomx-date');
 
 describe('util', function(){
 
@@ -465,22 +466,102 @@ describe('util', function(){
       expect(result).to.equal(0);
     });
     
-    it('work for partial dates', function(){
-      var result = util.compareFormalDates('+1880', '+1880-02-04');
-      expect(result).to.equal(0);
-      result = util.compareFormalDates('+1880-02', '+1880-02-04');
-      expect(result).to.equal(0);
-      result = util.compareFormalDates('+1880', '+1880-02');
-      expect(result).to.equal(0);
-      
-      result = util.compareFormalDates('+1881', '+1880-02-04');
-      expect(result).to.equal(1);
-      result = util.compareFormalDates('+1881-02', '+1880-02-04');
-      expect(result).to.equal(1);
-      result = util.compareFormalDates('+1881', '+1880-02');
-      expect(result).to.equal(1);
+    it('should not work for partial dates', function(){
+      expect(function(){
+        util.compareFormalDates('+1880', '+1880-02-04');
+      }).to.throw(Error);
     })
   
   });
+  
+  describe('isFullDate()', function(){
+    
+    describe('strings', function(){
+    
+      it('should detect full date', function(){
+        expect(util.isFullDate('+1940-01-01')).to.be.true;
+      });
+      
+      it('should detect full approximate date', function(){
+        expect(util.isFullDate('A+1940-03-23')).to.be.true;
+      });
+      
+      it('should detect partial date', function(){
+        expect(util.isFullDate('+1940-04')).to.be.false;
+        expect(util.isFullDate('+1940')).to.be.false;
+      });
+      
+      it('should detect partial approximate date', function(){
+        expect(util.isFullDate('A+1940-04')).to.be.false;
+        expect(util.isFullDate('A+1940')).to.be.false;
+      });
+    
+    });
+    
+    describe('objects', function(){
+      
+      it('should detect full date', function(){
+        expect(util.isFullDate(new GedcomXDate('+1940-01-01'))).to.be.true;
+      });
+      
+      it('should detect full approximate date', function(){
+        expect(util.isFullDate(new GedcomXDate('A+1940-03-23'))).to.be.true;
+      });
+      
+      it('should detect partial date', function(){
+        expect(util.isFullDate(new GedcomXDate('+1940-04'))).to.be.false;
+        expect(util.isFullDate(new GedcomXDate('+1940'))).to.be.false;
+      });
+      
+      it('should detect partial approximate date', function(){
+        expect(util.isFullDate(new GedcomXDate('A+1940-04'))).to.be.false;
+        expect(util.isFullDate(new GedcomXDate('A+1940'))).to.be.false;
+      });
+      
+    });
+    
+    it('should throw error on bad input', function(){
+      expect(function(){
+        util.isFullDate({}).to.throw(Error, 'Expected either a formal date string or a GedcomXDate simple object.');
+      });
+    })
+    
+  });
+  
+  describe('ensureFullDate()', function(){
+    
+    it('should throw error on bad input', function(){
+      expect(function(){
+        util.ensureFullDate('+1940');
+      }).to.throw(Error, 'Expected date to be a GedcomXDate object.')
+    });
+    
+    it('should fill partial date', function(){
+      var date = new GedcomXDate('+1940');
+      util.ensureFullDate(date);
+      expect(date.toFormalString()).to.equal('+1940-01-01');
+      
+      date = new GedcomXDate('+1940-05');
+      util.ensureFullDate(date);
+      expect(date.toFormalString()).to.equal('+1940-05-01');
+    });
+    
+    it('should honor month and day params', function(){
+      var date = new GedcomXDate('+1940');
+      util.ensureFullDate(date, 3, 4);
+      expect(date.toFormalString()).to.equal('+1940-03-04');
+      
+      date = new GedcomXDate('+1940-05');
+      util.ensureFullDate(date, 3, 4);
+      expect(date.toFormalString()).to.equal('+1940-05-04');
+    });
+    
+    it('should not allow for invalid dates', function(){
+      var date = new GedcomXDate('+1940');
+      util.ensureFullDate(date, 2, 31);
+      expect(date.toFormalString()).to.equal('+1940-02-29');
+    });
+    
+  })
 
 });

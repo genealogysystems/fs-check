@@ -2,8 +2,7 @@ var expect = require('chai').expect,
     fsCheck = require('../../lib/index.js').id('deathBeforeBirth'),
     doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    FS = utils.FS,
-    GedcomXDate = require('gedcomx-date');
+    FS = utils.FS;
 
 describe('deathBeforeBirth', function(){
 
@@ -209,6 +208,44 @@ describe('deathBeforeBirth', function(){
     person.id = 'PPPP-PPP';
     var opportunity = fsCheck.check(person);
     utils.validateSchema(fsCheck, opportunity);
+  });
+  
+  it('should not error on partial dates', function(){
+    var person = FS.createPerson({
+      gender: 'http://gedcomx.org/Female',
+      facts: [
+        FS.createFact({
+          type: 'http://gedcomx.org/Birth',
+          $formalDate: '+1900'
+        }),
+        FS.createFact({
+          type: 'http://gedcomx.org/Death',
+          $formalDate: '+1885-09-12'
+        })
+      ]
+    });
+    person.id = 'PPPP-PPP';
+    var opportunity = fsCheck.check(person);
+    utils.validateSchema(fsCheck, opportunity);
+  });
+  
+  it('should not create opportunity for partial birth and death in same year', function(){
+    var person = FS.createPerson({
+      gender: 'http://gedcomx.org/Female',
+      facts: [
+        FS.createFact({
+          type: 'http://gedcomx.org/Birth',
+          $formalDate: '+1900'
+        }),
+        FS.createFact({
+          type: 'http://gedcomx.org/Death',
+          $formalDate: '+1900'
+        })
+      ]
+    });
+    person.id = 'PPPP-PPP';
+    var opportunity = fsCheck.check(person);
+    expect(opportunity).to.not.exist;
   });
 
 });

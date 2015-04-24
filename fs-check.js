@@ -31,7 +31,7 @@ module.exports = {
     
     var birthFormal = utils.getFormalDate(birth);
     
-    if(!birthFormal){
+    if(!birthFormal || !utils.isFullDate(birthFormal)){
       return;
     }
     
@@ -39,7 +39,7 @@ module.exports = {
       var parentBirth = parents[i].$getBirth();
       if(parentBirth){
         var parentBirthDate = utils.getFormalDate(parentBirth);
-        if(parentBirthDate && utils.compareFormalDates(birthFormal, parentBirthDate) === -1){
+        if(parentBirthDate && utils.isFullDate(parentBirthDate) && utils.compareFormalDates(birthFormal, parentBirthDate) === -1){
           addParent(parents[i]);
         }
       }
@@ -93,19 +93,20 @@ module.exports = {
       for(var j = 0; j < marriageFacts.length; j++){
         var fact = marriageFacts[j];
         if(fact.type === 'http://gedcomx.org/Marriage'){
-          var date = utils.getFormalDate(fact);
+          var date = new GedcomXDate(utils.getFormalDate(fact));
+          utils.ensureFullDate(date, 1, 1);
           if(date){
             marriageDates.push(date);
           }
         }
       }
       
-      // Sort the marriage dates to find the earliest one
-      marriageDates.sort(utils.compareFormalDates);
-      
       if(marriageDates.length === 0){
         continue;
       }
+      
+      // Sort the marriage dates to find the earliest one
+      marriageDates.sort(utils.compareFormalDates);
       
       var marriageDate = marriageDates[0];
       
@@ -143,6 +144,9 @@ module.exports = {
         if(!birthDate){
           continue;
         }
+        
+        birthDate = new GedcomXDate(birthDate);
+        utils.ensureFullDate(birthDate, 12, 31);
         
         if(utils.compareFormalDates(marriageDate, birthDate) === 1){
           childrenBeforeMarriage.push({
@@ -203,9 +207,9 @@ module.exports = {
       return;
     }
     
-    // Make sure all children with birth dates have
-    // a formal date set
-    var compareChildrenList = [];
+    // Gather a list of all children with a birth date.
+    // If a formal date is not set, do our best to create one.
+    var compareList = [];
     for(var i = 0; i < children.length; i++){
       var child = children[i],
           birth = child.$getBirth();
@@ -213,34 +217,39 @@ module.exports = {
         continue;
       }
       var newFormalDate = utils.getFormalDate(birth);
-      if(newFormalDate){
-        birth.$setFormalDate(newFormalDate);
-        compareChildrenList.push(child);
+      
+      // Make sure we have a full (not partial) formal date 
+      if(newFormalDate && utils.isFullDate(newFormalDate)){
+        compareList.push({
+          id: child.id,
+          date: newFormalDate,
+          name: child.$getDisplayName()
+        });
       }
     }
 
     // Sort children based on birth date
-    compareChildrenList.sort(function(a, b){
-      return utils.compareFormalDates(a.$getBirth().$getFormalDate(), b.$getBirth().$getFormalDate());
+    compareList.sort(function(a, b){
+      return utils.compareFormalDates(a.date, b.date);
     });
     
-    // Compare birth dates
+    // Gather list of children born less than 9 months apart
     var problemPairs = [];
-    for(var i = 1; i < compareChildrenList.length; i++){
-      var previousChild = compareChildrenList[i-1],
-          currentChild = compareChildrenList[i],
-          previousChildBirthDate = previousChild.$getBirth().$getFormalDate(),
-          currentChildBirthDate = currentChild.$getBirth().$getFormalDate(),
-          previousGedcomXDate = new utils.GedcomXDate(previousChildBirthDate),
-          currentGedcomXDate = new utils.GedcomXDate(currentChildBirthDate);
-      if(previousChildBirthDate && currentChildBirthDate && utils.compareFormalDates(previousGedcomXDate, currentGedcomXDate) !== 0){
+    for(var i = 1; i < compareList.length; i++){
+      var previous = compareList[i-1],
+          current = compareList[i],
+          previousGedcomXDate = new utils.GedcomXDate(previous.date),
+          currentGedcomXDate = new utils.GedcomXDate(current.date);
+      
+      // If the dates are not equal (ignore twins) then calculate time between dates
+      if(utils.compareFormalDates(previousGedcomXDate, currentGedcomXDate) !== 0){
         var birthDuration = utils.GedcomXDate.getDuration(previousGedcomXDate, currentGedcomXDate);
         if(!birthDuration.getYears() && birthDuration.getMonths() < 9){
           problemPairs.push({
-            firstName: previousChild.$getDisplayName(),
-            id1: previousChild.id,
-            secondName: currentChild.$getDisplayName(),
-            id2: currentChild.id
+            firstName: previous.name,
+            id1: previous.id,
+            secondName: current.name,
+            id2: current.id
           });
         }
       }
@@ -283,7 +292,7 @@ function formalDatesEqual(date1, date2){
  *  4. There is a death date
  */
 var utils = _dereq_('../util'),
-    help = _dereq_('../help');
+    GedcomXDate = _dereq_('gedcomx-date');
 
 module.exports = {
   id: 'deathBeforeBirth',
@@ -306,7 +315,7 @@ module.exports = {
     }
 
     // If either the birth or death date doesn't
-    // have a formal value then we just compare years
+    // have a formal then we just compare years.
     if(!birth.$getFormalDate() || !death.$getFormalDate()){
       var birthYear = utils.getFactYear(birth),
           deathYear = utils.getFactYear(death);
@@ -315,11 +324,18 @@ module.exports = {
       }
     }
     
-    // If they both have formal values then do an exact comparison
+    // If they both have full formal values then we compare
     else {
-      var birthFormal = utils.getFormalDate(birth),
-          deathFormal = utils.getFormalDate(death);
-      if(utils.compareFormalDates(birthFormal, deathFormal) !== 1) {
+      var birthGedx = new GedcomXDate(utils.getFormalDate(birth)),
+          deathGedx = new GedcomXDate(utils.getFormalDate(death));
+          
+      // If the birth date is partial then we make it a full
+      // leaning towards the earliest date to avoid false positives
+      // For death we lean towards the latest
+      utils.ensureFullDate(birthGedx, 1, 1);
+      utils.ensureFullDate(deathGedx, 12, 31);
+          
+      if(utils.compareFormalDates(birthGedx, deathGedx) !== 1) {
         return;
       }
     }
@@ -333,7 +349,7 @@ module.exports = {
 
   }
 };
-},{"../help":39,"../util":41}],5:[function(_dereq_,module,exports){
+},{"../util":41,"gedcomx-date":48}],5:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. There are duplicates names (ignoring capitalization and punctuation)
@@ -427,7 +443,8 @@ module.exports = {
 /**
  * Returns an opportunity if a marriage date is after the person's death date
  */
-var utils = _dereq_('../util.js');
+var utils = _dereq_('../util.js'),
+    GedcomXDate = _dereq_('gedcomx-date');
 
 module.exports = {
   id: 'marriageAfterDeath',
@@ -452,6 +469,9 @@ module.exports = {
       return;
     }
     
+    var formalDeathGedx = new GedcomXDate(formalDeathDate);
+    utils.ensureFullDate(formalDeathGedx, 12, 31);
+    
     // For each couple relationship, compare death date with all marriage events
     for(var i = 0; i < spouseIds.length; i++){
       var coupleRelationship = relationships.getSpouseRelationship(spouseIds[i]),
@@ -463,14 +483,18 @@ module.exports = {
           continue;
         }
         var formalMarriageDate = utils.getFormalDate(fact);
-        if(formalMarriageDate && utils.compareFormalDates(formalMarriageDate, formalDeathDate) === 1){
-          problemMarriage = true;
-          problemMarriages.push({
-            spouseId: spouseIds[i],
-            coupleId: coupleRelationship.id,
-            fact: fact,
-            formalDate: formalMarriageDate
-          });
+        if(formalMarriageDate){
+          var formalMarriageGedx = new GedcomXDate(formalMarriageDate);
+          utils.ensureFullDate(formalMarriageGedx);
+          if(utils.compareFormalDates(formalMarriageGedx, formalDeathGedx) === 1){
+            problemMarriage = true;
+            problemMarriages.push({
+              spouseId: spouseIds[i],
+              coupleId: coupleRelationship.id,
+              fact: fact,
+              formalDate: formalMarriageDate
+            });
+          }
         }
       }
     }
@@ -497,7 +521,7 @@ module.exports = {
     }
   }
 };
-},{"../util.js":41}],8:[function(_dereq_,module,exports){
+},{"../util.js":41,"gedcomx-date":48}],8:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if:
  *  1. Person has one or more marriages
@@ -2326,10 +2350,76 @@ utils.createOpportunity = function(check, person, template, gensearch){
   };
 };
 
+/**
+ * Returns true if the date is a full date.
+ * Full means is has a year, month, and day.
+ */
+utils.isFullDate = function(date){
+  if(isString(date)){
+    return date.length >= 11;
+  } else {
+    try {
+      if(isUndefined(date.getYear()) || isUndefined(date.getMonth()) || isUndefined(date.getDay())){
+        return false; 
+      } else {
+        return true;
+      }
+    } catch(e) {
+      throw new Error('Expected either a formal date string or a GedcomXDate simple object.');
+    }
+  }
+};
+
+/**
+ * Make the date a full date by filling in missing month and day.
+ * If the new value for month or day is not specified then 1 will be used.
+ * Modifies the given object. Only works for GedX dates.
+ */
+utils.ensureFullDate = function(date, newMonth, newDay){
+  try {
+    if(!newMonth){
+      newMonth = 1;
+    }
+    if(newMonth > 12){
+      newMonth = 12;
+    }
+    if(!newDay){
+      newDay = 1;
+    }
+    
+    // TODO: user setters if they're ever available.
+    // https://github.com/trepo/gedcomx-date-js/issues/13
+    if(isUndefined(date.getMonth())){
+      date._month = newMonth;
+    }
+    if(isUndefined(date.getDay())){
+      var validDayMax = GedcomXDate.daysInMonth(date.getMonth(), date.getYear());
+      if(newDay > validDayMax){
+        newDay = validDayMax;
+      }
+      date._day = newDay;
+    }
+  } catch(e) {
+    throw new Error('Expected date to be a GedcomXDate object.');
+  }
+}
+
+/**
+ * Polyfill. Returns true or false;
+ */
 if (!Array.isArray) {
   Array.isArray = function(arg) {
     return Object.prototype.toString.call(arg) === '[object Array]';
   };
+}
+
+// http://stackoverflow.com/a/9436948/879121
+function isString(obj){
+  return typeof obj === 'string' || obj instanceof String;
+}
+
+function isUndefined(obj){
+  return typeof obj === 'undefined';
 }
 },{"gedcomx-date":48,"marked":54,"mustache":55}],42:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
@@ -4499,7 +4589,7 @@ function fromJSDate(date){
 };
 
 /**
- * Compare two dates. Only works for single dates right now.
+ * Compare two dates. Only works for single dates with the same specificity.
  * Designed to be usable as a custom compare function for sorting an array of dates.
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
  */
@@ -4507,17 +4597,25 @@ function compare(date1, date2){
   
   // Allow formal strings as input
   if(isString(date1)){
-    if(date1[0] === 'A'){
-      date1 = new Approximate(date1);
-    } else {
-      date1 = new Simple(date1);
+    try {
+      if(date1[0] === 'A'){
+        date1 = new Approximate(date1);
+      } else {
+        date1 = new Simple(date1);
+      }
+    } catch(e) {
+      throw new Error(date1 + ' is not a simple date. Can only compare simple dates.')
     }
   }
   if(isString(date2)){
-    if(date2[0] === 'A'){
-      date2 = new Approximate(date2);
-    } else {
-      date2 = new Simple(date2);
+    try {
+      if(date2[0] === 'A'){
+        date2 = new Approximate(date2);
+      } else {
+        date2 = new Simple(date2);
+      }
+    } catch(e) {
+      throw new Error(date2 + ' is not a simple date. Can only compare simple dates.')
     }
   }
   
@@ -4546,16 +4644,11 @@ function compare(date1, date2){
       continue;
     }
 
-    // If either part is undefined then consider the dates equal.
-    // Undefined parts are only allowed for lower order positions and
-    // cannot occur if anything is defined in a lower order. For example,
-    // you can't have a year and day but no month. So once we see something
-    // that was undefined we know everything before that matched and
-    // therefore the dates are effectively equal (either we're done comparing
-    // because nothing else is defined or we're comparing two dates with
-    // different specifities, i.e. comparing +1900 to +1900-04)
+    // We already know that both parts are not undefined, so if one of them
+    // is then we know the dates have different specificities. We can't support
+    // that. See https://github.com/trepo/gedcomx-date-js/pull/12
     if(typeof date1[part] === 'undefined' || typeof date2[part] === 'undefined'){
-      break;
+      throw new Error('Unable to compare dates with different specificities.')
     }
     
     // By this point we're guaranteed that this part is defined in both dates

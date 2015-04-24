@@ -2,8 +2,7 @@ var expect = require('chai').expect,
     fsCheck = require('../../lib/index.js').id('childBeforeMarriage'),
     doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    FS = utils.FS,
-    GedcomXDate = require('gedcomx-date');
+    FS = utils.FS;
 
 describe('childBeforeMarriage', function(){
 
@@ -346,7 +345,7 @@ describe('childBeforeMarriage', function(){
         facts: [
           FS.createFact({
             type: 'http://gedcomx.org/Birth',
-            $formalDate: '+1901-05-10'
+            $formalDate: '+1900'
           })
         ]
       }),
@@ -373,7 +372,7 @@ describe('childBeforeMarriage', function(){
         facts: [
           FS.createFact({
             type: 'http://gedcomx.org/Marriage',
-            $formalDate: '+1900-10-03'
+            $formalDate: '+1900'
           })
         ]
       })

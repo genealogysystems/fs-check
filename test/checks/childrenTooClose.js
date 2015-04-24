@@ -2,8 +2,7 @@ var expect = require('chai').expect,
     fsCheck = require('../../lib/index.js').id('childrenTooClose'),
     doc = require('../../docs/util.js'),
     utils = require('../test-utils.js'),
-    FS = utils.FS,
-    GedcomXDate = require('gedcomx-date');
+    FS = utils.FS;
 
 describe('childrenTooClose', function(){
 
@@ -91,8 +90,12 @@ describe('childrenTooClose', function(){
         gender: 'http://gedcomx.org/Female'
       });
       fsCheck.check(person, generateChildren([
-        {$formalDate: '+1880'},
-        {$formalDate: '+1880-01-01'}
+        {$formalDate: '+1562-02-12'},
+        {$formalDate: 'A+1562'},
+        {$formalDate: '+1562-01-11/+1563-01-10'},
+        {$formalDate: 'A+1562'},
+        {$formalDate: '+1562-02-12'},
+        {$date: 'about 1562'},
       ]));
     };
     expect(invalid).to.not.throw(Error);
@@ -111,14 +114,11 @@ function generateChildren(dates){
   return children;
 };
 
-function generateChild(data){
-  if(data){
-    data.facts = [
-      {
-        type: 'http://gedcomx.org/Birth',
-        $formalDate: data.$formalDate
-      }
-    ];
+function generateChild(birth){
+  var data = {};
+  if(birth){
+    birth.type = 'http://gedcomx.org/Birth';
+    data.facts = [ birth ];
   }
   return utils.generatePerson(data);
 };
