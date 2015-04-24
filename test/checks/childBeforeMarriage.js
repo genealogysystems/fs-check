@@ -18,7 +18,13 @@ describe('childBeforeMarriage', function(){
     var relationships = {
       getSpouseRelationships: function(){ 
         return [
-          FS.createCouple()
+          FS.createCouple({
+            facts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/Marriage'
+              })
+            ]
+          })
         ]
       }
     };
