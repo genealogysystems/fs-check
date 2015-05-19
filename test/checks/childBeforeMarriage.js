@@ -74,7 +74,19 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            $child: 'CHILD'
+            $child: 'CHILD',
+            $father: 'FATHER',
+            $mother: 'MOTHER',
+            fatherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent' 
+              }) 
+            ],
+            motherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent'
+              })  
+            ]
           })
         ]; 
       }
@@ -111,7 +123,19 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            $child: 'CHILD'
+            $child: 'CHILD',
+            $father: 'FATHER',
+            $mother: 'MOTHER',
+            fatherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent' 
+              }) 
+            ],
+            motherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent'
+              })  
+            ]
           })
         ]; 
       }
@@ -148,7 +172,19 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            $child: 'CHILD'
+            $child: 'CHILD',
+            $father: 'FATHER',
+            $mother: 'MOTHER',
+            fatherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent' 
+              }) 
+            ],
+            motherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent'
+              })  
+            ]
           })
         ]; 
       }
@@ -174,7 +210,19 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            $child: 'CHILD'
+            $child: 'CHILD',
+            $father: 'FATHER',
+            $mother: 'MOTHER',
+            fatherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent' 
+              }) 
+            ],
+            motherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent'
+              })  
+            ]
           })
         ]; 
       }
@@ -218,7 +266,19 @@ describe('childBeforeMarriage', function(){
       getChildRelationshipsOf: function(){ 
         return [
           FS.createChildAndParents({
-            $child: 'CHILD'
+            $child: 'CHILD',
+            $father: 'FATHER',
+            $mother: 'MOTHER',
+            fatherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent' 
+              }) 
+            ],
+            motherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent'
+              })  
+            ]
           })
         ]; 
       }
@@ -300,13 +360,37 @@ describe('childBeforeMarriage', function(){
         if(spouseId === 'SPOUSE1'){
           return [
             FS.createChildAndParents({
-              $child: 'CHILD1'
+              $child: 'CHILD1',
+              $father: 'FATHER',
+              $mother: 'MOTHER',
+              fatherFacts: [
+                FS.createFact({
+                  type: 'http://gedcomx.org/BiologicalParent' 
+                }) 
+              ],
+              motherFacts: [
+                FS.createFact({
+                  type: 'http://gedcomx.org/BiologicalParent'
+                })  
+              ]
             })
           ];
         } else {
           return [
             FS.createChildAndParents({
-              $child: 'CHILD2'
+              $child: 'CHILD2',
+              $father: 'FATHER',
+              $mother: 'MOTHER',
+              fatherFacts: [
+                FS.createFact({
+                  type: 'http://gedcomx.org/BiologicalParent' 
+                }) 
+              ],
+              motherFacts: [
+                FS.createFact({
+                  type: 'http://gedcomx.org/BiologicalParent'
+                })  
+              ]
             })
           ];
         }
@@ -394,13 +478,37 @@ describe('childBeforeMarriage', function(){
         if(spouseId === 'SPOUSE1'){
           return [
             FS.createChildAndParents({
-              $child: 'CHILD1'
+              $child: 'CHILD1',
+              $father: 'FATHER',
+              $mother: 'MOTHER',
+              fatherFacts: [
+                FS.createFact({
+                  type: 'http://gedcomx.org/BiologicalParent' 
+                }) 
+              ],
+              motherFacts: [
+                FS.createFact({
+                  type: 'http://gedcomx.org/BiologicalParent'
+                })  
+              ]
             })
           ];
         } else {
           return [
             FS.createChildAndParents({
-              $child: 'CHILD2'
+              $child: 'CHILD2',
+              $father: 'FATHER',
+              $mother: 'MOTHER',
+              fatherFacts: [
+                FS.createFact({
+                  type: 'http://gedcomx.org/BiologicalParent' 
+                }) 
+              ],
+              motherFacts: [
+                FS.createFact({
+                  type: 'http://gedcomx.org/BiologicalParent'
+                })  
+              ]
             })
           ];
         }
@@ -418,6 +526,66 @@ describe('childBeforeMarriage', function(){
       childName: undefined,
       childId: 'CHILD1'
     }]);
+  });
+  
+  it('should ignore non-biological relationships', function(){
+    var persons = {
+      'CHILD': FS.createPerson({
+        id: 'CHILD',
+        facts: [
+          FS.createFact({
+            type: 'http://gedcomx.org/Birth',
+            $formalDate: '+1899-05-10'
+          })
+        ]
+      }),
+      'SPOUSE': FS.createPerson({
+        id: 'SPOUSE'
+      })
+    };
+    
+    var marriages = [
+      FS.createCouple({
+        facts: [
+          FS.createFact({
+            type: 'http://gedcomx.org/Marriage',
+            $formalDate: '+1900-07-03'
+          })
+        ]
+      })
+    ];
+    marriages[0].$getSpouseId = function(){ return 'SPOUSE'; };
+    
+    var relationships = {
+      getSpouseRelationships: function(){ 
+        return marriages;
+      },
+      getChildRelationshipsOf: function(){ 
+        return [
+          FS.createChildAndParents({
+            $child: 'CHILD',
+            $father: 'FATHER',
+            $mother: 'MOTHER',
+            fatherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/AdoptiveParent' 
+              }) 
+            ],
+            motherFacts: [
+              FS.createFact({
+                type: 'http://gedcomx.org/BiologicalParent'
+              })  
+            ]
+          })
+        ]; 
+      }
+    };
+    
+    var person = FS.createPerson();
+    person.id = 'PPPP-PPP';
+    
+    var opportunity = fsCheck.check(person, relationships, persons);
+    expect(opportunity).to.not.exist;
   });
   
 });

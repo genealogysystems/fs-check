@@ -562,6 +562,66 @@ describe('util', function(){
       expect(date.toFormalString()).to.equal('+1940-02-29');
     });
     
+  });
+  
+  describe('isBiologicalChildAndParents', function(){
+    
+    it('return true when both parents are biological', function(){
+      expect(util.isBiologicalChildAndParents(FS.createChildAndParents({
+        $father: 'FATHER',
+        $mother: 'MOTHER',
+        fatherFacts: [
+          {
+            type: 'http://gedcomx.org/BiologicalParent'
+          }
+        ],
+        motherFacts: [
+          {
+            type: 'http://gedcomx.org/BiologicalParent'
+          }  
+        ]
+      }))).to.be.true;
+    });
+    
+    it('return true when one parent exists and that parent is biological', function(){
+      expect(util.isBiologicalChildAndParents(FS.createChildAndParents({
+        $father: 'FATHER',
+        fatherFacts: [
+          {
+            type: 'http://gedcomx.org/BiologicalParent'
+          }
+        ]
+      }))).to.be.true;
+    });
+    
+    it('return false when both parents exist and one is non-biological', function(){
+      expect(util.isBiologicalChildAndParents(FS.createChildAndParents({
+        $father: 'FATHER',
+        $mother: 'MOTHER',
+        fatherFacts: [
+          {
+            type: 'http://gedcomx.org/BiologicalParent'
+          }
+        ],
+        motherFacts: [
+          {
+            type: 'http://gedcomx.org/AdoptiveParent'
+          }  
+        ]
+      }))).to.be.false;
+    });
+    
+    it('return false when one parent exists and that parent is non-biological', function(){
+      expect(util.isBiologicalChildAndParents(FS.createChildAndParents({
+        $father: 'FATHER',
+        fatherFacts: [
+          {
+            type: 'http://gedcomx.org/StepParent'
+          }
+        ]
+      }))).to.be.false;
+    });
+    
   })
 
 });

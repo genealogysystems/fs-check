@@ -49,6 +49,15 @@ module.exports = {
     person.id = data.id;
     person.display = { name: data.name };
     return person;
+  },
+  
+  asyncTest: function(done, f){
+    try {
+      f();
+      done();
+    } catch(e) {
+      done(e);
+    }
   }
 
 };
