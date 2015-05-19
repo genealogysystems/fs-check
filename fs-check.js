@@ -69,7 +69,7 @@ module.exports = {
   id: 'childBeforeMarriage',
   type: 'problem',
   signature: 'relationships',
-  help: ['addingAndCorrecting'],
+  help: ['addingAndCorrecting', 'parentRelationshipType'],
   check: function(person, relationships, persons) {
 
     var marriages = relationships.getSpouseRelationships(),
@@ -1416,7 +1416,7 @@ module.exports = {
   id: 'multipleParents',
   type: 'family',
   signature: 'relationships',
-  help: ['addingAndCorrecting'],
+  help: ['addingAndCorrecting', 'parentRelationshipType'],
   check: function(person, relationships, people) {
 
     var parentRelationships = relationships.getParentRelationships();
@@ -1936,7 +1936,8 @@ module.exports = {
   mergingDuplicates: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Merging-Duplicate-Records-in-Family-Tree-1381814853391',
   nonexactDates: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Do-not-know-exact-birth-date-or-death-date',
   recordHints: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Record-Hints',
-  standardizing: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Entering-Standardized-Dates-and-Places'
+  standardizing: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Entering-Standardized-Dates-and-Places',
+  parentRelationshipType: 'https://familysearch.org/ask/salesforce/viewArticle?urlname=Adding-Changing-and-Deleting-Relationship-Types-between-Parents-and-Children'
 };
 },{}],40:[function(_dereq_,module,exports){
 var utils = _dereq_('./util'),

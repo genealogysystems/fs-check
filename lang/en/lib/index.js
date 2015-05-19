@@ -9,7 +9,8 @@ var data = module.exports = {
     mergingDuplicates: 'Merging Duplicate Persons',
     nonexactDates: 'Approximate Dates',
     recordHints: 'Reviewing Record Hints',
-    standardizing: 'Standardizing Dates and Places'
+    standardizing: 'Standardizing Dates and Places',
+    parentRelationshipType: 'Updating Parent Relationship Type'
   },
   checks: {
     birthBeforeParentsBirth: {
