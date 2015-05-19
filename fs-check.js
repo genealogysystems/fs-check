@@ -63,7 +63,6 @@ module.exports = {
  *    was born before the marriage.
  */
 var utils = _dereq_('../util'),
-    help = _dereq_('../help'),
     GedcomXDate = _dereq_('gedcomx-date');
 
 module.exports = {
@@ -120,7 +119,8 @@ module.exports = {
       }
       
       // For each child in this marriage, check to see if they
-      // have a birth date and if it's before the marriage date
+      // have a birth date, if the relationships are biologica,
+      // and if the birth date is before the marriage date
       for(var j = 0; j < children.length; j++){
       
         var rel = children[j],
@@ -129,6 +129,11 @@ module.exports = {
         
         // Short-circuit if we can't find the child. This should never happen.
         if(!child){
+          continue;
+        }
+        
+        // Short-circuit if the relationships are not biological
+        if(!utils.isBiologicalChildAndParents(rel)){
           continue;
         }
         
@@ -186,7 +191,7 @@ module.exports = {
     }
   }
 };
-},{"../help":39,"../util":41,"gedcomx-date":48}],3:[function(_dereq_,module,exports){
+},{"../util":41,"gedcomx-date":48}],3:[function(_dereq_,module,exports){
 /**
  * Returns an opportunity if two children are born less than 9 months apart
  */
@@ -1420,47 +1425,37 @@ module.exports = {
       return;
     }
     
-    var biologicalFathers = 0,
-        biologicalMothers = 0;
+    var biologicalParentIds = {};
     
-    // For each parent, begin by assuming they are biological.
-    // We do this because a large percentage of parent relationships
-    // do not have type specified.   
     for(var i = 0; i < parentRelationships.length; i++){
       var relationship = parentRelationships[i],
+          fatherId = relationship.$getFatherId(),
+          motherId = relationship.$getMotherId(),
           fatherFacts = relationship.$getFatherFacts(),
-          motherFacts = relationship.$getMotherFacts(),
-          biologicalFather = true,
-          biologicalMother = true;
-      for(var j = 0; biologicalFather && j < fatherFacts.length; j++){
-        if(fatherFacts[j].type !== 'http://gedcomx.org/BiologicalParent'){
-          biologicalFather = false;
+          motherFacts = relationship.$getMotherFacts();
+      if(fatherId && fatherFacts){
+        for(var j = 0; j < fatherFacts.length; j++){
+          if(fatherFacts[j].type === 'http://gedcomx.org/BiologicalParent'){
+            biologicalParentIds[fatherId] = true;
+          }
         }
       }
-      for(var j = 0; biologicalMother && j < motherFacts.length; j++){
-        if(motherFacts[j].type !== 'http://gedcomx.org/BiologicalParent'){
-          biologicalMother = false;
+      if(motherId && motherFacts){
+        for(var j = 0; j < motherFacts.length; j++){
+          if(motherFacts[j].type === 'http://gedcomx.org/BiologicalParent'){
+            biologicalParentIds[motherId] = true;
+          }
         }
-      }
-      if(biologicalFather){
-        biologicalFathers++;
-      }
-      if(biologicalMother){
-        biologicalMothers++;
       }
     }
     
-    if(biologicalFathers < 2 && biologicalMothers < 2){
-      return;
+    if(Object.keys(biologicalParentIds).length > 2){
+      var template = {
+        name: person.$getDisplayName(),
+        pid:  person.id
+      };
+      return utils.createOpportunity(this, person, template);
     }
-    
-    var template = {
-      name: person.$getDisplayName(),
-      pid:  person.id
-    };
-
-    return utils.createOpportunity(this, person, template);
-
   }
 };
 },{"../help":39,"../util":41}],29:[function(_dereq_,module,exports){
@@ -2404,6 +2399,45 @@ utils.ensureFullDate = function(date, newMonth, newDay){
     throw new Error('Expected date to be a GedcomXDate object.');
   }
 }
+
+
+
+/**
+ * Returns true if both parents are biological
+ * or true if only one parents exists and that parent is biological.
+ * Returns false if any non-biological parent relationships exist.
+ */
+utils.isBiologicalChildAndParents = function(childAndParents){
+  var fatherFacts = childAndParents.$getFatherFacts(),
+      motherFacts = childAndParents.$getMotherFacts();
+      
+  if(childAndParents.$getFatherId()){
+    if(!fatherFacts || !containsBiologicalParentFact(fatherFacts)){
+      return false;
+    }
+  }
+  
+  if(childAndParents.$getMotherId()){
+    if(!motherFacts || !containsBiologicalParentFact(motherFacts)){
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+/**
+ * Helper function used by isBiologicalChildAndParents.
+ * Returns true if the array of facts contains a BiologicalParent fact.
+ */
+function containsBiologicalParentFact(facts){
+  for(var i = 0; i < facts.length; i++){
+    if(facts[i].type === 'http://gedcomx.org/BiologicalParent'){
+      return true;
+    }
+  }
+  return false;
+};
 
 /**
  * Polyfill. Returns true or false;
