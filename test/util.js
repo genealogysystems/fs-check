@@ -156,7 +156,7 @@ describe('util', function(){
           fn = function(){
             util.getFactYear(fact);
           };
-      expect(fn).to.not.throw(Error);
+      expect(fn).to.throw(Error);
     });
     
     it('should return the original year', function(){

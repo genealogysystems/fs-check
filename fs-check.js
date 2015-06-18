@@ -2236,27 +2236,20 @@ utils.getFormalDate = function(fact){
  * instead. It will simplify your life immensly.
  */
 utils.getSimpleFormalDate = function(formalDateString){
-  try {
-    var date = new GedcomXDate(formalDateString);
-    if(date.getType() != 'single') {
-      if(date.getStart() && !date.getEnd()) {
-        date = date.getStart();
-      } else if(!date.getStart() && date.getEnd()) {
-        date = date.getEnd();
-      } else {
-        var start = date.getStart(),
-            duration = date.getDuration(),
-            halfDuration = GedcomXDate.multiplyDuration(duration, .5);
-        date = GedcomXDate.addDuration(start, halfDuration);
-      }
-    }
-    return date;
-  } catch(error) {
-    if(console.error){
-      console.error('Error parsing ' + formalDateString);
-      console.error(error);
+  var date = new GedcomXDate(formalDateString);
+  if(date.getType() != 'single') {
+    if(date.getStart() && !date.getEnd()) {
+      date = date.getStart();
+    } else if(!date.getStart() && date.getEnd()) {
+      date = date.getEnd();
+    } else {
+      var start = date.getStart(),
+          duration = date.getDuration(),
+          halfDuration = GedcomXDate.multiplyDuration(duration, .5);
+      date = GedcomXDate.addDuration(start, halfDuration);
     }
   }
+  return date;
 };
 
 /**
