@@ -169,6 +169,49 @@ FSCheck.help(['customEvents', 'recordHints'], 'en');
 ]
 ```
 
+### add(check, templates)
+
+Add a new check.
+
+```js
+FSCheck.add({
+  id: 'testAdd',
+  type: 'testType',
+  signature: 'testSignature',
+  help: [],
+  check: function(){
+    return {
+      id: 'testAdd:TTTT',
+      type: 'testType',
+      checkId: 'testAdd',
+      personId: 'TTTT',
+      person: {},
+      gensearch: {},
+      template: {
+        foo: 'bar'
+      }
+    };
+  }
+}, {
+  'en': {
+    title: 'Test add check',
+    description: '{{foo}}'
+  },
+  'es': {
+    title: 'Prueba de añadir',
+    description: '{{foo}}'
+  }
+});
+```
+
+### remove(checkId)
+
+Remove a check.
+
+```js
+FSCheck.remove('testAdd');
+```
+
 # Checks
 
 View a list of the [checks grouped by signature and type](lib/checks#checks).

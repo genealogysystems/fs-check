@@ -24,9 +24,11 @@ var typeCounts = {
 
 describe('FSCheck', function(){
 
-  it('should expose seven functions', function(){
-    expect(Object.keys(FSCheck)).to.have.length(11);
+  it('should expose proper functions', function(){
+    expect(Object.keys(FSCheck)).to.have.length(13);
     expect(FSCheck).to.have.property('all');
+    expect(FSCheck).to.have.property('add');
+    expect(FSCheck).to.have.property('remove');
     expect(FSCheck).to.have.property('id');
     expect(FSCheck).to.have.property('signature');
     expect(FSCheck).to.have.property('signatures');
@@ -56,7 +58,7 @@ describe('FSCheck', function(){
       // If calling fscheck by the check's id returns the
       // check itself for all checks then we know that all
       // checks have a unique id because if they didn't then
-      // requesting a check by itss id would return whichever
+      // requesting a check by its id would return whichever
       // check duplicated its id and stamped over it
       for(var i = 0; i < checks.length; i++){
         expect(FSCheck.id(checks[i].id)).to.equal(checks[i]);
@@ -108,6 +110,67 @@ describe('FSCheck', function(){
     
     it('should return correct number of types', function(){
       expect(FSCheck.types()).to.have.members(['person','source','family','problem','cleanup']);
+    });
+    
+  });
+  
+  describe('FSCheck.add', function(){
+    
+    it('allow a new check to be registered', function(){
+      var newCheck = {
+        id: 'testAdd',
+        type: 'testType',
+        signature: 'testSignature',
+        help: [],
+        check: function(){
+          return {
+            id: 'testAdd:TTTT',
+            type: 'testType',
+            checkId: 'testAdd',
+            personId: 'TTTT',
+            person: {},
+            gensearch: {},
+            template: {
+              foo: 'bar'
+            }
+          };
+        }
+      };
+      FSCheck.add(newCheck, {
+        'en': {
+          title: 'Test add check',
+          description: '{{foo}}'
+        },
+        'es': {
+          title: 'Prueba de añadir',
+          description: '{{foo}}'
+        }
+      });
+      
+      expect(FSCheck.signatures()).to.include('testSignature');
+      expect(FSCheck.signature('testSignature')).to.have.length(1);
+      expect(FSCheck.types()).to.include('testType');
+      expect(FSCheck.type('testType')).to.have.length(1);
+      
+      var registeredCheck = FSCheck.id('testAdd');
+      expect(registeredCheck).equals(newCheck);
+      var opportunity = registeredCheck.check();
+      expect(opportunity.id).equals('testAdd:TTTT');
+      FSCheck.translate(opportunity, 'en');
+      expect(opportunity.title).equals('Test add check');
+      expect(opportunity.description).equals('<p>bar</p>\n');
+      FSCheck.translate(opportunity, 'es');
+      expect(opportunity.title).equals('Prueba de añadir');
+      
+      // Remove check
+      FSCheck.remove(newCheck.id);
+      expect(FSCheck.signatures()).to.not.include('testSignature');
+      expect(FSCheck.signature('testSignature')).to.not.exist;
+      expect(FSCheck.types()).to.not.include('testType');
+      expect(FSCheck.type('testType')).to.not.exist;
+      expect(FSCheck.id('testAdd')).to.not.exist;
+      expect(FSCheck.title('testAdd', 'en')).to.not.exist;
+      expect(FSCheck.title('testAdd', 'es')).to.not.exist;
     });
     
   });
