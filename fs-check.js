@@ -1943,72 +1943,14 @@ module.exports = {
 var utils = _dereq_('./util'),
     help = _dereq_('./help');
 
-var checks = [
-  _dereq_('./checks/birthBeforeParentsBirth'),
-  _dereq_('./checks/childBeforeMarriage'),
-  _dereq_('./checks/childrenTooClose'),
-  _dereq_('./checks/deathBeforeBirth'),
-  _dereq_('./checks/duplicateNames'),
-  _dereq_('./checks/manyAlternateNames'),
-  _dereq_('./checks/marriageAfterDeath'),
-  _dereq_('./checks/marriageWithNoChildren'),
-  _dereq_('./checks/missingBirth'),
-  _dereq_('./checks/missingBirthDate'),
-  _dereq_('./checks/missingBirthPlace'),
-  _dereq_('./checks/missingBirthSource'),
-  _dereq_('./checks/missingDeath'),
-  _dereq_('./checks/missingDeathDate'),
-  _dereq_('./checks/missingDeathPlace'),
-  _dereq_('./checks/missingDeathSource'),
-  _dereq_('./checks/missingFather'),
-  _dereq_('./checks/missingGivenName'),
-  _dereq_('./checks/missingMarriageDate'),
-  _dereq_('./checks/missingMarriageFact'),
-  _dereq_('./checks/missingMarriagePlace'),
-  _dereq_('./checks/missingMarriageSource'),
-  _dereq_('./checks/missingMother'),
-  _dereq_('./checks/missingName'),
-  _dereq_('./checks/missingParents'),
-  _dereq_('./checks/missingSurname'),
-  _dereq_('./checks/multipleMarriageFacts'),
-  _dereq_('./checks/multipleParents'),
-  _dereq_('./checks/orInName'),
-  _dereq_('./checks/possibleDuplicates'),
-  _dereq_('./checks/recordHints'),
-  _dereq_('./checks/standardizeBirthDate'),
-  _dereq_('./checks/standardizeBirthPlace'),
-  _dereq_('./checks/standardizeDeathDate'),
-  _dereq_('./checks/standardizeDeathPlace'),
-  _dereq_('./checks/standardizeMarriageDate'),
-  _dereq_('./checks/standardizeMarriagePlace'),
-  _dereq_('./checks/unusualCharactersInName')
-];
-
-// Group checks by ID
+// Index checks by ID
 var ids = {};
-for(var i = 0; i < checks.length; i++){
-  ids[checks[i].id] = checks[i];
-}
 
-// Group checks by signature
+// Index checks by signature
 var signatures = {};
-for(var i = 0; i < checks.length; i++){
-  var signature = checks[i].signature;
-  if(!signatures[signature]){
-    signatures[signature] = [];
-  }
-  signatures[signature].push(checks[i]);
-}
 
-// Groups checks by type
+// Index checks by type
 var types = {};
-for(var i = 0; i < checks.length; i++){
-  var type = checks[i].type;
-  if(!types[type]){
-    types[type] = [];
-  }
-  types[type].push(checks[i]);
-}
 
 var languages = {};
 
@@ -2059,6 +2001,77 @@ module.exports = {
       list.push(t);
     }
     return list;
+  },
+  
+  /**
+   * Add a custom check
+   */
+  add: function(check, templates){
+    ids[check.id] = check;
+    
+    // Register signature
+    var signature = check.signature;
+    if(!signatures[signature]){
+      signatures[signature] = [];
+    }
+    signatures[signature].push(check);
+    
+    // Register type
+    var type = check.type;
+    if(!types[type]){
+      types[type] = [];
+    }
+    types[type].push(check);
+    
+    // Add language templates
+    if(templates){
+      for(var lang in templates){
+        if(!languages[lang]){
+          languages[lang] = {
+            code: lang,
+            help: {},
+            checks: {}
+          };
+        }
+        languages[lang].checks[check.id] = templates[lang];
+      }
+    }
+  },
+  
+  /**
+   * Remove a check.
+   */
+  remove: function(checkId){
+    var check = ids[checkId];
+    if(check){
+      delete ids[checkId];
+      
+      var signature = check.signature;
+      for(var i = 0; i < signatures[signature].length; i++){
+        if(signatures[signature][i].id === checkId){
+          signatures[signature].splice(i, 1);
+          break;
+        }
+      }
+      if(signatures[signature].length === 0){
+        delete signatures[signature];
+      }
+      
+      var type = check.type;
+      for(var i = 0; i < types[type].length; i++){
+        if(types[type][i].id === checkId){
+          types[type].splice(i, 1);
+          break;
+        }
+      }
+      if(types[type].length === 0){
+        delete types[type];
+      }
+      
+      for(var lang in languages){
+        delete languages[lang].checks[checkId];
+      }
+    }
   },
   
   /**
@@ -2134,6 +2147,51 @@ module.exports = {
   }
   
 };
+
+var checks = [
+  _dereq_('./checks/birthBeforeParentsBirth'),
+  _dereq_('./checks/childBeforeMarriage'),
+  _dereq_('./checks/childrenTooClose'),
+  _dereq_('./checks/deathBeforeBirth'),
+  _dereq_('./checks/duplicateNames'),
+  _dereq_('./checks/manyAlternateNames'),
+  _dereq_('./checks/marriageAfterDeath'),
+  _dereq_('./checks/marriageWithNoChildren'),
+  _dereq_('./checks/missingBirth'),
+  _dereq_('./checks/missingBirthDate'),
+  _dereq_('./checks/missingBirthPlace'),
+  _dereq_('./checks/missingBirthSource'),
+  _dereq_('./checks/missingDeath'),
+  _dereq_('./checks/missingDeathDate'),
+  _dereq_('./checks/missingDeathPlace'),
+  _dereq_('./checks/missingDeathSource'),
+  _dereq_('./checks/missingFather'),
+  _dereq_('./checks/missingGivenName'),
+  _dereq_('./checks/missingMarriageDate'),
+  _dereq_('./checks/missingMarriageFact'),
+  _dereq_('./checks/missingMarriagePlace'),
+  _dereq_('./checks/missingMarriageSource'),
+  _dereq_('./checks/missingMother'),
+  _dereq_('./checks/missingName'),
+  _dereq_('./checks/missingParents'),
+  _dereq_('./checks/missingSurname'),
+  _dereq_('./checks/multipleMarriageFacts'),
+  _dereq_('./checks/multipleParents'),
+  _dereq_('./checks/orInName'),
+  _dereq_('./checks/possibleDuplicates'),
+  _dereq_('./checks/recordHints'),
+  _dereq_('./checks/standardizeBirthDate'),
+  _dereq_('./checks/standardizeBirthPlace'),
+  _dereq_('./checks/standardizeDeathDate'),
+  _dereq_('./checks/standardizeDeathPlace'),
+  _dereq_('./checks/standardizeMarriageDate'),
+  _dereq_('./checks/standardizeMarriagePlace'),
+  _dereq_('./checks/unusualCharactersInName')
+];
+
+for(var i = 0; i < checks.length; i++){
+  module.exports.add(checks[i]);
+}
 
 /**
  * Help link helper
