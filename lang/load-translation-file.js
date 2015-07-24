@@ -5,7 +5,7 @@
 var fs = require('fs'),
     path = require('path'),
     argv = require('minimist')(process.argv.slice(2)),
-    translationFile = argv[0];
+    translationFile = argv._[0];
   
 if(!fs.existsSync(translationFile)){
   console.error('Could not open file');
@@ -13,9 +13,9 @@ if(!fs.existsSync(translationFile)){
 }
 
 // Load file into memory
-var translations = require(translationFile);
+var translations = JSON.parse(fs.readFileSync(translationFile));
 var lang = translations.code,
-    langDir = path.join(__dirname, lang);
+    langDir = path.join(__dirname, lang, 'lib');
 
 // Make sure the directory exists
 if(!fs.existsSync(langDir)){
@@ -26,8 +26,8 @@ if(!fs.existsSync(langDir)){
 var titles = {},
     descriptions = {};
 for(var check in translations.checks){
-  titles[check] = translations.checks[check].title;
-  descriptions[check] = translations.checks[check].title;
+  titles[check] = {title: translations.checks[check].title};
+  descriptions[check] = translations.checks[check].description;
 }
 
 // Save check titles file
@@ -39,7 +39,7 @@ if(!fs.existsSync(checksDir)){
   fs.mkdirSync(checksDir);
 }
 for(var check in descriptions){
-  fs.writefileSync(path.join(checksDir, check + '.md', descriptions[check]));
+  fs.writeFileSync(path.join(checksDir, check + '.md'), descriptions[check]);
 }
 
 // Save help links file
@@ -51,5 +51,5 @@ if(!fs.existsSync(partialsDir)){
   fs.mkdirSync(partialsDir);
 }
 for(var partial in translations.partials){
-  fs.writefileSync(path.join(partialsDir, partial + '.md', translations.partials[partial]));
+  fs.writeFileSync(path.join(partialsDir, partial + '.md'), translations.partials[partial]);
 }
