@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive",
-    "build": "sh build.sh",
+    "build": "npm run build:browserify && npm run build:minify && node lang/build.js",
     "build:browserify": "browserify lib/index.js -s FSCheck -o fs-check.js",
     "build:minify": "uglifyjs fs-check.js -o fs-check.min.js --source-map fs-check.min.js.map --source-map-root http://genealogysystems.github.io/fs-check/",
     "docs": "node docs/checks-list.js && ./docs/build.sh",
@@ -33,6 +33,7 @@
     "chai": "1.9.1",
     "coveralls": "2.11.2",
     "istanbul": "0.3.7",
+    "minimist": "1.1.2",
     "mocha": "2.2.1",
     "q": "1.2.0",
     "uglify-js": "2.4.20"
