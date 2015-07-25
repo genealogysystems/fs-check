@@ -25,5 +25,5 @@ else {
 }
 
 function buildLang(lang){
-	fs.writeFileSync(path.join(__dirname, lang, 'fs-check-' + lang + '.js'), '(function(){FSCheck.language(' + JSON.stringify(loadLang(lang)) + ');}())');
+	fs.writeFileSync(path.join(__dirname, lang, 'fs-check-' + lang + '.js'), '!function(){FSCheck.language(' + JSON.stringify(loadLang(lang)) + ');}();');
 }
