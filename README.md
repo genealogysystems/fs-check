@@ -32,7 +32,7 @@ var traversal = FSTraversal(FS)
             
             // Opportunities do not have any valuable display strings until
             // they have been translated
-            FSCheck.translate(opportunity, 'de');
+            FSCheck.translate(opportunity, 'es');
           }
         }
 
@@ -103,7 +103,7 @@ Translate an opportunity into the specified language. `title` and `description`
 properties will be added to the opportunity.
 
 ```js
-FSCheck.translate(opportunity, 'de');
+FSCheck.translate(opportunity, 'es');
 ```
 
 ### language(code, data)
