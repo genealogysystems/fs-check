@@ -15,9 +15,13 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="fs-check.min.js"></script>
     <script src="lang/en/fs-check-en.js"></script>
+    <script src="lang/es/fs-check-es.js"></script>
     <script>
+      var opportunities = {};
+      
       $(document).ready(function(){
-        $.getJSON('docs/opportunities.json').done(function(opportunities){
+        $.getJSON('docs/opportunities.json').done(function(oppsResponse){
+          opportunities = oppsResponse;
           $.each(opportunities, function(key, opportunity){
             $('#' + opportunity.type + '-list').append(
               $('<a id="opp-' + key + '" href="#' + key + '" class="list-group-item">' + key + '</a>').click(function(){
@@ -34,26 +38,35 @@
             $('#left a.list-group-item:first').click();
           }
         });
+        
+        $('#language').change(updateOppDisplay);
       });
       
       function displayOpportunity(opportunity){
-        var oppDOM = $('#opportunity');
-        FSCheck.translate(opportunity, 'en');
+        var oppDOM = $('#opportunity'),
+            lang = $('#language').val();
+        FSCheck.translate(opportunity, lang);
         $('.opp-title', oppDOM).html(opportunity.title);
         $('.opp-type', oppDOM).html(opportunity.type);
         $('.opp-description', oppDOM).html(opportunity.description);
-        $('.opp-help', oppDOM).html(displayHelpLinks(FSCheck.id(opportunity.checkId).help));
+        $('.opp-help', oppDOM).html(displayHelpLinks(FSCheck.id(opportunity.checkId).help, lang));
         $('.opp-gensearch', oppDOM).text(JSON.stringify(opportunity.gensearch, null, 2) || 'A gensearch object was not generated for this opportunity.');
-      };
+      }
       
-      function displayHelpLinks(links){
+      function displayHelpLinks(links, lang){
         var $list = $('<ul>');
-        $.each(links, function(i, url){
+        $.each(links, function(i, helpId){
+          var help = FSCheck.help(helpId, lang);
           $('<li>')
-            .append($('<a>').attr('href', url).attr('target', '_blank').text(url))
+            .append($('<a>').attr('href', help.url).attr('target', '_blank').text(help.title))
             .appendTo($list);
-        })
+        });
         return $list;
+      }
+      
+      function updateOppDisplay(){
+        var oppId = $('#left .list-group-item.active').text();
+        displayOpportunity(opportunities[oppId]);
       }
     </script>
   </head>
@@ -65,6 +78,13 @@
       </div>
       <div class="row">
         <div id="left" class="col-sm-3">
+          <div>
+            <select id="language" class="form-control">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
+            <br>
+          </div>
           <div id="person-list" class="list-group">
             <div class="list-group-item"><h4>Person</h4></div>
           </div>

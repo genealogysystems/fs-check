@@ -1,4 +1,5 @@
-var data = require('../../lang/en'),
+var loadLang = require('../../lang/load-language'),
+    data = loadLang('en'),
     expect = require('chai').expect;
 
 describe('fs-check-en', function(){

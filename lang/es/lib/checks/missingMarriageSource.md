@@ -1,7 +1,3 @@
 Intente estos pasos para encontrar un registro matrimonial para [{{couple}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{cid}}):
 
-1. Revise la pistas de registro para [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) y [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}) en FamilySearch.
-1. Realice búsquedas amplias en los sitios web de genealogía populares utilizando los enlaces de abajo o utilizando la Extensión de Chrome [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en).
-1. Busque ayuda en la página web de [genealogía e historia familiar] (http://genealogy.stackexchange.com/) Stack Exchange.
-1. Visite un [centro de historia familiar] local (https://familysearch.org/ask/help#localResource).
-1. Contrate a un investigador de la comunidad [Genlighten](http://www.genlighten.com/).
+{{> researchHelpMarriage}}
