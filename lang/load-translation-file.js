@@ -18,6 +18,9 @@ var lang = translations.code,
     langDir = path.join(__dirname, lang, 'lib');
 
 // Make sure the directory exists
+if(!fs.existsSync(path.join(__dirname, lang))){
+  fs.mkdirSync(path.join(__dirname, lang));
+}
 if(!fs.existsSync(langDir)){
   fs.mkdirSync(langDir);
 }

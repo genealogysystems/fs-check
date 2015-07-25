@@ -1,0 +1,2 @@
+{{name}} se muestra que tiene múltiples padres biológicos, lo que es altamente improbable.
+Los niños pueden tener varios padres si se adoptaron o en otras circunstancias similares. En este caso el tipo de relación paterno-filial tiene que ser cambiarse de biológica a adoptiva, acogida, tutela, o hijastro.

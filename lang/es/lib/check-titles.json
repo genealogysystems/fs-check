@@ -1,0 +1,116 @@
+{
+  "birthBeforeParentsBirth": {
+    "title": "Persona nacida antes que su(s) padre(s)"
+  },
+  "childBeforeMarriage": {
+    "title": "Hijo nacido antes del matrimonio"
+  },
+  "childrenTooClose": {
+    "title": "Niños demasiado cercanos"
+  },
+  "deathBeforeBirth": {
+    "title": "La persona murió antes de nacer"
+  },
+  "duplicateNames": {
+    "title": "Nombres idénticos"
+  },
+  "manyAlternateNames": {
+    "title": "Muchos nombres alternativos"
+  },
+  "marriageAfterDeath": {
+    "title": "Matrimonio después de la muerte"
+  },
+  "marriageWithNoChildren": {
+    "title": "Matrimonio sin hijos"
+  },
+  "missingBirth": {
+    "title": "Encuentre un nacimiento"
+  },
+  "missingBirthDate": {
+    "title": "Encuentre una fecha de nacimiento"
+  },
+  "missingBirthPlace": {
+    "title": "Encuentre un lugar de nacimiento"
+  },
+  "missingBirthSource": {
+    "title": "Encuentre un registro de nacimiento"
+  },
+  "missingDeath": {
+    "title": "Encuentre una muerte"
+  },
+  "missingDeathDate": {
+    "title": "Encuentra una fecha de la muerte"
+  },
+  "missingDeathPlace": {
+    "title": "Encuentre un lugar de la muerte"
+  },
+  "missingDeathSource": {
+    "title": "Encuentre un registro de defunción"
+  },
+  "missingFather": {
+    "title": "Falta el padre"
+  },
+  "missingGivenName": {
+    "title": "Falta el nombre"
+  },
+  "missingMarriageDate": {
+    "title": "Encuentre una fecha de matrimonio"
+  },
+  "missingMarriageFact": {
+    "title": "Encuentre un matrimonio"
+  },
+  "missingMarriagePlace": {
+    "title": "Encuentre un lugar de matrimonio"
+  },
+  "missingMarriageSource": {
+    "title": "Encuentre un registro matrimonial"
+  },
+  "missingMother": {
+    "title": "Falta la madre"
+  },
+  "missingName": {
+    "title": "Falta un nombre"
+  },
+  "missingParents": {
+    "title": "Faltan los padres"
+  },
+  "missingSurname": {
+    "title": "Falta un apellido"
+  },
+  "multipleMarriageFacts": {
+    "title": "Múltiples hechos matrimoniales"
+  },
+  "multipleParents": {
+    "title": "Varias relaciones parentales"
+  },
+  "orInName": {
+    "title": "Formato de nombre alternativo incorrecto"
+  },
+  "possibleDuplicates": {
+    "title": "Posibles personas duplicadas"
+  },
+  "recordHints": {
+    "title": "Pistas de registro"
+  },
+  "standardizeBirthDate": {
+    "title": "Estandarizar una fecha de nacimiento"
+  },
+  "standardizeBirthPlace": {
+    "title": "Estandarizar un lugar de nacimiento"
+  },
+  "standardizeDeathDate": {
+    "title": "Estandarice una fecha de defunción"
+  },
+  "standardizeDeathPlace": {
+    "title": "Estandarice un lugar de defunción"
+  },
+  "standardizeMarriageDate": {
+    "title": "Estandarice una fecha de matrimonio"
+  },
+  "standardizeMarriagePlace": {
+    "title": "Estandarice un lugar de matrimonio"
+  },
+  "unusualCharactersInName": {
+    "title": "Caracteres inusuales en un nombre"
+  }
+}
