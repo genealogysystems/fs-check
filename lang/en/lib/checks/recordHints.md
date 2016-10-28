@@ -4,4 +4,4 @@ FamilySearch has found matching records for {{name}} in the following collection
 * {{.}}
 {{/titles}}
 
-[Review these matches](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) and attach the sources to your tree.
+[Review these matches](https://familysearch.org/tree/person/{{pid}}/research-help) and attach the sources to your tree.

@@ -1,4 +1,4 @@
-1. Review the record hints in FamilySearch for both [{{wifeName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{wid}}) and [{{husbandName}}](https://familysearch.org/tree/#view=allMatchingRecords&person={{hid}}).
+1. Review the record hints in FamilySearch for both [{{wifeName}}](https://familysearch.org/tree/person/{{wid}}/research-help) and [{{husbandName}}](https://familysearch.org/tree/person/{{hid}}/research-help).
 1. Do broad searches on popular genealogy websites using the links below or using the [RootsSearch](https://chrome.google.com/webstore/detail/rootssearch/aolcffalbhpnojekmimmelebjchjmmgn?hl=en) Chrome Extension.
 1. Ask for help at the [Genealogy and Family History](http://genealogy.stackexchange.com/) Stack Exchange website.
 1. Visit a local [Family History Center](https://familysearch.org/ask/help#localResource).

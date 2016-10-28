@@ -4,4 +4,4 @@ FamilySearch ha encontrado registros sugeridos para {{name}} en las siguientes c
 * {{.}}
 {{/titles}}
 
-[Revise estas registros sugeridos](https://familysearch.org/tree/#view=allMatchingRecords&person={{pid}}) y conecte las fuentes a su árbol.
+[Revise estas registros sugeridos](https://familysearch.org/tree/person/{{pid}}/research-help) y conecte las fuentes a su árbol.
