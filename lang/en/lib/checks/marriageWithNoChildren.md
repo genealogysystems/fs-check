@@ -1,6 +1,6 @@
 {{^multipleSpouses}}
 The marriage between [{{name}}](https://familysearch.org/tree/person/{{pid}}/details)
-and [{{spouse.name}}](https://familysearch.org/tree/#view=ancestor&person={{spouse.id}}) has no children. Though this is possible it still represents
+and [{{spouse.name}}](https://familysearch.org/tree/person/{{spouse.id}}/details) has no children. Though this is possible it still represents
 an opportunity for research until you are confident that the couple had no children.
 {{/multipleSpouses}}
 {{#multipleSpouses}}
