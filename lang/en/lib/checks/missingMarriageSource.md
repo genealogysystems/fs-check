@@ -1,3 +1,3 @@
-Try these steps to find a marriage record for [{{couple}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{cid}}):
+Try these steps to find a marriage record for [{{couple}}](https://familysearch.org/tree/relationship/{{cid}}/couple):
 
 {{> researchHelpMarriage}}

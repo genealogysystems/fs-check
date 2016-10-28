@@ -1,5 +1,5 @@
 El lugar de matrimonio de `{{place}}` no ha sido estandarizado para el matrimonio entre
-[{{wifeName}} y {{husbandName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}). 
+[{{wifeName}} y {{husbandName}}](https://familysearch.org/tree/relationship/{{crid}}/couple). 
 
 La estandarización asegura que todo el mundo sabe dónde se llevó a cabo este evento.
 Debido a que hay muchas maneras diferentes de deletrear o calificar un lugar, no siempre puede ser obvio cuál es ese lugar en realidad.

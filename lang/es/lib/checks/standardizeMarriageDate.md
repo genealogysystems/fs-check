@@ -1,5 +1,5 @@
 La fecha de matrimonio de `{{date}}` no ha sido estandarizada para el matrimonio entre
-[{{wifeName}} y {{husbandName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{crid}}).
+[{{wifeName}} y {{husbandName}}](https://familysearch.org/tree/relationship/{{crid}}/couple).
 
 La estandarización asegura que todo el mundo sabe cuándo se llevó a cabo este evento.
 Debido a que hay muchos formatos de fecha utilizados en todo el mundo, no siempre puede ser obvio qué fecha es en realidad.

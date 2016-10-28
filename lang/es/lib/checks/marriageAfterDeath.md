@@ -3,5 +3,5 @@ O bien la fecha de la muerte es incorrecta o la fecha de matrimonio está equivo
 Vea las relaciones de pareja en FamilySearch para solucionar el problema.
 
 {{#spouses}}
-* [{{spouseName}}](https://familysearch.org/tree/#view=coupleRelationship&relationshipId={{coupleId}}) - Se produjo un evento matrimonial después de la muerte de {{name}}.
+* [{{spouseName}}](https://familysearch.org/tree/relationship/{{coupleId}}/couple) - Se produjo un evento matrimonial después de la muerte de {{name}}.
 {{/spouses}}
