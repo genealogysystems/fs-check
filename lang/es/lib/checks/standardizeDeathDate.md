@@ -1,4 +1,4 @@
-La fecha de defunción de [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}) `{{date}}` no se ha estandarizado.
+La fecha de defunción de [{{name}}](https://familysearch.org/tree/person/{{pid}}/details) `{{date}}` no se ha estandarizado.
 
 La estandarización asegura que todo el mundo sabe cuándo se llevó a cabo este evento.
 Debido a que hay muchos formatos de fecha utilizados en todo el mundo, no siempre puede ser obvio qué fecha es en realidad.

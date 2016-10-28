@@ -1,4 +1,4 @@
-[{{name}}'s](https://familysearch.org/tree/#view=ancestor&person={{pid}}) birth date of `{{date}}` has not been standardized.
+[{{name}}'s](https://familysearch.org/tree/person/{{pid}}/details) birth date of `{{date}}` has not been standardized.
 
 Standardization ensures that everyone knows when this event took place.
 Because there are many date formats used accross the world, it may not always be obvious what the date actually is.

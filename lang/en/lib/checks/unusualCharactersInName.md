@@ -5,7 +5,7 @@ These characters are often used to annotate an alternate given name or surname, 
 Remove the alternate annotations from the preferred name and add them as alternate names.
 {{/brackets}}
 {{^brackets}}      
-These characters are not normally found in names. Update the person's name in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to remove the unusual characters.
+These characters are not normally found in names. Update the person's name in the [Family Tree](https://familysearch.org/tree/person/{{pid}}/details) to remove the unusual characters.
 {{/brackets}}
 {{/preferred}}
 {{^preferred}}
@@ -15,5 +15,5 @@ These alternate names have characters which normally do not appear in names:
 * {{.}}
 {{/badNames}}
 
-Update these names in the [Family Tree](https://familysearch.org/tree/#view=ancestor&person={{pid}}) to remove the unusual characters.
+Update these names in the [Family Tree](https://familysearch.org/tree/person/{{pid}}/details) to remove the unusual characters.
 {{/preferred}}

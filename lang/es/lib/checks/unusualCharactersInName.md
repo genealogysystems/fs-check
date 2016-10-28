@@ -5,7 +5,7 @@ Estos caracteres se utilizan a menudo para anotar un nombre o apellido alternati
 Elimine las anotaciones alternativas desde el nombre preferido y añádalas como nombres alternativos.
 {{/brackets}}
 {{^brackets}}      
-Estos caracteres no se encuentran normalmente en los nombres. Actualice el nombre de la persona en el [árbol de familia](https://familysearch.org/tree/#view=ancestor&person={{pid}}) para eliminar los caracteres inusuales.
+Estos caracteres no se encuentran normalmente en los nombres. Actualice el nombre de la persona en el [árbol de familia](https://familysearch.org/tree/person/{{pid}}/details) para eliminar los caracteres inusuales.
 {{/brackets}}
 {{/preferred}}
 {{^preferred}}
@@ -15,5 +15,5 @@ Estos nombres alternativos tienen caracteres que normalmente no aparecen en los 
 * {{.}}
 {{/badNames}}
 
-Actualice estos nombres en el [árbol de familia](https://familysearch.org/tree/#view=ancestor&person={{pid}}) para eliminar los caracteres inusuales.
+Actualice estos nombres en el [árbol de familia](https://familysearch.org/tree/person/{{pid}}/details) para eliminar los caracteres inusuales.
 {{/preferred}}

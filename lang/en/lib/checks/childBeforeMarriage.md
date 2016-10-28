@@ -5,5 +5,5 @@ step. Check the marriages with the following people to verify the marriage date,
 the children's birth dates, and the parent relationship type.
 
 {{#children}}
-* [{{childName}}](https://familysearch.org/tree/#view=ancestor&person={{childId}}) was born before {{name}} married [{{spouseName}}](https://familysearch.org/tree/#view=ancestor&person={{spouseId}}).
+* [{{childName}}](https://familysearch.org/tree/person/{{childId}}/details) was born before {{name}} married [{{spouseName}}](https://familysearch.org/tree/person/{{spouseId}}/details).
 {{/children}}

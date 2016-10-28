@@ -1,4 +1,4 @@
-Intente estos pasos para encontrar un registro de nacimiento de [{{name}}](https://familysearch.org/tree/#view=ancestor&person={{pid}}):
+Intente estos pasos para encontrar un registro de nacimiento de [{{name}}](https://familysearch.org/tree/person/{{pid}}/details):
 
 {{> researchHelp}}
 
